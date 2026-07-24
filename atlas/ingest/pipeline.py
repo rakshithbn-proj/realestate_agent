@@ -2,10 +2,14 @@
 
 For one source run:
   1. open a scrape_run row
-  2. fetch raw items and store EVERY one in raw_payloads before parsing
-  3. parse each item (versioned parser) and upsert into listings, recording
-     change history in listing_versions and price moves in price_events
-  4. close the run with a status health monitoring can act on
+  2. fetch raw items, parse them (pure, per-item error containment), and
+     commit EVERY raw item to raw_payloads before any listing is touched —
+     an upsert crash can never lose raw data
+  3. upsert each parsed item into listings inside a savepoint, recording
+     change history in listing_versions and price moves in price_events;
+     a failing item is logged with its raw_payload id and skipped
+  4. close the run with a status health monitoring can act on — the run row
+     always reaches a terminal state, even on unexpected errors
 
 Re-running a day is safe: upserts are keyed on (source_id, external_id) and a
 re-observation with no changes only bumps last_seen_at (plan.md §7 idempotent
@@ -34,11 +38,12 @@ from atlas.models import (
 
 log = logging.getLogger(__name__)
 
-# Fields whose change constitutes an 'updated' version (price handled separately).
+# Listing columns compared against the parsed dict to detect an 'updated'
+# observation. Price and locality_id are tracked separately.
 TRACKED_FIELDS = (
-    "title", "project_raw", "project_norm", "locality", "city", "lat", "lon",
-    "property_type", "bhk", "floor", "area_sqft", "lister_kind", "lister_phone",
-    "rera_ids", "description", "url", "status",
+    "title", "project_raw", "project_norm", "address_raw", "lat", "lon",
+    "property_type", "bhk", "floor", "area_sqft", "lister_kind",
+    "lister_phone", "rera_ids", "description", "url",
 )
 
 
@@ -87,12 +92,16 @@ def _get_or_create_locality(session: Session, city: str, name: str) -> Locality:
     return locality
 
 
-def _apply_parsed(listing: Listing, parsed: dict, parser_version: str) -> None:
+def _apply_parsed(listing: Listing, parsed: dict, market_city: str,
+                  parser_version: str) -> None:
     listing.title = parsed["title"]
     listing.project_raw = parsed["project_raw"]
     listing.project_norm = parsed["project_norm"]
     listing.address_raw = parsed["address_raw"]
-    listing.city = parsed["city"]
+    # The registry market slug is authoritative; the portal-reported city
+    # (parsed["city"]) stays in the snapshot as evidence. A portal spelling
+    # change ('Bengaluru') must not fork the market into a new slug.
+    listing.city = market_city
     listing.lat = parsed["lat"]
     listing.lon = parsed["lon"]
     listing.geohash6 = (
@@ -104,7 +113,12 @@ def _apply_parsed(listing: Listing, parsed: dict, parser_version: str) -> None:
     listing.bhk = parsed["bhk"]
     listing.floor = parsed["floor"]
     listing.area_sqft = parsed["area_sqft"]
-    listing.price_inr = parsed["price_inr"]
+    # A vanished price (portal switched to "price on request", or a parse
+    # regression) keeps the last known value — the disappearance is recorded
+    # as an 'updated' version whose snapshot shows price_inr null, never as a
+    # silent overwrite.
+    if parsed["price_inr"] is not None:
+        listing.price_inr = parsed["price_inr"]
     listing.lister_kind = parsed["lister_kind"]
     listing.lister_phone = parsed["lister_phone"]
     listing.rera_ids = parsed["rera_ids"]
@@ -114,20 +128,29 @@ def _apply_parsed(listing: Listing, parsed: dict, parser_version: str) -> None:
     listing.last_seen_at = _now()
 
 
+def _stored_value(listing: Listing, field: str):
+    """Listing column value normalised for comparison with the parsed dict."""
+    value = getattr(listing, field)
+    if field == "area_sqft" and value is not None:
+        return float(value)
+    if field == "rera_ids":
+        return list(value or [])
+    return value
+
+
 def _upsert_listing(
     session: Session,
     source: Source,
     spec: SourceSpec,
     parsed: dict,
     run: ScrapeRun,
+    parser_version: str,
 ) -> str:
     """Insert or update one listing; return the change kind observed
     ('new' | 'updated' | 'price_changed' | 'unchanged')."""
-    city = parsed["city"] or spec.city
-    parsed["city"] = city
     if parsed["locality"]:
-        locality = _get_or_create_locality(session, city, parsed["locality"])
-        locality_id = locality.id
+        locality_id = _get_or_create_locality(session, spec.city,
+                                              parsed["locality"]).id
     else:
         locality_id = None
 
@@ -144,9 +167,9 @@ def _upsert_listing(
             external_id=parsed["external_id"],
             locality_id=locality_id,
             status="active",
-            parser_version="",  # set by _apply_parsed
+            parser_version=parser_version,
         )
-        _apply_parsed(listing, parsed, PARSERS[spec.parser][1])
+        _apply_parsed(listing, parsed, spec.city, parser_version)
         session.add(listing)
         session.flush()
         session.add(
@@ -167,26 +190,16 @@ def _upsert_listing(
     old_price = listing.price_inr
     new_price = parsed["price_inr"]
     price_changed = new_price is not None and old_price != new_price
+    price_vanished = new_price is None and old_price is not None
 
-    old_values = {
-        "title": listing.title, "project_raw": listing.project_raw,
-        "project_norm": listing.project_norm, "locality": None,
-        "city": listing.city, "lat": listing.lat, "lon": listing.lon,
-        "property_type": listing.property_type, "bhk": listing.bhk,
-        "floor": listing.floor,
-        "area_sqft": float(listing.area_sqft) if listing.area_sqft is not None else None,
-        "lister_kind": listing.lister_kind, "lister_phone": listing.lister_phone,
-        "rera_ids": list(listing.rera_ids or []),
-        "description": listing.description, "url": listing.url,
-        "status": listing.status,
-    }
-    other_changed = any(
-        field != "locality" and old_values.get(field) != parsed.get(field, old_values.get(field))
-        for field in TRACKED_FIELDS
+    other_changed = (
+        locality_id != listing.locality_id
+        or price_vanished
+        or any(_stored_value(listing, f) != parsed[f] for f in TRACKED_FIELDS)
     )
 
     listing.locality_id = locality_id
-    _apply_parsed(listing, parsed, PARSERS[spec.parser][1])
+    _apply_parsed(listing, parsed, spec.city, parser_version)
 
     if price_changed:
         pct = (
@@ -213,13 +226,18 @@ def _upsert_listing(
 
 
 def run_source(session: Session, spec: SourceSpec) -> RunResult:
+    # Resolve config before opening a run — an unknown fetcher/parser key is a
+    # programming error and must not strand a 'running' row.
+    fetch_fn = FETCHERS[spec.fetcher]
+    parse_fn, parser_version = PARSERS[spec.parser]
+
     source = _get_or_create_source(session, spec)
     run = ScrapeRun(source_id=source.id, status="running")
     session.add(run)
     session.commit()
 
     try:
-        raw_items = FETCHERS[spec.fetcher](spec.params)
+        raw_items = fetch_fn(spec.params)
     except Exception as exc:  # failure is recorded, never swallowed (plan §7)
         run.status = "failed"
         run.error = f"fetch: {exc}"
@@ -229,43 +247,80 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
         log.exception("fetch failed for %s/%s", spec.name, spec.city)
         return RunResult(run.id, "failed", 0, 0, 0, 0, 0, 0, 0)
 
-    parse_fn = PARSERS[spec.parser][0]
     counts = {"new": 0, "updated": 0, "price_changed": 0, "unchanged": 0}
     failed = 0
-    for raw in raw_items:
-        parsed = None
-        parse_error: str | None = None
-        try:
-            parsed = parse_fn(raw)
-        except Exception as exc:
-            parse_error = str(exc)
+    errors: list[str] = []
+    try:
+        # Parse first (pure python, per-item containment) so the raw archive
+        # can record each item's external id.
+        parsed_items: list[tuple[dict, dict | None]] = []
+        for raw in raw_items:
+            try:
+                parsed = parse_fn(raw)
+            except Exception as exc:
+                parsed = None
+                errors.append(f"parse: {exc}")
+                log.exception("parse error in run %s", run.id)
+            parsed_items.append((raw, parsed))
 
-        # Raw payload is stored no matter what happened above.
-        session.add(
-            RawPayload(
+        # Raw first: the entire archive is committed before any upsert, so a
+        # listing-write failure can never roll back raw data.
+        payload_rows = []
+        for raw, parsed in parsed_items:
+            row = RawPayload(
                 scrape_run_id=run.id,
                 external_id=parsed["external_id"] if parsed else None,
                 url=parsed["url"] if parsed else None,
                 payload=raw,
             )
-        )
-        if parsed is None:
-            failed += 1
-            if parse_error:
-                log.error("parse error in run %s: %s", run.id, parse_error)
-            continue
-        kind = _upsert_listing(session, source, spec, parsed, run)
-        counts[kind] += 1
+            session.add(row)
+            payload_rows.append(row)
+        session.commit()
+
+        for (raw, parsed), payload_row in zip(parsed_items, payload_rows):
+            if parsed is None:
+                failed += 1
+                continue
+            try:
+                with session.begin_nested():
+                    kind = _upsert_listing(session, source, spec, parsed,
+                                           run, parser_version)
+                counts[kind] += 1
+            except Exception as exc:
+                # Savepoint rolled back this item only; raw payload is safe.
+                failed += 1
+                errors.append(
+                    f"upsert raw_payload={payload_row.id} "
+                    f"external_id={parsed['external_id']}: {exc}"
+                )
+                log.exception("upsert error in run %s (raw_payload %s)",
+                              run.id, payload_row.id)
+        session.commit()
+    except Exception as exc:
+        # Catastrophic (e.g. connection loss): the run row must still reach a
+        # terminal state so health monitoring sees it.
+        session.rollback()
+        run.status = "failed"
+        run.error = f"run aborted: {exc}"
+        run.items_found = len(raw_items)
+        run.finished_at = _now()
+        session.commit()
+        log.exception("run %s aborted for %s/%s", run.id, spec.name, spec.city)
+        return RunResult(run.id, "failed", len(raw_items),
+                         sum(counts.values()), failed, counts["new"],
+                         counts["updated"], counts["price_changed"],
+                         counts["unchanged"])
 
     run.items_found = len(raw_items)
     run.finished_at = _now()
     parsed_total = sum(counts.values())
+    error_summary = "; ".join(errors)[:2000] or None
     if parsed_total == 0 and raw_items:
         run.status = "failed"
-        run.error = f"all {len(raw_items)} items failed to parse"
+        run.error = f"all {len(raw_items)} items failed: {error_summary}"
     elif failed:
         run.status = "anomalous"
-        run.error = f"{failed}/{len(raw_items)} items failed to parse"
+        run.error = f"{failed}/{len(raw_items)} items failed: {error_summary}"
     else:
         run.status = "ok"
     session.commit()

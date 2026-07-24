@@ -27,6 +27,22 @@ def test_price_parsing():
     assert magicbricks.parse_price(24202000) == 24_202_000
     assert magicbricks.parse_price(None) is None
     assert magicbricks.parse_price("Price on request") is None
+    # Dotted prefixes must not eat the match (review finding: 'Rs.' → None)
+    assert magicbricks.parse_price("Rs. 95 Lac") == 9_500_000
+    assert magicbricks.parse_price("₹ 1.53 Cr") == 15_300_000
+    # Fractional numerics must not collapse to a stored price of 0
+    assert magicbricks.parse_price(0.5) is None
+    assert magicbricks.parse_price(0) is None
+
+
+def test_malformed_numeric_fields_do_not_kill_item():
+    # '12.9.3' used to raise ValueError out of _to_float, failing the item
+    parsed = magicbricks.parse(
+        {"listing_id": "1", "super_area_sqft": "1.234.56", "latitude": "12.9.3"}
+    )
+    assert parsed is not None
+    assert parsed["area_sqft"] == 1.234
+    assert parsed["lat"] == 12.9
 
 
 def test_rera_canonicalisation():
