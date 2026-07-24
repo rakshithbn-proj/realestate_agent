@@ -1,0 +1,6 @@
+.env
+apify_token.txt
+data/
+logs/
+reports/
+__pycache__/

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RealEstate Trial Monitor</title>
+<style>
+  :root { --bg:#0f1420; --card:#171e2e; --line:#26304a; --txt:#e6ebf5; --dim:#8b96ad;
+          --ok:#3fb97f; --warn:#e0a33d; --bad:#e05d5d; --accent:#5b8def; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--txt); font:14px/1.5 "Segoe UI",system-ui,sans-serif; padding:24px; }
+  h1 { font-size:20px; margin-bottom:4px; }
+  .sub { color:var(--dim); margin-bottom:20px; }
+  .row { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 18px; flex:1; min-width:180px; }
+  .card .k { color:var(--dim); font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+  .card .v { font-size:22px; font-weight:600; margin-top:2px; }
+  .card .v small { font-size:13px; color:var(--dim); font-weight:400; }
+  .ok { color:var(--ok); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+  h2 { font-size:15px; margin:22px 0 10px; color:var(--dim); text-transform:uppercase; letter-spacing:.05em; }
+  table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  th,td { padding:8px 12px; text-align:left; border-bottom:1px solid var(--line); }
+  th { color:var(--dim); font-weight:500; font-size:12px; text-transform:uppercase; }
+  tr:last-child td { border-bottom:none; }
+  .tablewrap { overflow-x:auto; }
+  button { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:9px 16px; font-size:14px; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:default; }
+  .banner { padding:10px 16px; border-radius:10px; margin-bottom:20px; border:1px solid var(--line); background:var(--card); }
+  a { color:var(--accent); text-decoration:none; }
+  .muted { color:var(--dim); }
+</style>
+</head>
+<body>
+<h1>RealEstate Trial Monitor</h1>
+<div class="sub" id="sub">loading…</div>
+
+<div class="banner" id="verdict">…</div>
+
+<div class="row">
+  <div class="card"><div class="k">Trial day</div><div class="v" id="day">–</div></div>
+  <div class="card"><div class="k">Total Apify spend</div><div class="v" id="spend">–</div></div>
+  <div class="card"><div class="k">Projected / 30 days</div><div class="v" id="proj">–</div></div>
+  <div class="card"><div class="k">Active listings</div><div class="v" id="active">–</div></div>
+  <div class="card" style="display:flex;align-items:center;justify-content:center">
+    <button id="runbtn" onclick="runNow()">Run scrape now</button>
+  </div>
+</div>
+
+<h2>Sources</h2>
+<div class="tablewrap"><table id="sources">
+  <thead><tr><th>Source</th><th>Runs</th><th>Ran %</th><th title="Runs that delivered usable data (excludes anomalous) — the go/no-go gate">Clean %</th>
+  <th>Avg items</th><th>Active</th>
+  <th>Cost $</th><th>Last run</th><th>Last status</th></tr></thead><tbody></tbody>
+</table></div>
+
+<h2 id="parked-h" style="display:none">Parked sources</h2>
+<div class="tablewrap"><table id="parked" style="display:none">
+  <thead><tr><th>Source</th><th>Runs</th><th>Items pushed</th><th>Raw archived</th>
+  <th>Usable</th><th>Usable %</th></tr></thead><tbody></tbody>
+</table></div>
+
+<h2>Field coverage (% of active listings)</h2>
+<div class="tablewrap"><table id="coverage">
+  <thead><tr><th>Source</th><th>price</th><th>area</th><th>gps</th><th>locality</th><th>project</th><th>rera</th><th>url</th></tr></thead>
+  <tbody></tbody>
+</table></div>
+
+<h2>Top price drops</h2>
+<div class="tablewrap"><table id="drops">
+  <thead><tr><th>%</th><th>Old</th><th>New</th><th>Listing</th><th>Locality</th><th>Source</th></tr></thead>
+  <tbody></tbody>
+</table></div>
+
+<h2>Recent runs</h2>
+<div class="tablewrap"><table id="runs">
+  <thead><tr><th>#</th><th>Source</th><th>Started</th><th>Status</th><th>Items</th><th>Cost $</th><th>Secs</th><th>Note</th></tr></thead>
+  <tbody></tbody>
+</table></div>
+
+<script>
+const token = new URLSearchParams(location.search).get("token") || "";
+const hdrs = token ? {"X-Auth-Token": token} : {};
+const inr = n => n == null ? "–" : "₹" + Number(n).toLocaleString("en-IN");
+const cls = s => s === "ok" ? "ok" : (s === "anomalous" ? "warn" : "bad");
+
+async function j(url) {
+  const r = await fetch(url, {headers: hdrs});
+  if (!r.ok) throw new Error(url + " -> " + r.status);
+  return r.json();
+}
+
+async function refresh() {
+  try {
+    const s = await j("/api/summary");
+    document.getElementById("sub").textContent =
+      `started ${s.trial_started ?? "–"} · updated ${s.generated_at}`;
+    document.getElementById("day").textContent = s.trial_day;
+    document.getElementById("spend").textContent = "$" + s.cost.total_usd;
+    document.getElementById("proj").textContent = "$" + s.cost.projected_30d_usd;
+    document.getElementById("active").textContent =
+      s.sources.reduce((a, x) => a + x.active_listings, 0);
+
+    const v = s.verdict;
+    const flag = (b, t) => `<span class="${b ? "ok" : "warn"}">${b ? "✓" : "⚠"} ${t}</span>`;
+    document.getElementById("verdict").innerHTML =
+      flag(v.actors_reliable_so_far, "actors reliable") + " &nbsp; " +
+      flag(v.field_coverage_ok, "field coverage") + " &nbsp; " +
+      `<span class="muted">projected Apify cost $${v.projected_monthly_apify_usd}/mo</span>`;
+
+    document.querySelector("#sources tbody").innerHTML = s.sources.map(x => `
+      <tr><td>${x.source}</td><td>${x.runs}</td>
+      <td>${x.success_rate ?? "–"}</td>
+      <td class="${x.clean_rate == null ? "" : (x.clean_rate >= 90 ? "ok" : x.clean_rate >= 60 ? "warn" : "bad")}">${x.clean_rate ?? "–"}</td>
+      <td>${x.avg_items}</td><td>${x.active_listings}</td>
+      <td>${x.total_cost_usd}</td>
+      <td>${x.last_run ? x.last_run.at.replace("T", " ").slice(0, 16) : "–"}</td>
+      <td class="${x.last_run ? cls(x.last_run.status) : ""}">${x.last_run ? x.last_run.status : "–"}</td></tr>`).join("");
+
+    if (s.parked && s.parked.length) {
+      document.getElementById("parked-h").style.display = "";
+      document.getElementById("parked").style.display = "";
+      document.querySelector("#parked tbody").innerHTML = s.parked.map(p => `
+        <tr><td>${p.source}</td><td>${p.runs}</td><td>${p.items_pushed}</td>
+        <td>${p.raw_archived}</td><td>${p.raw_usable}</td>
+        <td class="bad">${p.usable_pct}</td></tr>`).join("");
+    }
+
+    const F = ["price_inr","area_sqft","lat","locality","project","rera_id","url"];
+    document.querySelector("#coverage tbody").innerHTML = s.sources.map(x =>
+      `<tr><td>${x.source}</td>` + F.map(f => {
+        const p = x.coverage_pct[f];
+        const c = p == null ? "" : (p >= 90 ? "ok" : p >= 60 ? "warn" : "bad");
+        return `<td class="${c}">${p ?? "–"}</td>`;
+      }).join("") + "</tr>").join("");
+
+    document.querySelector("#drops tbody").innerHTML =
+      (s.changes.top_price_drops || []).map(d => `
+        <tr><td class="ok">${d.pct}%</td><td>${inr(d.old_price)}</td><td>${inr(d.new_price)}</td>
+        <td>${d.url ? `<a href="${d.url}" target="_blank">${d.title ?? "listing"}</a>` : (d.title ?? "–")}</td>
+        <td>${d.locality ?? "–"}</td><td>${d.source}</td></tr>`).join("")
+      || `<tr><td colspan="6" class="muted">none observed yet — needs at least two runs</td></tr>`;
+
+    const r = await j("/api/runs?limit=30");
+    document.querySelector("#runs tbody").innerHTML = r.runs.map(x => `
+      <tr><td>${x.id}</td><td>${x.source}</td><td>${(x.started_at || "").replace("T", " ").slice(0, 16)}</td>
+      <td class="${cls(x.status)}">${x.status}</td><td>${x.items}</td>
+      <td>${(x.cost_usd ?? 0).toFixed(4)}</td><td>${x.duration_s ?? "–"}</td>
+      <td class="muted">${x.note ?? x.error ?? ""}</td></tr>`).join("");
+  } catch (e) {
+    document.getElementById("sub").textContent = "error: " + e.message;
+  }
+}
+
+async function runNow() {
+  const btn = document.getElementById("runbtn");
+  btn.disabled = true; btn.textContent = "Running…";
+  try {
+    await fetch("/api/run-now", {method: "POST", headers: hdrs});
+    const poll = setInterval(async () => {
+      const st = await j("/api/run-status");
+      if (!st.running) {
+        clearInterval(poll);
+        btn.disabled = false; btn.textContent = "Run scrape now";
+        refresh();
+      }
+    }, 3000);
+  } catch (e) {
+    btn.disabled = false; btn.textContent = "Run scrape now";
+  }
+}
+
+refresh();
+setInterval(refresh, 60000);
+</script>
+</body>
+</html>

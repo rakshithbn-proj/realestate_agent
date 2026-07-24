@@ -1,0 +1,6 @@
+# HTTPS terminator for the Atlas API (VPS deploy).
+# With a real ATLAS_DOMAIN, Caddy provisions Let's Encrypt certificates
+# automatically. App-level auth is the bearer token enforced by FastAPI.
+{$ATLAS_DOMAIN:localhost} {
+	reverse_proxy app:8000
+}
