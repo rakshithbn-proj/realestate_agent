@@ -9,7 +9,14 @@ from atlas.config import get_settings
 
 @lru_cache
 def get_engine(url: str | None = None) -> Engine:
-    return create_engine(url or get_settings().database_url, pool_pre_ping=True)
+    # Bounded connect: psycopg has no default connect timeout, so an
+    # unreachable/filtered Postgres would hang callers (notably /health)
+    # indefinitely instead of reporting degraded.
+    return create_engine(
+        url or get_settings().database_url,
+        pool_pre_ping=True,
+        connect_args={"connect_timeout": 5},
+    )
 
 
 def make_session_factory(engine: Engine) -> sessionmaker[Session]:

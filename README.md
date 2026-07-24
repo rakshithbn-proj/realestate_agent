@@ -21,9 +21,19 @@ python -m venv .venv
 .venv\Scripts\python -m pytest
 ```
 
-Tests spin up an **embedded Postgres** (`pgserver`) automatically — no Docker or
-local Postgres install needed. To test against a real Postgres instead, set
+Tests spin up a **throwaway Postgres** automatically — no Docker or local
+Postgres install needed (portable binaries in `.pgbin/` on Windows, `pgserver`
+on Linux/macOS). To test against a real Postgres instead, set
 `ATLAS_TEST_DATABASE_URL` (CI does this with a pgvector service container).
+
+To run the app locally against a persistent local database:
+
+```powershell
+scripts\dev.ps1     # starts portable Postgres (.pgdata), migrates, runs uvicorn --reload
+```
+
+Then open http://127.0.0.1:8000/docs (bearer token defaults to `dev-token`).
+Stop Postgres later with `.pgbin\pgsql\bin\pg_ctl -D .pgdata stop`.
 
 ## VPS deploy
 
