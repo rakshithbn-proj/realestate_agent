@@ -1,3 +1,5 @@
+import secrets
+
 from fastapi import Header, HTTPException, status
 
 from atlas.config import get_settings
@@ -15,7 +17,11 @@ def require_token(authorization: str = Header(default="")) -> None:
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="ATLAS_API_TOKEN is not configured; API is locked",
         )
-    if authorization != f"Bearer {token}":
+    # Constant-time comparison: the token guards an internet-facing API and
+    # must not be recoverable byte-by-byte via response timing.
+    if not secrets.compare_digest(
+        authorization.encode(), f"Bearer {token}".encode()
+    ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="invalid or missing bearer token",

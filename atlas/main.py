@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, FastAPI
+from fastapi import APIRouter, Depends, FastAPI, Query
 from sqlalchemy import select, text
 
 import atlas
@@ -38,7 +38,7 @@ def list_sources() -> list[dict]:
 
 
 @api.get("/runs")
-def recent_runs(limit: int = 20) -> list[dict]:
+def recent_runs(limit: int = Query(default=20, ge=1, le=200)) -> list[dict]:
     factory = make_session_factory(get_engine())
     with factory() as session:
         rows = session.scalars(

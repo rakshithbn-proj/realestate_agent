@@ -32,7 +32,9 @@ CANDIDATES: dict[str, list[str]] = {
     "url": ["url", "detail_url", "detailUrl", "link", "property_url"],
 }
 
-_PRICE_RE = re.compile(r"([\d.,]+)\s*(cr|crore|l|lac|lakh|k)?", re.IGNORECASE)
+# Number must start with a digit ("Rs. 95 Lac" must match "95", not the dot in
+# "Rs."), and units are longest-first so "Lakh" never half-matches.
+_PRICE_RE = re.compile(r"(\d+(?:\.\d+)?)\s*(crore|cr|lakh|lac|l|k)?", re.IGNORECASE)
 _MULT = {"cr": 1e7, "crore": 1e7, "l": 1e5, "lac": 1e5, "lakh": 1e5, "k": 1e3}
 
 # Registry keys look like PRM/KA/RERA/...; portals prefix junk (e.g. TOR/).
@@ -49,14 +51,12 @@ def parse_price(value: Any) -> int | None:
     if value is None:
         return None
     if isinstance(value, (int, float)):
-        return int(value) if value > 0 else None
+        iv = int(value)
+        return iv if iv > 0 else None
     m = _PRICE_RE.search(str(value).replace(",", ""))
-    if not m or not m.group(1):
+    if not m:
         return None
-    try:
-        num = float(m.group(1))
-    except ValueError:
-        return None
+    num = float(m.group(1))
     unit = (m.group(2) or "").lower()
     return int(num * _MULT.get(unit, 1)) or None
 
@@ -81,7 +81,9 @@ def _to_float(v: Any) -> float | None:
         return None
     if isinstance(v, (int, float)):
         return float(v)
-    m = re.search(r"[\d.]+", str(v).replace(",", ""))
+    # Digit-anchored with at most one decimal point, so junk like "12.9.3"
+    # yields 12.9 instead of an uncaught ValueError killing the whole item.
+    m = re.search(r"\d+(?:\.\d+)?", str(v).replace(",", ""))
     return float(m.group(0)) if m else None
 
 

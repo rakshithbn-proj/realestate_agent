@@ -5,6 +5,14 @@
 #   docker compose exec -T db psql -U atlas -d atlas_restore_test < backups/<file>.sql
 set -eu
 
+# Cron runs with a bare environment — pick up the same credentials compose
+# uses, so a non-default POSTGRES_USER/DB doesn't silently break the dump.
+if [ -f .env ]; then
+    set -a
+    . ./.env
+    set +a
+fi
+
 BACKUP_DIR="${BACKUP_DIR:-./backups}"
 KEEP_DAYS="${KEEP_DAYS:-14}"
 STAMP="$(date +%Y%m%d_%H%M%S)"

@@ -122,6 +122,93 @@ def test_price_change_and_update_tracked(session, tmp_path):
     assert version_kinds == ["new", "price_changed"]
 
 
+def test_vanished_price_is_preserved_and_recorded(session, tmp_path):
+    run_source(session, make_spec(FIXTURE))
+
+    items = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    del items[0]["price_inr"]           # portal now says "price on request"
+    del items[0]["price_display"]
+    changed = tmp_path / "no_price.json"
+    changed.write_text(json.dumps(items), encoding="utf-8")
+
+    result = run_source(session, make_spec(changed))
+    assert result.updated == 1          # disappearance is a recorded change...
+
+    listing = session.scalar(select(Listing).where(Listing.external_id == "84945537"))
+    session.refresh(listing)
+    assert listing.price_inr == 24_202_000   # ...but the price is not wiped
+
+    versions = session.scalars(
+        select(ListingVersion)
+        .where(ListingVersion.listing_id == listing.id)
+        .order_by(ListingVersion.observed_at)
+    ).all()
+    assert [v.change_kind for v in versions] == ["new", "updated"]
+    assert versions[-1].snapshot["price_inr"] is None   # evidence of the gap
+    # No bogus PriceEvent for a missing price
+    assert session.scalar(
+        select(func.count(PriceEvent.id)).where(PriceEvent.listing_id == listing.id)
+    ) == 1
+
+
+def test_locality_change_is_recorded(session, tmp_path):
+    run_source(session, make_spec(FIXTURE))
+
+    items = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    items[0]["locality"] = "Hebbal"     # was Yelahanka
+    changed = tmp_path / "moved.json"
+    changed.write_text(json.dumps(items), encoding="utf-8")
+
+    result = run_source(session, make_spec(changed))
+    assert result.updated == 1
+
+    listing = session.scalar(select(Listing).where(Listing.external_id == "84945537"))
+    session.refresh(listing)
+    loc = session.get(Locality, listing.locality_id)
+    assert (loc.name, loc.city) == ("Hebbal", "bangalore")
+    kinds = session.scalars(
+        select(ListingVersion.change_kind)
+        .where(ListingVersion.listing_id == listing.id)
+        .order_by(ListingVersion.observed_at)
+    ).all()
+    assert kinds == ["new", "updated"]
+
+
+def test_portal_city_spelling_does_not_fork_market(session, tmp_path):
+    run_source(session, make_spec(FIXTURE))
+
+    items = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    for item in items:
+        item["city"] = "Bengaluru"      # portal respelling, same market
+    changed = tmp_path / "respelled.json"
+    changed.write_text(json.dumps(items), encoding="utf-8")
+
+    result = run_source(session, make_spec(changed))
+    assert result.unchanged == N_ITEMS  # spelling is not a market change
+
+    cities = set(session.scalars(select(Listing.city)).all())
+    assert cities == {"bangalore"}      # registry slug stays authoritative
+    assert set(session.scalars(select(Locality.city)).all()) == {"bangalore"}
+
+
+def test_upsert_failure_keeps_raw_and_finishes_run(session, tmp_path):
+    items = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    items[0]["bhk"] = 99_999            # overflows smallint at the DB
+    bad = tmp_path / "bad.json"
+    bad.write_text(json.dumps(items), encoding="utf-8")
+
+    result = run_source(session, make_spec(bad))
+
+    # The failing item is contained: run terminal, others stored, raw complete
+    assert result.status == "anomalous"
+    assert result.failed == 1
+    assert result.new == N_ITEMS - 1
+    assert session.scalar(select(func.count(RawPayload.id))) == N_ITEMS
+    run = session.get(ScrapeRun, result.run_id)
+    assert run.finished_at is not None
+    assert "84945537" in run.error      # failure cites the item
+
+
 def test_failed_fetch_is_recorded_not_swallowed(session):
     result = run_source(session, make_spec(Path("does/not/exist.json")))
     assert result.status == "failed"
