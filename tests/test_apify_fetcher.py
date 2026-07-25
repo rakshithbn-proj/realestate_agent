@@ -28,8 +28,9 @@ def test_actor_call_shape(monkeypatch):
                         lambda: SimpleNamespace(apify_token="tok"))
     captured = {}
 
-    def fake_post(url, params=None, json=None, timeout=None):
-        captured.update(url=url, params=params, json=json, timeout=timeout)
+    def fake_post(url, params=None, json=None, timeout=None, follow_redirects=None):
+        captured.update(url=url, params=params, json=json, timeout=timeout,
+                        follow_redirects=follow_redirects)
         return FakeResponse([{"listing_id": "1"}])
 
     monkeypatch.setattr(fetchers.httpx, "post", fake_post)
@@ -42,6 +43,7 @@ def test_actor_call_shape(monkeypatch):
     assert "acts/thirdwatch~magicbricks-scraper/run-sync-get-dataset-items" in captured["url"]
     assert captured["params"] == {"token": "tok"}
     assert captured["json"]["city"] == "Bangalore"
+    assert captured["follow_redirects"] is True
 
 
 def test_non_list_response_rejected(monkeypatch):

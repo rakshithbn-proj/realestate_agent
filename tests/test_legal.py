@@ -104,3 +104,41 @@ def test_tagging_is_idempotent(session):
     tags = _tags(session, "84945537")
     # Still exactly one row per item (upsert, not insert)
     assert len(tags) == 4
+
+
+def test_default_scan_skips_removed_listings(session):
+    from datetime import datetime, timedelta, timezone
+
+    from atlas.ingest.pipeline import sweep_stale_listings
+    from atlas.models import Listing
+    spec = make_spec(FIXTURE)
+    run_source(session, spec)
+
+    # Remove one listing via the staleness sweep
+    listing = session.scalar(select(Listing).where(Listing.external_id == "84945537"))
+    listing.last_seen_at = datetime.now(timezone.utc) - timedelta(days=10)
+    session.commit()
+    sweep_stale_listings(session, spec, stale_days=7)
+
+    result = legal.tag_listings(session)          # default: skip removed
+    assert result.tagged_listings == 14           # the removed one is skipped
+    # But an explicit full re-tag can still reach it
+    assert legal.tag_listings(session, include_removed=True).tagged_listings == 15
+
+
+def test_tag_recent_listings_bounds_to_window(session):
+    from datetime import datetime, timedelta, timezone
+
+    from atlas.models import Listing
+    run_source(session, make_spec(FIXTURE))
+
+    # Age most listings out of the window; keep 3 recent
+    recent_ids = {"84945537", "85452079", "85207719"}
+    old = datetime.now(timezone.utc) - timedelta(days=30)
+    for listing in session.scalars(select(Listing)):
+        if listing.external_id not in recent_ids:
+            listing.last_seen_at = old
+    session.commit()
+
+    result = legal.tag_recent_listings(session, since_days=7)
+    assert result.tagged_listings == 3            # only recently-seen listings

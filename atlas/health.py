@@ -38,11 +38,18 @@ def source_health(session: Session) -> list[SourceHealth]:
             select(ScrapeRun)
             .where(ScrapeRun.source_id == source.id)
             .order_by(ScrapeRun.started_at.desc())
-            .limit(10)
+            .limit(200)   # count a long outage fully; still bounded
         ).all()
 
         last = runs[0] if runs else None
-        last_ok = next((r for r in runs if r.status == "ok"), None)
+        # Most-recent 'ok' resolved independently of the window so an outage
+        # longer than the window never reports last_ok_at as null.
+        last_ok = session.scalar(
+            select(ScrapeRun)
+            .where(ScrapeRun.source_id == source.id, ScrapeRun.status == "ok")
+            .order_by(ScrapeRun.started_at.desc())
+            .limit(1)
+        )
         consecutive_bad = 0
         for r in runs:
             if r.status in ("failed", "anomalous"):
@@ -50,16 +57,20 @@ def source_health(session: Session) -> list[SourceHealth]:
             elif r.status == "ok":
                 break
 
+        stuck = (last is not None and last.status == "running"
+                 and last.started_at < now - timedelta(hours=2))
         if not source.enabled:
             healthy, reason = True, "disabled"
         elif last is None:
             healthy, reason = False, "never ran"
+        elif stuck:
+            # Check before 'silent': a stuck run IS a recent run, just wedged —
+            # reporting it as "no run" would hide the real failure mode.
+            healthy, reason = False, "run stuck in 'running'"
         elif last.started_at < now - timedelta(hours=SILENT_AFTER_HOURS):
             healthy, reason = False, f"silent: no run in {SILENT_AFTER_HOURS}h"
         elif consecutive_bad >= CONSECUTIVE_FAILURE_ALERT:
             healthy, reason = False, f"{consecutive_bad} consecutive bad runs"
-        elif last.status == "running" and last.started_at < now - timedelta(hours=2):
-            healthy, reason = False, "run stuck in 'running'"
         else:
             healthy, reason = True, "ok"
 

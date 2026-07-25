@@ -25,15 +25,23 @@ def ingest_rera() -> None:
                  result.new, result.updated, result.unregistered)
 
 
+def ingest_portal(name: str) -> None:
+    """Run a single portal source by name."""
+    if name not in SOURCES:
+        raise KeyError(f"unknown portal source '{name}'; known: {list(SOURCES)}")
+    spec = SOURCES[name]
+    with _session() as session:
+        result = run_source(session, spec)
+        log.info("%s/%s run %s: %s — %d items (new=%d updated=%d "
+                 "price=%d relisted=%d failed=%d)",
+                 spec.name, spec.city, result.run_id, result.status,
+                 result.items_found, result.new, result.updated,
+                 result.price_changed, result.relisted, result.failed)
+
+
 def ingest_portals() -> None:
-    for spec in SOURCES.values():
-        with _session() as session:
-            result = run_source(session, spec)
-            log.info("%s/%s run %s: %s — %d items (new=%d updated=%d "
-                     "price=%d relisted=%d failed=%d)",
-                     spec.name, spec.city, result.run_id, result.status,
-                     result.items_found, result.new, result.updated,
-                     result.price_changed, result.relisted, result.failed)
+    for name in SOURCES:
+        ingest_portal(name)
 
 
 def sweep_and_tag() -> None:
@@ -43,7 +51,11 @@ def sweep_and_tag() -> None:
             removed = sweep_stale_listings(session, spec,
                                            stale_days=settings.stale_after_days)
             log.info("sweep %s/%s: %d marked removed", spec.name, spec.city, removed)
-        tag_result = legal.tag_listings(session)
+        # Tag only listings seen within the stale window — bounds nightly work
+        # to recently-touched listings instead of re-stamping the whole table
+        # (long-dead 'removed' listings can't change and are skipped).
+        tag_result = legal.tag_recent_listings(
+            session, since_days=settings.stale_after_days)
         log.info("legal tags: %d listings, %d tags",
                  tag_result.tagged_listings, tag_result.tags_written)
 

@@ -52,9 +52,18 @@ Asia/Kolkata).
 
 **Removal is inferred from sustained absence, never from one run.** A ~300-item
 actor sample is not a full snapshot, so `sweep_stale_listings` only marks
-listings removed when the source has a healthy run *newer than the staleness
+listings removed when the source has an *`ok`* run *newer than the staleness
 cutoff* — a dead scraper must never manufacture removals (that would poison
 days-on-market). A same-id reappearance flips `removed → relisted`.
+
+**Run-status classification is what gates the sweep, so its tolerances matter.**
+A run stays `ok` (and keeps authorizing removals) through a *low* item-failure
+rate — the failures are noted in `run.error` but don't downgrade status, or a
+scraper dropping one stub a day would silently freeze removal tracking forever.
+It goes `anomalous` only on a real collapse: empty fetch, unparsed ratio over
+`ANOMALY_UNPARSED_RATIO`, or volume under `ANOMALY_VOLUME_RATIO × trailing avg`;
+`failed` only when nothing parsed. The trailing average counts `ok` runs only,
+so anomalous/empty runs never poison it.
 
 **Legal tags (`atlas/ingest/legal.py`) separate facts from claims.**
 `rera_registered` is a verifiable join of `listings.rera_ids` against the
