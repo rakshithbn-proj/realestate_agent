@@ -12,6 +12,12 @@ class Settings(BaseSettings):
     atlas_api_token: str = ""
     # All scheduled jobs run in this timezone (plan.md §7)
     timezone: str = "Asia/Kolkata"
+    # Env var: APIFY_TOKEN — required for live portal scraping (Phase 1)
+    apify_token: str = ""
+    # Env var: ATLAS_ENABLE_SCHEDULER — in-process APScheduler jobs (VPS: on)
+    atlas_enable_scheduler: bool = False
+    # Active listings unseen this many days are marked removed (staleness sweep)
+    stale_after_days: int = 7
 
 
 @lru_cache

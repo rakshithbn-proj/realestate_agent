@@ -17,7 +17,7 @@ jobs).
 """
 import logging
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -47,6 +47,11 @@ TRACKED_FIELDS = (
 )
 
 
+# Trial-validated anomaly thresholds (trial/config.py, handoff §7)
+ANOMALY_VOLUME_RATIO = 0.5    # run smaller than half the trailing avg
+ANOMALY_UNPARSED_RATIO = 0.3  # actor "SUCCEEDED" but items are stubs
+
+
 @dataclass
 class RunResult:
     run_id: int
@@ -57,6 +62,7 @@ class RunResult:
     new: int
     updated: int
     price_changed: int
+    relisted: int
     unchanged: int
 
 
@@ -191,6 +197,7 @@ def _upsert_listing(
     new_price = parsed["price_inr"]
     price_changed = new_price is not None and old_price != new_price
     price_vanished = new_price is None and old_price is not None
+    was_removed = listing.status == "removed"
 
     other_changed = (
         locality_id != listing.locality_id
@@ -200,6 +207,27 @@ def _upsert_listing(
 
     listing.locality_id = locality_id
     _apply_parsed(listing, parsed, spec.city, parser_version)
+
+    if was_removed:
+        # Same-portal reappearance under the same id. (Cross-listing relists
+        # with NEW ids route through entity resolution in Phase 4 — plan §7.)
+        listing.status = "relisted"
+        listing.removed_at = None
+        session.add(
+            ListingVersion(listing_id=listing.id, scrape_run_id=run.id,
+                           change_kind="relisted", snapshot=parsed)
+        )
+        if price_changed:
+            pct = (
+                round((new_price - old_price) / old_price * 100, 2)
+                if old_price
+                else None
+            )
+            session.add(
+                PriceEvent(listing_id=listing.id, old_price=old_price,
+                           new_price=new_price, pct_change=pct)
+            )
+        return "relisted"
 
     if price_changed:
         pct = (
@@ -245,9 +273,10 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
         run.items_found = 0
         session.commit()
         log.exception("fetch failed for %s/%s", spec.name, spec.city)
-        return RunResult(run.id, "failed", 0, 0, 0, 0, 0, 0, 0)
+        return RunResult(run.id, "failed", 0, 0, 0, 0, 0, 0, 0, 0)
 
-    counts = {"new": 0, "updated": 0, "price_changed": 0, "unchanged": 0}
+    counts = {"new": 0, "updated": 0, "price_changed": 0, "relisted": 0,
+              "unchanged": 0}
     failed = 0
     errors: list[str] = []
     try:
@@ -309,18 +338,29 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
         return RunResult(run.id, "failed", len(raw_items),
                          sum(counts.values()), failed, counts["new"],
                          counts["updated"], counts["price_changed"],
-                         counts["unchanged"])
+                         counts["relisted"], counts["unchanged"])
 
     run.items_found = len(raw_items)
     run.finished_at = _now()
     parsed_total = sum(counts.values())
     error_summary = "; ".join(errors)[:2000] or None
+    volume_avg = _trailing_avg_items(session, source.id, exclude_run_id=run.id)
     if parsed_total == 0 and raw_items:
         run.status = "failed"
         run.error = f"all {len(raw_items)} items failed: {error_summary}"
+    elif raw_items and failed / len(raw_items) > ANOMALY_UNPARSED_RATIO:
+        # Actor reported success but pushed stubs — the acres99 failure mode
+        # (handoff §7): silent data-quality collapse behind a green status.
+        run.status = "anomalous"
+        run.error = (f"unparsed ratio {failed}/{len(raw_items)} exceeds "
+                     f"{ANOMALY_UNPARSED_RATIO}: {error_summary}")
     elif failed:
         run.status = "anomalous"
         run.error = f"{failed}/{len(raw_items)} items failed: {error_summary}"
+    elif volume_avg is not None and len(raw_items) < volume_avg * ANOMALY_VOLUME_RATIO:
+        run.status = "anomalous"
+        run.error = (f"volume collapse: {len(raw_items)} items vs trailing "
+                     f"avg {volume_avg:.0f}")
     else:
         run.status = "ok"
     session.commit()
@@ -329,5 +369,75 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
         run_id=run.id, status=run.status, items_found=len(raw_items),
         parsed=parsed_total, failed=failed, new=counts["new"],
         updated=counts["updated"], price_changed=counts["price_changed"],
-        unchanged=counts["unchanged"],
+        relisted=counts["relisted"], unchanged=counts["unchanged"],
     )
+
+
+def _trailing_avg_items(session: Session, source_id: int, n: int = 7,
+                        exclude_run_id: int | None = None) -> float | None:
+    query = (
+        select(ScrapeRun.items_found)
+        .where(ScrapeRun.source_id == source_id,
+               ScrapeRun.status == "ok",
+               ScrapeRun.items_found.isnot(None))
+        .order_by(ScrapeRun.started_at.desc())
+        .limit(n)
+    )
+    if exclude_run_id is not None:
+        query = query.where(ScrapeRun.id != exclude_run_id)
+    rows = session.scalars(query).all()
+    return sum(rows) / len(rows) if rows else None
+
+
+def sweep_stale_listings(session: Session, spec: SourceSpec,
+                         stale_days: int = 7) -> int:
+    """Mark active listings unseen for `stale_days` as removed.
+
+    The per-run actor sample (~300 items) is NOT a full market snapshot, so
+    absence from one run means nothing — removal is inferred from sustained
+    absence. Guard (trial-validated): only sweep when the source has had an
+    'ok' run more recent than the cutoff. A dead or anomalous scraper must
+    never convert its own failure into thousands of fake removals — that
+    would poison days-on-market, a core distress signal.
+    """
+    source = _get_or_create_source(session, spec)
+    cutoff = _now() - timedelta(days=stale_days)
+
+    healthy_run_since_cutoff = session.scalar(
+        select(ScrapeRun.id)
+        .where(ScrapeRun.source_id == source.id,
+               ScrapeRun.status == "ok",
+               ScrapeRun.finished_at > cutoff)
+        .limit(1)
+    )
+    if healthy_run_since_cutoff is None:
+        log.warning("sweep skipped for %s/%s: no healthy run since %s",
+                    spec.name, spec.city, cutoff.isoformat())
+        return 0
+
+    stale = session.scalars(
+        select(Listing).where(
+            Listing.source_id == source.id,
+            Listing.status.in_(("active", "relisted")),
+            Listing.last_seen_at < cutoff,
+        )
+    ).all()
+    now = _now()
+    for listing in stale:
+        listing.status = "removed"
+        listing.removed_at = now
+        session.add(
+            ListingVersion(
+                listing_id=listing.id,
+                scrape_run_id=None,
+                change_kind="removed",
+                snapshot={"reason": "stale",
+                          "last_seen_at": listing.last_seen_at.isoformat(),
+                          "stale_days": stale_days},
+            )
+        )
+    session.commit()
+    if stale:
+        log.info("sweep: %d listings marked removed for %s/%s",
+                 len(stale), spec.name, spec.city)
+    return len(stale)

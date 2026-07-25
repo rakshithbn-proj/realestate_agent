@@ -9,9 +9,10 @@ from sqlalchemy.orm import sessionmaker
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# Tables the pipeline writes, in FK-safe truncation order.
-SPINE_TABLES = ("raw_payloads", "price_events", "listing_versions", "listings",
-                "scrape_runs", "sources", "localities")
+# Tables the ingestion layer writes; TRUNCATE ... CASCADE handles FK order.
+SPINE_TABLES = ("raw_payloads", "price_events", "listing_versions",
+                "listing_legal_tags", "listings", "scrape_runs", "sources",
+                "localities", "rera_projects", "builders")
 
 
 @pytest.fixture(scope="session")

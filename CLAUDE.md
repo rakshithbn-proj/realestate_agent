@@ -13,7 +13,17 @@ Atlas: a personal AI system for Karnataka real-estate investing (Bangalore first
 .venv\Scripts\python -m pytest tests\test_pipeline.py -k idempotent   # single test
 .venv\Scripts\python -m tests.regen_golden           # regenerate parser golden file — review the diff
 .venv\Scripts\alembic upgrade head                   # apply migrations (DATABASE_URL from .env)
+scripts\dev.ps1                                       # local app: portable PG + migrate + uvicorn --reload
 docker compose up -d --build                         # VPS deploy only (dev box has no Docker)
+```
+
+Manual source runs (idempotent — same code as the scheduler):
+
+```sh
+.venv\Scripts\python -m atlas.cli run rera            # RERA registry (free, no token)
+.venv\Scripts\python -m atlas.cli run magicbricks     # portal (needs APIFY_TOKEN)
+.venv\Scripts\python -m atlas.cli sweep-and-tag       # staleness sweep + legal tagging
+.venv\Scripts\python -m atlas.cli health              # per-source health JSON
 ```
 
 - Setup: `python -m venv .venv` then `.venv\Scripts\pip install -e .[dev]`.
@@ -30,6 +40,29 @@ docker compose up -d --build                         # VPS deploy only (dev box 
 - Embeddings are deferred: no vector columns / pgvector extension exist yet. They land in the Phase-3 semantic-search migration pinned to whichever embedding model is chosen then (assumed voyage-3.5, 1024-dim). Until then the schema must stay runnable on stock Postgres 16 (`pg_trgm` only) — local tests depend on this.
 - Multi-city from day one: `city` market slug (`'bangalore'`/`'mysore'`) on `sources`, `localities`, `listings`; uniqueness is city-scoped. Never assume single-market.
 - `listings.rera_ids text[]` holds canonicalized `PRM/KA/RERA/...` ids (portal prefixes like `TOR/` stripped) — this is the ~99.6% join to the RERA registry.
+
+**Two ingestion entry points, both raw-first:** portals go through the generic
+`run_source()` (registry `SourceSpec` → fetcher → parser → pipeline); RERA has
+its own `atlas/ingest/rera.py` (single GET renders the whole registry; four
+positional JS arrays; `parse()` asserts equal lengths and fails loudly). Both
+share `_trailing_avg_items` and the anomaly thresholds. Daily orchestration is
+`atlas/jobs.py` (RERA → portals → sweep+tag), exposed via `atlas/cli.py` and an
+optional in-process APScheduler (`ATLAS_ENABLE_SCHEDULER=1`, jobs pinned to
+Asia/Kolkata).
+
+**Removal is inferred from sustained absence, never from one run.** A ~300-item
+actor sample is not a full snapshot, so `sweep_stale_listings` only marks
+listings removed when the source has a healthy run *newer than the staleness
+cutoff* — a dead scraper must never manufacture removals (that would poison
+days-on-market). A same-id reappearance flips `removed → relisted`.
+
+**Legal tags (`atlas/ingest/legal.py`) separate facts from claims.**
+`rera_registered` is a verifiable join of `listings.rera_ids` against the
+ingested registry. `khata_type`/`jurisdiction`/`layout_approval` are keyword
+matches on listing text — `evidence.kind = 'listing_text_claim'`, explicitly
+"NOT document-verified", status never better than `pass (claimed)`.
+Document-verified checks are the separate, property-scoped `legal_checks` table
+(Phase 3+). Never conflate the two.
 
 **Auth:** every endpoint except `GET /health` requires `Authorization: Bearer $ATLAS_API_TOKEN`; an *unset* token must lock the API (503), never open it.
 

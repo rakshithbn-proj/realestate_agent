@@ -13,8 +13,9 @@ class SourceSpec:
     expected_daily_volume: int | None = None
 
 
-# Production sources (Phase 1 wires the Apify fetcher; Mysore is one config
-# entry away by design). Tests register fixture-backed specs directly.
+# Production sources (Mysore is one config entry away by design — handoff §4a).
+# Tests register fixture-backed specs directly. Actor + input schema validated
+# in the trial (trial/config.py): 300 items/run, ~$0.0005 in compute.
 SOURCES: dict[str, SourceSpec] = {
     "magicbricks": SourceSpec(
         name="magicbricks",
@@ -22,7 +23,10 @@ SOURCES: dict[str, SourceSpec] = {
         kind="portal",
         fetcher="apify",
         parser="magicbricks",
-        params={"actor": "thirdwatch/magicbricks-scraper", "city": "Bangalore"},
+        params={
+            "actor": "thirdwatch/magicbricks-scraper",
+            "input": {"searchMode": "buy", "city": "Bangalore", "maxResults": 300},
+        },
         expected_daily_volume=300,
     ),
 }
