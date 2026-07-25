@@ -29,7 +29,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.source == "rera":
             jobs.ingest_rera()
         else:
-            jobs.ingest_portals()
+            jobs.ingest_portal(args.source)
     elif args.command == "sweep-and-tag":
         jobs.sweep_and_tag()
     elif args.command == "health":

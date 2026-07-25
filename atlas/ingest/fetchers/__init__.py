@@ -33,6 +33,7 @@ def fetch_apify(params: dict) -> list[dict]:
         params={"token": token},
         json=params.get("input", {}),
         timeout=params.get("timeout_s", 300),
+        follow_redirects=True,   # dataset-items endpoint may 3xx to storage
     )
     resp.raise_for_status()
     items = resp.json()

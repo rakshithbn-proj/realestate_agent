@@ -26,7 +26,7 @@ import httpx
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from atlas.ingest.pipeline import _trailing_avg_items
+from atlas.ingest.pipeline import ANOMALY_VOLUME_RATIO, _trailing_avg_items
 from atlas.models import Builder, RawPayload, ReraProject, ScrapeRun, Source
 
 log = logging.getLogger(__name__)
@@ -173,9 +173,6 @@ def _get_or_create_builder(session: Session, name: str,
         session.flush()
     cache[name_norm] = builder
     return builder
-
-
-ANOMALY_VOLUME_RATIO = 0.5  # trial-validated (trial/config.py)
 
 
 def run(session: Session, html_override: str | None = None) -> ReraRunResult:

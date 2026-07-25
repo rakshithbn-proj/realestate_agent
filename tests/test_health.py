@@ -65,3 +65,39 @@ def test_silent_source_flagged(session):
     h = _health_for(session, "magicbricks")
     assert h.healthy is False
     assert "silent" in h.reason
+
+
+def test_stuck_running_reported_as_stuck_not_silent(session):
+    # A run wedged in 'running' for >36h is a stuck run, not silence — the
+    # reason operators see must name the real failure mode. The stuck run is
+    # the MOST RECENT run (both stuck and silent conditions hold; stuck wins).
+    run_source(session, make_spec(FIXTURE))
+    src = session.scalar(select(Source).where(Source.name == "magicbricks"))
+    now = datetime.now(timezone.utc)
+    ok_run = session.scalar(select(ScrapeRun).where(ScrapeRun.source_id == src.id))
+    ok_run.started_at = now - timedelta(days=5)
+    ok_run.finished_at = now - timedelta(days=5)
+    session.add(ScrapeRun(source_id=src.id, status="running",
+                          started_at=now - timedelta(hours=40), finished_at=None))
+    session.commit()
+
+    h = _health_for(session, "magicbricks")
+    assert h.healthy is False
+    assert h.reason == "run stuck in 'running'"
+
+
+def test_last_ok_survives_outage_beyond_window(session):
+    # A long run of failures after a success must still report last_ok_at
+    run_source(session, make_spec(FIXTURE))   # the one ok run
+    src = session.scalar(select(Source).where(Source.name == "magicbricks"))
+    now = datetime.now(timezone.utc)
+    for i in range(15):
+        session.add(ScrapeRun(source_id=src.id, status="failed",
+                              started_at=now + timedelta(minutes=i + 1),
+                              finished_at=now + timedelta(minutes=i + 1),
+                              items_found=0, error="boom"))
+    session.commit()
+
+    h = _health_for(session, "magicbricks")
+    assert h.last_ok_at is not None          # not lost behind the window
+    assert h.consecutive_bad_runs == 15

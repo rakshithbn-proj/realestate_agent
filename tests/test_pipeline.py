@@ -191,7 +191,10 @@ def test_portal_city_spelling_does_not_fork_market(session, tmp_path):
     assert set(session.scalars(select(Locality.city)).all()) == {"bangalore"}
 
 
-def test_upsert_failure_keeps_raw_and_finishes_run(session, tmp_path):
+def test_low_item_failure_stays_ok_but_is_noted(session, tmp_path):
+    # One bad item out of 15 (< ANOMALY_UNPARSED_RATIO) must keep the run 'ok'
+    # so the source stays authorized to sweep — a flaky scraper dropping one
+    # item a day must not silently freeze removal tracking.
     items = json.loads(FIXTURE.read_text(encoding="utf-8"))
     items[0]["bhk"] = 99_999            # overflows smallint at the DB
     bad = tmp_path / "bad.json"
@@ -199,14 +202,78 @@ def test_upsert_failure_keeps_raw_and_finishes_run(session, tmp_path):
 
     result = run_source(session, make_spec(bad))
 
-    # The failing item is contained: run terminal, others stored, raw complete
-    assert result.status == "anomalous"
+    assert result.status == "ok"        # tolerated, not anomalous
     assert result.failed == 1
     assert result.new == N_ITEMS - 1
     assert session.scalar(select(func.count(RawPayload.id))) == N_ITEMS
     run = session.get(ScrapeRun, result.run_id)
     assert run.finished_at is not None
-    assert "84945537" in run.error      # failure cites the item
+    # The failure is still surfaced in the run row, citing the item
+    assert "within tolerance" in run.error
+    assert "84945537" in run.error
+
+
+def test_mostly_stub_run_is_anomalous(session, tmp_path):
+    # >30% unparsed = the acres99 silent-collapse mode → anomalous
+    items = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    for item in items[:8]:              # 8/15 = 53% have no usable id
+        item.pop("listing_id", None)
+    bad = tmp_path / "stubs.json"
+    bad.write_text(json.dumps(items), encoding="utf-8")
+
+    result = run_source(session, make_spec(bad))
+    assert result.status == "anomalous"
+    assert result.failed == 8
+    assert "unparsed ratio" in session.get(ScrapeRun, result.run_id).error
+
+
+def test_empty_fetch_is_anomalous_not_ok(session, tmp_path):
+    # A portal returning zero items is a block, not an empty market
+    empty = tmp_path / "empty.json"
+    empty.write_text("[]", encoding="utf-8")
+    result = run_source(session, make_spec(empty))
+    assert result.status == "anomalous"
+    assert result.items_found == 0
+    assert "empty fetch" in session.get(ScrapeRun, result.run_id).error
+
+
+def test_relist_with_price_change_records_both_signals(session, tmp_path):
+    from datetime import datetime, timedelta, timezone
+
+    from atlas.ingest.pipeline import sweep_stale_listings
+    spec = make_spec(FIXTURE)
+    run_source(session, spec)
+
+    # Age + sweep one listing to 'removed'
+    listing = session.scalar(select(Listing).where(Listing.external_id == "84945537"))
+    listing.last_seen_at = datetime.now(timezone.utc) - timedelta(days=10)
+    session.commit()
+    assert sweep_stale_listings(session, spec, stale_days=7) == 1
+
+    # It reappears at a lower price
+    items = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    items[0]["price_inr"] = 20_000_000   # was 24_202_000
+    changed = tmp_path / "relist_cheaper.json"
+    changed.write_text(json.dumps(items), encoding="utf-8")
+
+    result = run_source(session, make_spec(changed))
+    assert result.relisted == 1
+
+    session.refresh(listing)
+    assert listing.status == "relisted"
+    assert listing.price_inr == 20_000_000
+    # Both signals present: a PriceEvent AND a price_changed version, so a
+    # consumer reading either reconstructs the move.
+    assert session.scalar(
+        select(func.count(PriceEvent.id))
+        .where(PriceEvent.listing_id == listing.id, PriceEvent.new_price == 20_000_000)
+    ) == 1
+    kinds = session.scalars(
+        select(ListingVersion.change_kind)
+        .where(ListingVersion.listing_id == listing.id)
+        .order_by(ListingVersion.observed_at)
+    ).all()
+    assert kinds == ["new", "removed", "relisted", "price_changed"]
 
 
 def test_failed_fetch_is_recorded_not_swallowed(session):

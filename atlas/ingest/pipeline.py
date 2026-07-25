@@ -208,28 +208,7 @@ def _upsert_listing(
     listing.locality_id = locality_id
     _apply_parsed(listing, parsed, spec.city, parser_version)
 
-    if was_removed:
-        # Same-portal reappearance under the same id. (Cross-listing relists
-        # with NEW ids route through entity resolution in Phase 4 — plan §7.)
-        listing.status = "relisted"
-        listing.removed_at = None
-        session.add(
-            ListingVersion(listing_id=listing.id, scrape_run_id=run.id,
-                           change_kind="relisted", snapshot=parsed)
-        )
-        if price_changed:
-            pct = (
-                round((new_price - old_price) / old_price * 100, 2)
-                if old_price
-                else None
-            )
-            session.add(
-                PriceEvent(listing_id=listing.id, old_price=old_price,
-                           new_price=new_price, pct_change=pct)
-            )
-        return "relisted"
-
-    if price_changed:
+    def _record_price_move() -> None:
         pct = (
             round((new_price - old_price) / old_price * 100, 2)
             if old_price
@@ -243,6 +222,24 @@ def _upsert_listing(
             ListingVersion(listing_id=listing.id, scrape_run_id=run.id,
                            change_kind="price_changed", snapshot=parsed)
         )
+
+    if was_removed:
+        # Same-portal reappearance under the same id. (Cross-listing relists
+        # with NEW ids route through entity resolution in Phase 4 — plan §7.)
+        listing.status = "relisted"
+        listing.removed_at = None
+        session.add(
+            ListingVersion(listing_id=listing.id, scrape_run_id=run.id,
+                           change_kind="relisted", snapshot=parsed)
+        )
+        # A price move across the relist is also recorded as a price_changed
+        # version + PriceEvent, so consumers reading either signal see it.
+        if price_changed:
+            _record_price_move()
+        return "relisted"
+
+    if price_changed:
+        _record_price_move()
         return "price_changed"
     if other_changed:
         session.add(
@@ -345,24 +342,37 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
     parsed_total = sum(counts.values())
     error_summary = "; ".join(errors)[:2000] or None
     volume_avg = _trailing_avg_items(session, source.id, exclude_run_id=run.id)
-    if parsed_total == 0 and raw_items:
+    unparsed_ratio = failed / len(raw_items) if raw_items else 0.0
+
+    # Status classification. A run stays 'ok' — and so keeps authorizing the
+    # staleness sweep — through a low rate of item failures; only a real
+    # collapse turns it 'anomalous'. Otherwise a scraper that drops one stub a
+    # day would silently freeze removal / days-on-market tracking forever
+    # (the sweep guard needs a recent 'ok' run), with nothing surfaced.
+    if not raw_items:
+        # A portal returning zero items is a block/soft-failure, not an empty
+        # market — never 'ok' (which would also poison the trailing average).
+        run.status = "anomalous"
+        run.error = "empty fetch: 0 items returned"
+    elif parsed_total == 0:
         run.status = "failed"
         run.error = f"all {len(raw_items)} items failed: {error_summary}"
-    elif raw_items and failed / len(raw_items) > ANOMALY_UNPARSED_RATIO:
-        # Actor reported success but pushed stubs — the acres99 failure mode
-        # (handoff §7): silent data-quality collapse behind a green status.
+    elif unparsed_ratio > ANOMALY_UNPARSED_RATIO:
+        # Actor reported success but pushed mostly stubs — the acres99 failure
+        # mode (handoff §7): silent data-quality collapse behind a green status.
         run.status = "anomalous"
         run.error = (f"unparsed ratio {failed}/{len(raw_items)} exceeds "
                      f"{ANOMALY_UNPARSED_RATIO}: {error_summary}")
-    elif failed:
-        run.status = "anomalous"
-        run.error = f"{failed}/{len(raw_items)} items failed: {error_summary}"
     elif volume_avg is not None and len(raw_items) < volume_avg * ANOMALY_VOLUME_RATIO:
         run.status = "anomalous"
         run.error = (f"volume collapse: {len(raw_items)} items vs trailing "
                      f"avg {volume_avg:.0f}")
     else:
+        # Healthy run. Note any tolerated item failures without downgrading —
+        # visible in the run row, but the source stays authorized to sweep.
         run.status = "ok"
+        run.error = (f"{failed}/{len(raw_items)} items failed (within tolerance): "
+                     f"{error_summary}") if failed else None
     session.commit()
 
     return RunResult(

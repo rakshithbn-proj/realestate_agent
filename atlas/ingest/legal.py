@@ -18,7 +18,7 @@ stamped so tag semantics changes are attributable (plan §7).
 import logging
 import re
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -126,11 +126,32 @@ def _upsert_tag(session: Session, listing_id: int, item: str, status: str,
         tag.checked_at = _now()
 
 
-def tag_listings(session: Session, listing_ids: list[int] | None = None) -> TagResult:
-    """Tag the given listings (or every listing when None)."""
+def tag_recent_listings(session: Session, since_days: int = 7) -> TagResult:
+    """Tag listings seen within the window — the daily path.
+
+    Bounds the nightly write to recently-touched listings (new / updated /
+    relisted all bump last_seen_at) instead of re-stamping every row in a
+    table that only grows. Removed listings are frozen and skipped.
+    """
+    cutoff = datetime.now(timezone.utc) - timedelta(days=since_days)
+    ids = session.scalars(
+        select(Listing.id).where(
+            Listing.status.in_(("active", "relisted")),
+            Listing.last_seen_at >= cutoff,
+        )
+    ).all()
+    return tag_listings(session, listing_ids=list(ids))
+
+
+def tag_listings(session: Session, listing_ids: list[int] | None = None,
+                 include_removed: bool = False) -> TagResult:
+    """Tag the given listings. With no ids, tags every non-removed listing
+    (pass include_removed=True to force a full re-tag of the whole table)."""
     query = select(Listing)
     if listing_ids is not None:
         query = query.where(Listing.id.in_(listing_ids))
+    elif not include_removed:
+        query = query.where(Listing.status != "removed")
     listings = session.scalars(query).all()
 
     registry_cache: dict = {}
