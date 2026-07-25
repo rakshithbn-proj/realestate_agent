@@ -1,12 +1,29 @@
+from contextlib import asynccontextmanager
+
 from fastapi import APIRouter, Depends, FastAPI, Query
 from sqlalchemy import select, text
 
 import atlas
 from atlas.auth import require_token
+from atlas.config import get_settings
 from atlas.db import get_engine, make_session_factory
-from atlas.models import ScrapeRun, Source
+from atlas.health import source_health_dicts
+from atlas.models import ScrapeRun
 
-app = FastAPI(title="Atlas", version=atlas.__version__)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    scheduler = None
+    if get_settings().atlas_enable_scheduler:
+        from atlas.jobs import build_scheduler
+        scheduler = build_scheduler()
+        scheduler.start()
+    yield
+    if scheduler is not None:
+        scheduler.shutdown(wait=False)
+
+
+app = FastAPI(title="Atlas", version=atlas.__version__, lifespan=lifespan)
 
 
 @app.get("/health")
@@ -26,15 +43,10 @@ api = APIRouter(dependencies=[Depends(require_token)])
 
 @api.get("/sources")
 def list_sources() -> list[dict]:
+    """Per-source health: last run, consecutive failures, silence detection."""
     factory = make_session_factory(get_engine())
     with factory() as session:
-        rows = session.scalars(select(Source).order_by(Source.name, Source.city))
-        return [
-            {"id": s.id, "name": s.name, "city": s.city, "kind": s.kind,
-             "enabled": s.enabled,
-             "expected_daily_volume": s.expected_daily_volume}
-            for s in rows
-        ]
+        return source_health_dicts(session)
 
 
 @api.get("/runs")

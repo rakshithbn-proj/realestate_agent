@@ -301,6 +301,9 @@ CREATE TABLE documents (
 );
 CREATE INDEX ON documents (property_id);
 
+-- Property-scoped, document-VERIFIED checks at diligence time (Phase 3+).
+-- Distinct from listing_legal_tags below, which are per-listing, crude, and
+-- often only the seller's *claim* — the two must never be conflated.
 CREATE TABLE legal_checks (
     id           bigserial PRIMARY KEY,
     property_id  bigint NOT NULL REFERENCES properties(id),
@@ -311,3 +314,21 @@ CREATE TABLE legal_checks (
     checked_at   timestamptz NOT NULL DEFAULT now(),
     UNIQUE (property_id, item)
 );
+
+-- Per-LISTING legal-risk tags (Phase 1 — migration 0002, atlas_roadmap App. A).
+-- Added beyond the original design: the guardrail layer must tag every listing
+-- as it arrives, before entity resolution exists. rera_registered is a
+-- verifiable registry join; khata/jurisdiction/layout are listing-text CLAIMS
+-- (evidence.kind = 'listing_text_claim', explicitly not document-verified).
+CREATE TABLE listing_legal_tags (
+    id           bigserial PRIMARY KEY,
+    listing_id   bigint NOT NULL REFERENCES listings(id),
+    item         text NOT NULL,                  -- rera_registered | khata_type | jurisdiction | layout_approval
+    status       text NOT NULL,                  -- pass | flag | fail | unknown
+    detail       text,
+    evidence     jsonb,                          -- cited: text snippet, rera_project id, ...
+    tagger_version text NOT NULL,                -- plan §7: version everything that judges
+    checked_at   timestamptz NOT NULL DEFAULT now(),
+    UNIQUE (listing_id, item)
+);
+CREATE INDEX ON listing_legal_tags (item, status);

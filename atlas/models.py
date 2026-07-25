@@ -80,6 +80,33 @@ class Locality(Base):
     zone: Mapped[str | None] = mapped_column(Text)
 
 
+class Builder(Base):
+    __tablename__ = "builders"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(Text)
+    name_norm: Mapped[str] = mapped_column(Text, unique=True)
+    reputation_summary: Mapped[str | None] = mapped_column(Text)
+    summary_sources: Mapped[dict | None] = mapped_column(JSONB)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class ReraProject(Base):
+    __tablename__ = "rera_projects"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    rera_reg_no: Mapped[str] = mapped_column(Text, unique=True)
+    builder_id: Mapped[int | None] = mapped_column(ForeignKey("builders.id"))
+    project_name: Mapped[str | None] = mapped_column(Text)
+    district: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[str | None] = mapped_column(Text)
+    complaints_count: Mapped[int | None]
+    raw: Mapped[dict] = mapped_column(JSONB)
+    fetched_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+
 class Listing(Base):
     __tablename__ = "listings"
     __table_args__ = (UniqueConstraint("source_id", "external_id"),)
@@ -122,6 +149,22 @@ class Listing(Base):
         DateTime(timezone=True), server_default=func.now()
     )
     removed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class ListingLegalTag(Base):
+    __tablename__ = "listing_legal_tags"
+    __table_args__ = (UniqueConstraint("listing_id", "item"),)
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    listing_id: Mapped[int] = mapped_column(ForeignKey("listings.id"))
+    item: Mapped[str] = mapped_column(Text)    # rera_registered | khata_type | jurisdiction | layout_approval
+    status: Mapped[str] = mapped_column(Text)  # pass | flag | fail | unknown
+    detail: Mapped[str | None] = mapped_column(Text)
+    evidence: Mapped[dict | None] = mapped_column(JSONB)
+    tagger_version: Mapped[str] = mapped_column(Text)
+    checked_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
 
 
 class ListingVersion(Base):
