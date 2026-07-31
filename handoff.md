@@ -49,18 +49,34 @@ If any two docs conflict, precedence is: **atlas_roadmap.md → overall_plan.md 
 
 ---
 
-## 3. Current reality (honest state)
+## 3. Current reality (honest state — updated 2026-07-25)
 
-- **No real app exists yet.** No Postgres, no FastAPI app, no frontend, no LLM
-  integration. The repo is planning docs plus a retired spike.
-- **What was proven** (see §7): Karnataka RERA is free, public, and fully
-  ingestible; **99.6% of portal listings with a RERA id join to the registry**;
-  MagicBricks is a reliable free portal source; 99acres' actor is dead (skip it),
-  and the BaankNet auction feed is blocked pending a browser-capture step.
-- **Open business inputs not yet given** (needed by Phase 2, not before): your
-  capital band, target localities, and plot-vs-apartment preference. Note that two
-  *technical* decisions are needed earlier, at Phase 0 — the embedding dimension
-  (§9.4) and the multi-city schema column (§4a) — both flagged where they bite.
+- **Phase 0 (foundations): DONE.** FastAPI + Postgres 16 + Alembic + Docker
+  Compose/Caddy spine; raw-first ingestion pipeline; token auth; the
+  `docs/schema.sql` design migrated (migration 0001) with the multi-city columns
+  and embeddings deferred (§4a / §9.4 decided — see the `atlas-phase0-decisions`
+  memory). Local dev runs on portable Postgres (`.pgbin/`, no Docker); tests
+  green in CI. `scripts/start.ps1` / `stop.ps1` run the local stack.
+- **Phase 1 (data spine + legal guardrail): CODE DONE, runtime gate NOT met.**
+  On `master`. Built: RERA collector **ported and proven live** (pulled the real
+  registry — 8,854 registered projects, ~5,600 deduped builders); live
+  MagicBricks via Apify (`APIFY_TOKEN`); new/updated/price-changed/removed/
+  relisted tracking with the dead-scraper sweep guard; legal-risk tags v1
+  (`rera_registered` fact vs khata/jurisdiction/layout listing-text claims);
+  per-source health monitoring; APScheduler + `python -m atlas.cli`. 50 tests
+  passing; two `/code-review` passes fixed 20 findings with regression tests.
+- **What closes Phase 1 (the only thing left): the RUNTIME gate** — 7 consecutive
+  clean ingestion days. Needs the app collecting daily (VPS deploy, or the local
+  scheduler / a daily `atlas.cli run` left running). `APIFY_TOKEN` is set locally.
+- **What was proven earlier** (see §7): Karnataka RERA is free/public/ingestible;
+  **99.6% of portal listings with a RERA id join to the registry**; MagicBricks is
+  a reliable free portal; 99acres' actor is dead (skip it); BaankNet auctions are
+  blocked pending a browser-capture step.
+- **Open business inputs still not given** (needed to START Phase 2 — the daily
+  briefing — not before): capital band + LTV, target localities, plots-vs-
+  apartments, and an email provider (Resend/SES). See the `atlas-open-inputs`
+  memory. The two Phase-0 technical decisions (embedding dim §9.4, multi-city
+  §4a) are already made and migrated.
 
 ---
 

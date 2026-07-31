@@ -5,7 +5,7 @@ $ErrorActionPreference = "Stop"
 $pgbin = Join-Path $PSScriptRoot "..\.pgbin\pgsql\bin"
 
 if (-not (Test-Path (Join-Path $pgbin "initdb.exe"))) {
-    throw ".pgbin\pgsql\bin not found — extract the PostgreSQL 16 'windows-x64-binaries' zip to .pgbin\ (see README)"
+    throw ".pgbin\pgsql\bin not found - extract the PostgreSQL 16 windows-x64-binaries zip to .pgbin\ (see README)"
 }
 if (-not (Test-Path .pgdata)) {
     & (Join-Path $pgbin "initdb.exe") -D .pgdata -U postgres -A trust -E UTF8 --no-locale
@@ -22,7 +22,7 @@ if (-not (Get-NetTCPConnection -LocalPort 5432 -State Listen -ErrorAction Silent
         if ($LASTEXITCODE -eq 0) { break }
         Start-Sleep -Seconds 1
     }
-    if ($LASTEXITCODE -ne 0) { throw "Postgres did not come up — check .pgdata\server.log" }
+    if ($LASTEXITCODE -ne 0) { throw "Postgres did not come up - check .pgdata\server.log" }
 }
 
 $env:DATABASE_URL = "postgresql+psycopg://postgres@127.0.0.1:5432/postgres"

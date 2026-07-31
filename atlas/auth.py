@@ -1,11 +1,23 @@
 import secrets
 
-from fastapi import Header, HTTPException, status
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from atlas.config import get_settings
 
+# Registering HTTPBearer as the dependency makes /docs render an "Authorize"
+# button (paste the token only — Swagger adds the "Bearer " prefix) and marks
+# protected endpoints with a lock. auto_error=False so we control the
+# responses: 503 when the server has no token configured, 401 otherwise.
+_bearer = HTTPBearer(
+    auto_error=False,
+    description="Paste your ATLAS_API_TOKEN (no 'Bearer ' prefix).",
+)
 
-def require_token(authorization: str = Header(default="")) -> None:
+
+def require_token(
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
+) -> None:
     """Bearer-token gate for every endpoint except /health.
 
     The API fronts private data (broker phone numbers, deal notes) from day
@@ -17,11 +29,10 @@ def require_token(authorization: str = Header(default="")) -> None:
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="ATLAS_API_TOKEN is not configured; API is locked",
         )
+    provided = credentials.credentials if credentials else ""
     # Constant-time comparison: the token guards an internet-facing API and
     # must not be recoverable byte-by-byte via response timing.
-    if not secrets.compare_digest(
-        authorization.encode(), f"Bearer {token}".encode()
-    ):
+    if not secrets.compare_digest(provided.encode(), token.encode()):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="invalid or missing bearer token",
