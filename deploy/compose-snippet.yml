@@ -68,6 +68,20 @@ services:
     # internet bypassing your proxy's TLS.
     expose:
       - "8000"
+    # Traefik routing. Uncomment and set the Host rule. `websecure` and
+    # `letsencrypt` are the common defaults but are named by YOUR Traefik
+    # config — copy them from a service that already works rather than
+    # trusting these. server.port is the CONTAINER port; there is no host
+    # port by design.
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.atlas.rule=Host(`atlas.example.com`)"
+    #   - "traefik.http.routers.atlas.entrypoints=websecure"
+    #   - "traefik.http.routers.atlas.tls.certresolver=letsencrypt"
+    #   - "traefik.http.services.atlas.loadbalancer.server.port=8000"
+    # If your Traefik is pinned to a dedicated network (providers.docker.network,
+    # or a `proxy` network on the traefik service), atlas-app must join it too:
+    # networks: [default, proxy]
 
 volumes:
   atlas_pgdata:

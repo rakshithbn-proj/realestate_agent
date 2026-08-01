@@ -65,8 +65,23 @@ If any two docs conflict, precedence is: **atlas_roadmap.md → overall_plan.md 
   (`rera_registered` fact vs khata/jurisdiction/layout listing-text claims);
   per-source health monitoring; APScheduler + `python -m atlas.cli`. 50 tests
   passing; two `/code-review` passes fixed 20 findings with regression tests.
-- **Phase 1 runtime gate: RUNNING, streak 2/7 as of 2026-08-01.** The clock is
-  started and measurable — `atlas.cli gate` (and `GET /gate`) reports
+- **DEPLOYED. Phase 1 runtime gate is running on the VPS, streak 1/7 as of
+  2026-08-01** (all three sources `ok`; Phase 1 completes **2026-08-07** if
+  unbroken). Verified on the box: 300 bangalore + 147 mysore active listings and
+  8,869 `rera_projects` — the RERA count matched the local pull exactly, from an
+  independent fetch. The deploy is **image-only**: CI publishes
+  `ghcr.io/rakshithbn-proj/realestate_agent:latest` and the VPS holds no source,
+  with Atlas merged into the user's existing multi-service compose as
+  `atlas-db`/`atlas-app` behind their Traefik. Ship a change: push → CI builds →
+  `docker compose pull atlas-app && docker compose up -d atlas-app`. The local
+  Windows Scheduled Task is now redundant and should be unregistered — two
+  schedulers means two independent databases.
+- **The startup catch-up earned itself on day one:** the first VPS boot logged
+  "2026-08-01 is not clean (no runs yet) and the 05:30 window has passed -
+  running the daily sequence now" and collected immediately, and when the Apify
+  token was still a placeholder the sweep guard correctly refused to
+  manufacture removals from the failed runs.
+- **The clock is measurable** — `atlas.cli gate` (and `GET /gate`) reports
   consecutive clean days off `scrape_runs`. A day is clean when every enabled
   source that was live that day landed an `ok` run, counted in **Asia/Kolkata**;
   a retry later the same day rescues the day, a new source doesn't retroactively
