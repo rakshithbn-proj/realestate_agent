@@ -19,7 +19,8 @@ SPINE_TABLES = ("raw_payloads", "price_events", "listing_versions",
 def database_url(tmp_path_factory):
     """Postgres for the e2e tests, in preference order:
     1. ATLAS_TEST_DATABASE_URL (CI service container, or your own instance)
-    2. embedded pgserver (Linux/macOS)
+    2. embedded pgserver — optional, `pip install -e ".[dev,localpg]"` on
+       Linux/macOS; absent by design in CI and on Windows
     3. portable binaries via tests/_local_pg.py (Windows — see its docstring)
     """
     url = os.environ.get("ATLAS_TEST_DATABASE_URL")

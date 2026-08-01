@@ -22,9 +22,17 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=8",
-    # Embedded Postgres for local tests on machines without Docker/Postgres.
-    # No Windows wheels exist — on Windows, tests fall back to portable
-    # binaries (see tests/_local_pg.py and README). CI uses a real Postgres.
+]
+
+# Embedded Postgres, for local test runs on a machine with no Docker and no
+# installed Postgres. Deliberately NOT in [dev]: it publishes no Windows
+# wheels and, as of 2026-08, no cp313 build at all, so putting it there makes
+# `pip install -e .[dev]` fail outright on Python 3.13 — which is exactly how
+# CI broke. Nothing needs it in CI (a real pgvector service is provided via
+# ATLAS_TEST_DATABASE_URL, which conftest.py prefers) and nothing needs it on
+# Windows (portable binaries in .pgbin/ — see tests/_local_pg.py).
+# Opt in on Linux/macOS with:  pip install -e ".[dev,localpg]"
+localpg = [
     'pgserver>=0.1.4; sys_platform != "win32"',
 ]
 
