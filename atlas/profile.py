@@ -35,6 +35,11 @@ PROFILE_VERSION = "profile-v2"
 # top, then 1% registration. These are the rates to cite, and they change --
 # treat as config to verify, never as a settled fact (handoff §8).
 REGISTRATION_RATE = 0.01
+
+# Equity LTCG, for costing a liquidation that funds a purchase. Approximate and
+# subject to change — a decision aid, not a filing figure.
+LTCG_RATE = 0.125
+LTCG_EXEMPTION_INR = 125_000
 _STAMP_DUTY_SLABS = (
     # (upper bound inclusive, base stamp duty rate)
     (2_000_000, 0.02),      # up to Rs 20L
@@ -87,6 +92,15 @@ class InvestorProfile:
     reserved_inr: int = 600_000             # emergency fund — never deployable
     monthly_contribution_inr: int = 0       # added toward the goal each month
     ltv: float = 0.70                       # where financing is available
+
+    # Long-term holdings that are NEITHER emergency reserve NOR earmarked for
+    # this goal — equity you would not normally break into. Tracked separately
+    # rather than lumped into `reserved` because the honest answer to "should I
+    # break into my investments for this one deal?" is sometimes yes, and it
+    # needs a number: what it unlocks, and what the tax costs.
+    committed_inr: int = 0
+    # Share of committed value that is unrealised gain, for the LTCG estimate.
+    committed_gain_fraction: float = 0.35
 
     # Months of EMI the reserve should ALSO cover once a loan exists. Taking on
     # a secured EMI raises the emergency-fund requirement: the downside stops
@@ -170,6 +184,39 @@ class InvestorProfile:
 
     def capital_for(self, months: int = 0) -> int:
         return self.deployable_at(months)
+
+    def unlock_cost(self, amount_inr: float) -> int:
+        """Tax cost of liquidating `amount_inr` of committed long-term holdings.
+
+        Approximate: equity LTCG at 12.5% above the annual exemption, on the
+        unrealised-gain share of what is sold. Rates change and your actual
+        basis differs per holding — treat this as a decision aid to check with
+        a CA, never as a filing figure.
+        """
+        amount = max(0.0, min(float(amount_inr), self.committed_inr))
+        gain = amount * self.committed_gain_fraction
+        taxable = max(0.0, gain - LTCG_EXEMPTION_INR)
+        return int(taxable * LTCG_RATE)
+
+    def unlock_needed_for(self, price_inr: float, financeable: bool = True,
+                          months: int = 0) -> int:
+        """Committed capital that must be liquidated to close this purchase,
+        after deployable cash. 0 when no unlock is required."""
+        gap = self.cash_needed(price_inr, financeable) - self.deployable_at(months)
+        return max(0, int(gap))
+
+    def can_unlock_for(self, price_inr: float, financeable: bool = True,
+                       months: int = 0) -> bool:
+        """Is the purchase reachable at all, counting committed holdings?
+
+        The tax is paid from the same pot, so the unlock has to cover both the
+        gap and its own cost — ignoring that is how a plan comes up short at
+        the registrar's office.
+        """
+        gap = self.unlock_needed_for(price_inr, financeable, months)
+        if gap == 0:
+            return True
+        return gap + self.unlock_cost(gap) <= self.committed_inr
 
     def reserve_shortfall_for_emi(self, monthly_emi_inr: float) -> int:
         """How much the emergency fund is short once this EMI exists.
@@ -279,6 +326,8 @@ def default_profile() -> InvestorProfile:
         reserved_inr=settings.atlas_reserved_inr,
         monthly_contribution_inr=settings.atlas_monthly_contribution_inr,
         ltv=settings.atlas_ltv,
+        committed_inr=settings.atlas_committed_inr,
+        committed_gain_fraction=settings.atlas_committed_gain_fraction,
     )
 
 

@@ -205,7 +205,9 @@ def test_capital_comes_from_settings_not_hardcoded(monkeypatch):
         atlas_liquid_total_inr=2_600_000,
         atlas_reserved_inr=600_000,
         atlas_monthly_contribution_inr=40_000,
-        atlas_ltv=0.60))
+        atlas_ltv=0.60,
+        atlas_committed_inr=0,
+        atlas_committed_gain_fraction=0.35))
     p = profile_mod.default_profile()
     assert p.deployable_inr == 2_000_000
     assert p.monthly_contribution_inr == 40_000

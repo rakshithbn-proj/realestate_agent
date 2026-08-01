@@ -29,6 +29,7 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("daily", help="full daily sequence (rera, portals, sweep+tag)")
     sub.add_parser("sweep-and-tag", help="staleness sweep + legal tagging")
     sub.add_parser("health", help="per-source health summary")
+    sub.add_parser("plan", help="capital plan: what you need, and how long")
     gate_p = sub.add_parser("gate", help="Phase-1 gate: consecutive clean days")
     gate_p.add_argument("--days", type=int, default=None,
                         help="clean days required (default 7)")
@@ -52,6 +53,11 @@ def main(argv: list[str] | None = None) -> int:
         from atlas.health import source_health_dicts
         with make_session_factory(get_engine())() as session:
             print(json.dumps(source_health_dicts(session), indent=2))
+    elif args.command == "plan":
+        from atlas.db import get_engine, make_session_factory
+        from atlas.plan import build_plan, format_plan
+        with make_session_factory(get_engine())() as session:
+            print(format_plan(build_plan(session)))
     elif args.command == "gate":
         from atlas.db import get_engine, make_session_factory
         from atlas.gate import REQUIRED_CLEAN_DAYS, gate_status

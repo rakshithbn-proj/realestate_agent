@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     atlas_reserved_inr: int = 600_000              # emergency fund, never spent
     atlas_monthly_contribution_inr: int = 0        # saved toward the goal
     atlas_ltv: float = 0.70                        # where financing is available
+    # Long-term holdings you would not normally break into, but could for an
+    # exceptional deal — tracked apart from the reserve so the unlock decision
+    # can be costed instead of guessed.
+    atlas_committed_inr: int = 0
+    atlas_committed_gain_fraction: float = 0.35    # unrealised-gain share, for LTCG
 
 
 @lru_cache
