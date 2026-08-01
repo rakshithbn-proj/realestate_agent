@@ -89,6 +89,41 @@ Front-load the "don't lose money" layer before you trust any recommendation.
 
 **Done when:** the briefing arrives every morning for 14 days; ≥1 recommendation/week is genuinely worth reading; every recommendation shows legal flags + evidence + why-selling.
 
+### Phase 2b — Capital Plan: how the first deal actually gets funded (~15–20h)
+
+**Why this exists:** the roadmap assumed the reader could transact. In practice
+the capital is in equity, the emergency fund is inside it, and *stamp duty and
+registration cannot be borrowed* — so there is a hard cash floor (~₹15.3L for a
+₹44L plot) below which no amount of ranking matters. A briefing that shows
+un-buyable properties every morning trains you to ignore it.
+
+Until the floor is cleared, the briefing's job is **not** "buy this." It is
+"here is your countdown, here is what your corridor is doing, here is who to
+call." Same data, different product.
+
+- **Reserve-first capital model** (built — `atlas/profile.py`, `profile-v2`):
+  deployable = liquid − reserve. The emergency fund is never buying power;
+  spending it is how an owner becomes the forced seller this system is built to
+  *find in others*. `reserve_shortfall_for_emi()` warns that a secured EMI
+  *raises* the reserve requirement — before committing, not after.
+- **Runway** (built): `months_until_affordable(price, annual_appreciation)`
+  returns `None` when the market outruns savings. That `None` is the point —
+  it means "buy smaller or further out **now**", and a system that only ever
+  said "keep saving" would hide it.
+- **To build:** liquidation cost (LTCG on the funding sale is part of the true
+  price of the plot); loan *eligibility* as distinct from LTV (banks size on
+  income and existing EMIs, and plot loans are stricter than home loans);
+  "am I saving faster than my corridor is appreciating?" as a tracked metric
+  once locality ₹/sqft history exists.
+- **Later, once assets exist:** capital recycling — sale vs loan-against-
+  property vs top-up, and rental income raising serviceability for the *next*
+  purchase. This is the "sell this to buy that" sequencing that M12 Portfolio
+  only tracks and never plans.
+
+**Done when:** the briefing states the capital it assumed, the cash floor, and
+the countdown — and never surfaces a property that cannot be funded on the date
+it is shown.
+
 ### Phase 3 — The judgment layer (the 9/10 differentiator, pulled early) (~25–35h)
 Mostly prompts + schemas + storage — cheap, and it compounds immediately, even on deals you find manually offline.
 

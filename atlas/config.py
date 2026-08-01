@@ -25,9 +25,10 @@ class Settings(BaseSettings):
     # hiding what you could buy, surfacing what you can't. Env-overridable so it
     # can be corrected on the VPS without a code change and redeploy.
     # Defaults are profile-v1; bump PROFILE_VERSION when the meaning changes.
-    atlas_capital_min_inr: int = 1_500_000     # Rs 15L own funds
-    atlas_capital_max_inr: int = 2_500_000     # Rs 25L own funds
-    atlas_ltv: float = 0.70                    # where financing is available
+    atlas_liquid_total_inr: int = 2_500_000        # MFs + stocks + cash
+    atlas_reserved_inr: int = 600_000              # emergency fund, never spent
+    atlas_monthly_contribution_inr: int = 0        # saved toward the goal
+    atlas_ltv: float = 0.70                        # where financing is available
 
 
 @lru_cache

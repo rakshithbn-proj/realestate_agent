@@ -28,7 +28,7 @@ from dataclasses import dataclass, field, replace
 
 from atlas.config import get_settings
 
-PROFILE_VERSION = "profile-v1"
+PROFILE_VERSION = "profile-v2"
 
 # Karnataka acquisition costs, paid in cash at registration. Stamp duty is
 # slab-based on consideration value; cess (10% of duty) and surcharge apply on
@@ -78,10 +78,21 @@ def acquisition_cost_rate(price_inr: float) -> float:
 class InvestorProfile:
     version: str = PROFILE_VERSION
 
-    # Own funds actually deployable (not the ticket size).
-    capital_min_inr: int = 1_500_000       # Rs 15L
-    capital_max_inr: int = 2_500_000       # Rs 25L
-    ltv: float = 0.70                      # loan-to-value where financing works
+    # --- Capital, modelled reserve-first (profile-v2) ---
+    # v1 held a single capital band, which silently treated the emergency fund
+    # as buyable. It is not: spending it is how an owner becomes a forced
+    # seller, which is precisely the distress this system is built to find in
+    # OTHER people. Reserve comes off the top, always.
+    liquid_total_inr: int = 2_500_000       # MFs + stocks + cash
+    reserved_inr: int = 600_000             # emergency fund — never deployable
+    monthly_contribution_inr: int = 0       # added toward the goal each month
+    ltv: float = 0.70                       # where financing is available
+
+    # Months of EMI the reserve should ALSO cover once a loan exists. Taking on
+    # a secured EMI raises the emergency-fund requirement: the downside stops
+    # being "tight months" and becomes losing the asset. Used by
+    # `reserve_shortfall_for_emi` to warn before, not after, committing.
+    emi_months_covered: int = 6
 
     # Markets, in priority order. Bangalore-first with Mysore data-ready is
     # handoff §4a; Mysore is active here because the user asked for it.
@@ -121,33 +132,64 @@ class InvestorProfile:
     property_types: tuple[str, ...] = ("plot", "apartment", "builder-floor")
 
     def __post_init__(self) -> None:
-        # Fail loudly on nonsense config. A swapped min/max or an LTV typed as
-        # 70 instead of 0.70 would not crash — it would quietly compute a
-        # ceiling that is wrong by an order of magnitude, and every ranked
-        # listing after it would inherit that error silently.
-        if self.capital_min_inr > self.capital_max_inr:
+        # Fail loudly on nonsense config. A reserve larger than the portfolio,
+        # or an LTV typed as 70 instead of 0.70, would not crash — it would
+        # quietly compute a ceiling wrong by an order of magnitude, and every
+        # ranked listing after it would inherit that error silently.
+        # Negatives first: otherwise liquid_total=-1 trips the "exceeds" branch
+        # and reports a confusing comparison instead of the real mistake.
+        if self.liquid_total_inr < 0 or self.reserved_inr < 0:
+            raise ValueError("capital figures must not be negative")
+        if self.monthly_contribution_inr < 0:
+            raise ValueError("monthly_contribution_inr must not be negative")
+        if self.reserved_inr > self.liquid_total_inr:
             raise ValueError(
-                f"capital_min_inr ({self.capital_min_inr:,}) exceeds "
-                f"capital_max_inr ({self.capital_max_inr:,})")
-        if self.capital_min_inr <= 0:
-            raise ValueError("capital_min_inr must be positive")
+                f"reserved_inr ({self.reserved_inr:,}) exceeds "
+                f"liquid_total_inr ({self.liquid_total_inr:,})")
         if not 0.0 <= self.ltv < 1.0:
             raise ValueError(
                 f"ltv must be a fraction in [0, 1), got {self.ltv} "
                 "(70% is 0.70, not 70)")
 
-    def capital_for(self, optimistic: bool = False) -> int:
-        return self.capital_max_inr if optimistic else self.capital_min_inr
+    @property
+    def deployable_inr(self) -> int:
+        """Cash actually available for a purchase, after the reserve."""
+        return max(0, self.liquid_total_inr - self.reserved_inr)
+
+    def deployable_at(self, months: int) -> int:
+        """Deployable cash after `months` of contributions.
+
+        Deliberately ignores investment growth on the earmarked money: cash
+        needed inside ~3 years should not be sitting in equity, so assuming
+        returns on it would both overstate the runway and encourage exactly
+        the drawdown risk that can kill a purchase weeks before registration.
+        """
+        if months < 0:
+            raise ValueError("months must not be negative")
+        return self.deployable_inr + self.monthly_contribution_inr * months
+
+    def capital_for(self, months: int = 0) -> int:
+        return self.deployable_at(months)
+
+    def reserve_shortfall_for_emi(self, monthly_emi_inr: float) -> int:
+        """How much the emergency fund is short once this EMI exists.
+
+        Taking on a secured loan raises the reserve requirement — the reserve
+        must now also cover `emi_months_covered` of repayments. Returns 0 when
+        the current reserve already covers it.
+        """
+        needed = monthly_emi_inr * self.emi_months_covered
+        return max(0, int(needed - self.reserved_inr))
 
     def max_price_for(self, financeable: bool = True,
-                      optimistic: bool = True) -> int:
-        """Highest purchase price the profile can actually fund.
+                      months: int = 0) -> int:
+        """Highest purchase price the profile can fund `months` from now.
 
-        Solves price P from: own_funds >= down_payment + acquisition costs,
-        i.e. P * (1 - ltv + cost_rate) <= capital, with ltv forced to 0 when
+        Solves price P from: deployable >= down_payment + acquisition costs,
+        i.e. P * (1 - ltv + cost_rate) <= deployable, with ltv forced to 0 when
         the legal tags make the property un-financeable.
         """
-        capital = self.capital_for(optimistic)
+        capital = self.capital_for(months)
         ltv = self.ltv if financeable else 0.0
         # cost_rate depends on P and P depends on cost_rate. Rather than
         # iterating to a fixed point (which can oscillate across a slab
@@ -176,12 +218,30 @@ class InvestorProfile:
 
     def is_affordable(self, price_inr: float | None,
                       financeable: bool = True,
-                      optimistic: bool = True) -> bool:
+                      months: int = 0) -> bool:
         """A listing with no price is not affordable-by-default — 'price on
         request' must not sneak past a capital filter."""
         if price_inr is None:
             return False
-        return self.cash_needed(price_inr, financeable) <= self.capital_for(optimistic)
+        return self.cash_needed(price_inr, financeable) <= self.capital_for(months)
+
+    def months_until_affordable(self, price_inr: float,
+                                financeable: bool = True,
+                                annual_appreciation: float = 0.0,
+                                horizon_months: int = 240) -> int | None:
+        """Months until this becomes affordable, or None if never.
+
+        `None` is the decision-relevant answer, not an error: when the market
+        appreciates faster than you accumulate, waiting moves the target away
+        from you and the honest advice is to buy smaller or further out NOW
+        rather than save toward a price that keeps receding. A briefing that
+        only ever said "keep saving" would hide that.
+        """
+        for m in range(0, horizon_months + 1):
+            grown = price_inr * (1 + annual_appreciation) ** (m / 12)
+            if self.cash_needed(grown, financeable) <= self.deployable_at(m):
+                return m
+        return None
 
     def corridor_for(self, city: str, locality: str | None) -> str | None:
         """Which target corridor a locality belongs to, or None if off-target.
@@ -215,8 +275,9 @@ def default_profile() -> InvestorProfile:
     """
     settings = get_settings()
     return InvestorProfile(
-        capital_min_inr=settings.atlas_capital_min_inr,
-        capital_max_inr=settings.atlas_capital_max_inr,
+        liquid_total_inr=settings.atlas_liquid_total_inr,
+        reserved_inr=settings.atlas_reserved_inr,
+        monthly_contribution_inr=settings.atlas_monthly_contribution_inr,
         ltv=settings.atlas_ltv,
     )
 
