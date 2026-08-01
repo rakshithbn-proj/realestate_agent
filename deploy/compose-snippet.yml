@@ -1,0 +1,73 @@
+# Atlas services to PASTE INTO an existing docker-compose.yml on the VPS.
+#
+# This is not a compose file to run on its own — it is the two services to add
+# under the `services:` key of the compose file you already have, plus one
+# volume under `volumes:`. Use this (not the repo's standalone
+# docker-compose.yml) when the VPS already runs everything from one compose.
+#
+# Everything is namespaced to avoid collisions with services you already run:
+#
+#   service names   atlas-db / atlas-app   (not the generic db / app)
+#   volume          atlas_pgdata
+#   env vars        ATLAS_* in your .env, remapped to the names the container
+#                   expects — so a POSTGRES_PASSWORD used by another service
+#                   never leaks into Atlas's database, or vice versa
+#
+# Three deliberate differences from the standalone file:
+#
+#  1. NO reverse proxy. You already have one. Atlas publishes no host ports;
+#     your existing Caddy/nginx/Traefik reaches it at http://atlas-app:8000
+#     over the shared compose network. See docs/deploy-vps.md for the routing
+#     block for each proxy.
+#  2. NO host port on Postgres. Publishing 5432 would collide with any other
+#     Postgres on the box. Admin access is `docker compose exec atlas-db psql`,
+#     which needs no published port.
+#  3. The `:?` markers make compose refuse to start when a required secret is
+#     missing. In a SHARED compose that blast radius covers your other
+#     services too — see the note in docs/deploy-vps.md if you would rather
+#     trade the hard stop for a soft default.
+
+services:
+  atlas-db:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      # Left side = what the container expects. Right side = the namespaced
+      # key in your .env, so it cannot clash with another service's vars.
+      POSTGRES_USER: ${ATLAS_POSTGRES_USER:-atlas}
+      POSTGRES_PASSWORD: ${ATLAS_POSTGRES_PASSWORD:?set ATLAS_POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${ATLAS_POSTGRES_DB:-atlas}
+    volumes:
+      - atlas_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${ATLAS_POSTGRES_USER:-atlas} -d ${ATLAS_POSTGRES_DB:-atlas}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  atlas-app:
+    # Built and published by CI (.github/workflows/release.yml); the VPS only
+    # ever pulls. e.g. ATLAS_IMAGE=ghcr.io/<owner>/<repo>:latest
+    image: ${ATLAS_IMAGE:?set ATLAS_IMAGE in .env}
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://${ATLAS_POSTGRES_USER:-atlas}:${ATLAS_POSTGRES_PASSWORD:?set ATLAS_POSTGRES_PASSWORD in .env}@atlas-db:5432/${ATLAS_POSTGRES_DB:-atlas}
+      ATLAS_API_TOKEN: ${ATLAS_API_TOKEN:?set ATLAS_API_TOKEN in .env}
+      # Without this the portal fetcher raises and Atlas runs with a
+      # permanently dead MagicBricks collector — visible only days later.
+      APIFY_TOKEN: ${ATLAS_APIFY_TOKEN:?set ATLAS_APIFY_TOKEN in .env}
+      # The in-process scheduler is what actually collects daily
+      # (05:30 / 06:00 / 06:45, pinned to Asia/Kolkata in atlas/jobs.py).
+      ATLAS_ENABLE_SCHEDULER: ${ATLAS_ENABLE_SCHEDULER:-1}
+      TZ: Asia/Kolkata
+    depends_on:
+      atlas-db:
+        condition: service_healthy
+    # No `ports:` — your existing reverse proxy routes to atlas-app:8000 on the
+    # shared network. Adding a host port here would expose the API to the
+    # internet bypassing your proxy's TLS.
+    expose:
+      - "8000"
+
+volumes:
+  atlas_pgdata:

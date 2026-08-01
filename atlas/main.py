@@ -7,6 +7,7 @@ import atlas
 from atlas.auth import require_token
 from atlas.config import get_settings
 from atlas.db import get_engine, make_session_factory
+from atlas.gate import gate_status_dict
 from atlas.health import source_health_dicts
 from atlas.models import ScrapeRun
 
@@ -15,9 +16,17 @@ from atlas.models import ScrapeRun
 async def lifespan(app: FastAPI):
     scheduler = None
     if get_settings().atlas_enable_scheduler:
-        from atlas.jobs import build_scheduler
+        import threading
+
+        from atlas.jobs import _catch_up_safely, build_scheduler
         scheduler = build_scheduler()
         scheduler.start()
+        # Recover a day lost to downtime (container restart, host maintenance,
+        # a `docker compose down` spanning the 05:30-06:45 IST window). Runs in
+        # a daemon thread so a ~4-minute ingestion never blocks app startup or
+        # the /health endpoint.
+        threading.Thread(target=_catch_up_safely, name="atlas-catchup",
+                         daemon=True).start()
     yield
     if scheduler is not None:
         scheduler.shutdown(wait=False)
@@ -47,6 +56,18 @@ def list_sources() -> list[dict]:
     factory = make_session_factory(get_engine())
     with factory() as session:
         return source_health_dicts(session)
+
+
+@api.get("/gate")
+def phase1_gate() -> dict:
+    """Phase-1 runtime gate: consecutive clean ingestion days (handoff §6).
+
+    Exposed over the API so the streak can be checked against the deployed
+    instance without shelling into the VPS.
+    """
+    factory = make_session_factory(get_engine())
+    with factory() as session:
+        return gate_status_dict(session)
 
 
 @api.get("/runs")

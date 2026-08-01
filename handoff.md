@@ -49,7 +49,7 @@ If any two docs conflict, precedence is: **atlas_roadmap.md → overall_plan.md 
 
 ---
 
-## 3. Current reality (honest state — updated 2026-07-25)
+## 3. Current reality (honest state — updated 2026-08-01)
 
 - **Phase 0 (foundations): DONE.** FastAPI + Postgres 16 + Alembic + Docker
   Compose/Caddy spine; raw-first ingestion pipeline; token auth; the
@@ -65,18 +65,63 @@ If any two docs conflict, precedence is: **atlas_roadmap.md → overall_plan.md 
   (`rera_registered` fact vs khata/jurisdiction/layout listing-text claims);
   per-source health monitoring; APScheduler + `python -m atlas.cli`. 50 tests
   passing; two `/code-review` passes fixed 20 findings with regression tests.
-- **What closes Phase 1 (the only thing left): the RUNTIME gate** — 7 consecutive
-  clean ingestion days. Needs the app collecting daily (VPS deploy, or the local
-  scheduler / a daily `atlas.cli run` left running). `APIFY_TOKEN` is set locally.
+- **Phase 1 runtime gate: RUNNING, streak 2/7 as of 2026-08-01.** The clock is
+  started and measurable — `atlas.cli gate` (and `GET /gate`) reports
+  consecutive clean days off `scrape_runs`. A day is clean when every enabled
+  source that was live that day landed an `ok` run, counted in **Asia/Kolkata**;
+  a retry later the same day rescues the day, a new source doesn't retroactively
+  dirty history, and a not-yet-run today is `pending` rather than dirty.
+  Collection runs on this Windows box via Scheduled Task **`Atlas-Daily`**
+  (06:00 IST → `scripts\daily.ps1` → `atlas.cli daily`, logs to
+  `.run\daily-<date>.log`). It only counts days the laptop is awake — the VPS is
+  the durable answer.
+- **Third source live: MagicBricks Mysore** (`magicbricks_mysore`, 145 items,
+  100% parsed). Sources are keyed on `(name, city)`, so this was one registry
+  entry as designed in §4a.
+- **VPS: not provisioned yet.** Runbook is written and the deploy artifacts are
+  fixed: **[docs/deploy-vps.md](docs/deploy-vps.md)**. Compose previously never
+  passed `APIFY_TOKEN` or `ATLAS_ENABLE_SCHEDULER` to the app — a deploy would
+  have come up with a dead portal scraper and no jobs running. Both are now
+  required/defaulted in `docker-compose.yml`.
+- **Security fix:** the Apify token was being sent as a `?token=` query param,
+  and httpx logs full request URLs at INFO — so the token was written to the
+  logs on every run (and would land in `docker logs` daily on the VPS). Now sent
+  as an `Authorization: Bearer` header, with a regression test.
 - **What was proven earlier** (see §7): Karnataka RERA is free/public/ingestible;
   **99.6% of portal listings with a RERA id join to the registry**; MagicBricks is
   a reliable free portal; 99acres' actor is dead (skip it); BaankNet auctions are
   blocked pending a browser-capture step.
-- **Open business inputs still not given** (needed to START Phase 2 — the daily
-  briefing — not before): capital band + LTV, target localities, plots-vs-
-  apartments, and an email provider (Resend/SES). See the `atlas-open-inputs`
-  memory. The two Phase-0 technical decisions (embedding dim §9.4, multi-city
-  §4a) are already made and migrated.
+- **Business inputs: GIVEN (2026-08-01), encoded in
+  [atlas/profile.py](atlas/profile.py) as `profile-v1`.** Capital ₹15–25L own
+  funds at ~70% LTV; corridors South-East + North + East (Bangalore) plus
+  Mysore; both plots and apartments, equal weight; email via **Resend**.
+  Two things the profile makes deliberately more conservative than a naive read:
+  purchase costs (Karnataka stamp duty + registration, ~6.65% above ₹45L) come
+  out of **own funds, not the loan** — which drops the ceiling from a naive
+  ₹83L to **₹68L** (₹43.6L at the low end of the band) — and legal status gates
+  financeability, so a B-khata/revenue-site flag collapses the ticket to cash
+  (~₹23.9L). Affordability and the legal tag are coupled, not independent.
+
+### Three findings from the first live data pass (2026-08-01) — read before Phase 2
+
+1. **There are no plots in the pipeline at all.** All 521 Bangalore listings are
+   `apartment` (514) / `builder-floor` (5) / `penthouse` (2). "Both asset types"
+   is currently unachievable, not merely under-weighted: MagicBricks' actor
+   returns no land. Closing this needs a plot-capable source — §7 flags the paid
+   99acres actor (`fatihtahta/99acres-scraper-ppe`) as the candidate. This
+   directly blocks the land/JD value-creation thesis.
+2. **The capital band barely intersects Bangalore.** Of 656 active listings,
+   490 sit in target corridors but only **40 are affordable — 38 Mysore, 2
+   Bangalore.** Bangalore's median listing is ₹2.26Cr against a ₹68L ceiling.
+   This is real support for the Mysore thesis (§4a), with the caveat that a
+   300-item actor sample skews to promoted/premium stock — directional, not a
+   census.
+3. **The khata dimension of the legal layer is currently inert.** Zero of 670
+   tagged listings carry any khata claim in their text, so `khata_type` is
+   `unknown` everywhere and the financeability coupling never fires today. It is
+   correct and will matter for plots (where khata language is common in
+   listings); it does nothing for apartment descriptions. `rera_registered`, by
+   contrast, passes on 503/670 (75%) — the RERA join is carrying the layer.
 
 ---
 
@@ -310,22 +355,42 @@ Bangalore–Mysore Expressway) added in Phase 4 per §4a. Detailed in
 
 ---
 
-## 9. Open decisions (needed by Phase 2, not blocking Phase 0/1)
+## 9. Open decisions
 
-1. **Capital band** you can actually deploy (and whether you're financing / your
-   LTV). Without it, ranking is generic and the briefing surfaces things you
-   can't buy.
-2. **Target localities / micro-markets** (Bangalore and, when ready, Mysore — see
-   §4a), and **plots vs apartments vs both**.
-3. **Ticket-size band** worth surfacing (below = noise, above = fantasy).
+**Answered 2026-08-01** — all encoded in [atlas/profile.py](atlas/profile.py)
+(`profile-v1`; bump `PROFILE_VERSION` on any change, same discipline as
+`PARSER_VERSION`):
 
-**Needed at Phase 0 (migration time), not Phase 2:**
+1. **Capital band** — ₹15–25L own funds, ~70% LTV where financing is available.
+   Derived ceiling ₹68L (₹43.6L at the band's low end); cash-only ₹23.9L when
+   the legal tag blocks financing.
+2. **Target localities** — Bangalore South-East (Sarjapur/Attibele/Chandapura/
+   Electronic City/Bommasandra), North (Devanahalli/Yelahanka/Hennur/
+   Thanisandra/Jakkur), East (Whitefield/Varthur/Budigere/Hoskote/KR Puram),
+   **plus Mysore** (not corridor-segmented — that's Phase-4 config per §4a).
+   Matched as normalised **substrings**: the portal emits one corridor under
+   many spellings (`Sarjapur Road` / `Sarjapur` / `Sarjapura Attibele Road`;
+   `Electronic City` / `Electronics City Phase 1`), so exact matching would
+   discard most of the inventory it is meant to select.
+3. **Plots vs apartments** — both, equal weight. **But see §3 finding 1: there
+   is currently zero plot inventory**, so this is aspirational until a
+   plot-capable source lands.
+4. **Ticket-size band** — falls out of (1) rather than being set separately:
+   below ~₹20L is noise, above ₹68L is unfinanceable fantasy.
+5. **Email provider** — **Resend** (one API key, 3k/month free, no domain
+   verification needed to send to yourself). Not yet wired.
 
-4. **Embedding model + vector dimension.** The schema assumes Voyage
-   `voyage-3.5` (1024-dim). Embeddings are a separate provider from Claude. Pin
-   the dimension to the chosen model before the first migration, or defer the
-   `vector` columns (see §5 step 3). Getting this wrong means a re-embedding pass
-   later.
+**Still open:**
+
+6. **A plot-capable source.** Blocks the land/JD thesis outright (§3 finding 1).
+   Candidate is the paid `fatihtahta/99acres-scraper-ppe` ($3.5/1k) — the free
+   `thirdwatch/acres99-scraper` is dead (§7).
+7. **Embedding model + vector dimension** — deferred to Phase 3, *not* needed at
+   migration time. The schema assumes Voyage `voyage-3.5` (1024-dim);
+   embeddings are a separate provider from Claude. The `vector` columns were
+   deliberately left out of migration 0001, so the schema stays runnable on
+   stock Postgres 16 and local tests keep working. Pin the dimension when
+   semantic search actually lands; getting it wrong means a re-embedding pass.
 
 ---
 

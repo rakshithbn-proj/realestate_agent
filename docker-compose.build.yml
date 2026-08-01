@@ -1,0 +1,13 @@
+# Dev-box overlay: adds the ability to BUILD the app image. The base
+# docker-compose.yml intentionally has no 'build:' so the VPS can run purely
+# from a published image with no source checked out.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.build.yml build
+#
+# On Windows (no Docker here) use scripts\publish-image.ps1, which does this
+# through whichever Docker host you have, or falls back to GitHub Actions.
+services:
+  app:
+    build:
+      context: .
+    image: ${ATLAS_IMAGE:-atlas:local}

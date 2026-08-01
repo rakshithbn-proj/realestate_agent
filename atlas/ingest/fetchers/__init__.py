@@ -30,7 +30,11 @@ def fetch_apify(params: dict) -> list[dict]:
     actor = params["actor"].replace("/", "~")
     resp = httpx.post(
         f"{APIFY_BASE}/acts/{actor}/run-sync-get-dataset-items",
-        params={"token": token},
+        # Bearer header, never ?token= — httpx logs the full request URL at
+        # INFO, so a query-string token is written to the scheduler's logs on
+        # every daily run. httpx also strips Authorization on cross-origin
+        # redirects, so the token isn't forwarded to storage hosts below.
+        headers={"Authorization": f"Bearer {token}"},
         json=params.get("input", {}),
         timeout=params.get("timeout_s", 300),
         follow_redirects=True,   # dataset-items endpoint may 3xx to storage

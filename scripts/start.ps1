@@ -22,12 +22,16 @@ if (Get-NetTCPConnection -LocalPort 5432 -State Listen -ErrorAction SilentlyCont
     Start-Process -WindowStyle Hidden (Join-Path $pgbin "pg_ctl.exe") -ArgumentList `
         '-D', '.pgdata', '-w', '-l', '.pgdata\server.log', `
         '-o', '"-p 5432 -c listen_addresses=127.0.0.1"', 'start'
-    foreach ($i in 1..30) {
+    # 300s, not 30s: after an unclean shutdown Postgres runs crash recovery
+    # first, and the Windows data-directory fsync alone has taken ~34s here.
+    $deadline = (Get-Date).AddSeconds(300)
+    $ready = $false
+    while ((Get-Date) -lt $deadline) {
         & (Join-Path $pgbin "pg_isready.exe") -h 127.0.0.1 -p 5432 -q
-        if ($LASTEXITCODE -eq 0) { break }
-        Start-Sleep -Seconds 1
+        if ($LASTEXITCODE -eq 0) { $ready = $true; break }
+        Start-Sleep -Seconds 2
     }
-    if ($LASTEXITCODE -ne 0) { throw "Postgres did not come up - check .pgdata\server.log" }
+    if (-not $ready) { throw "Postgres did not come up - check .pgdata\server.log" }
     Write-Host "Postgres: started"
 }
 

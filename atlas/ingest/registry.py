@@ -29,4 +29,21 @@ SOURCES: dict[str, SourceSpec] = {
         },
         expected_daily_volume=300,
     ),
+    # Mysore: an early-stage market whose thesis is meant to be tested with
+    # data, not assumed (handoff §4a). Sources are keyed on (name, city), so
+    # this shares the bangalore spec's fetcher/parser and gets its own source
+    # row, run history, and health line. Volume is a fraction of Bangalore's —
+    # expected_daily_volume is left unset until a trailing average exists,
+    # since a wrong expectation would mislabel a normal thin day.
+    "magicbricks_mysore": SourceSpec(
+        name="magicbricks",
+        city="mysore",
+        kind="portal",
+        fetcher="apify",
+        parser="magicbricks",
+        params={
+            "actor": "thirdwatch/magicbricks-scraper",
+            "input": {"searchMode": "buy", "city": "Mysore", "maxResults": 300},
+        },
+    ),
 }

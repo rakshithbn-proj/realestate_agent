@@ -19,11 +19,22 @@ services:
       retries: 10
 
   app:
-    build: .
+    # Deliberately NO 'build:' here. The VPS runs a pre-built image and never
+    # holds the source: `docker compose pull && docker compose up -d`. Building
+    # is a dev-box concern, added by docker-compose.build.yml — see
+    # scripts/publish-image.ps1 and docs/deploy-vps.md.
+    image: ${ATLAS_IMAGE:-atlas:local}
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-atlas}:${POSTGRES_PASSWORD:?set in .env}@db:5432/${POSTGRES_DB:-atlas}
       ATLAS_API_TOKEN: ${ATLAS_API_TOKEN:?set in .env}
+      # Required, not optional: without a token the portal fetcher raises and
+      # the app deploys with a permanently dead MagicBricks collector, which
+      # only shows up as a failing source days later.
+      APIFY_TOKEN: ${APIFY_TOKEN:?set in .env}
+      # The whole point of the VPS: the in-process scheduler is what actually
+      # collects daily (jobs pinned to Asia/Kolkata in atlas/jobs.py).
+      ATLAS_ENABLE_SCHEDULER: ${ATLAS_ENABLE_SCHEDULER:-1}
       TZ: Asia/Kolkata
     depends_on:
       db:

@@ -16,9 +16,16 @@ fi
 BACKUP_DIR="${BACKUP_DIR:-./backups}"
 KEEP_DAYS="${KEEP_DAYS:-14}"
 STAMP="$(date +%Y%m%d_%H%M%S)"
+# Service name of the Atlas database. 'atlas-db' when merged into an existing
+# multi-service compose (deploy/compose-snippet.yml); 'db' for the repo's
+# standalone docker-compose.yml. Dumping the WRONG service would silently back
+# up someone else's database under an atlas_ filename.
+DB_SERVICE="${ATLAS_DB_SERVICE:-atlas-db}"
+DB_USER="${ATLAS_POSTGRES_USER:-${POSTGRES_USER:-atlas}}"
+DB_NAME="${ATLAS_POSTGRES_DB:-${POSTGRES_DB:-atlas}}"
 
 mkdir -p "$BACKUP_DIR"
-docker compose exec -T db pg_dump -U "${POSTGRES_USER:-atlas}" "${POSTGRES_DB:-atlas}" \
+docker compose exec -T "$DB_SERVICE" pg_dump -U "$DB_USER" "$DB_NAME" \
     | gzip > "$BACKUP_DIR/atlas_$STAMP.sql.gz"
 
 find "$BACKUP_DIR" -name 'atlas_*.sql.gz' -mtime "+$KEEP_DAYS" -delete
