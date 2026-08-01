@@ -26,6 +26,8 @@ against.
 """
 from dataclasses import dataclass, field, replace
 
+from atlas.config import get_settings
+
 PROFILE_VERSION = "profile-v1"
 
 # Karnataka acquisition costs, paid in cash at registration. Stamp duty is
@@ -118,6 +120,22 @@ class InvestorProfile:
     # flags the paid 99acres actor as the candidate).
     property_types: tuple[str, ...] = ("plot", "apartment", "builder-floor")
 
+    def __post_init__(self) -> None:
+        # Fail loudly on nonsense config. A swapped min/max or an LTV typed as
+        # 70 instead of 0.70 would not crash — it would quietly compute a
+        # ceiling that is wrong by an order of magnitude, and every ranked
+        # listing after it would inherit that error silently.
+        if self.capital_min_inr > self.capital_max_inr:
+            raise ValueError(
+                f"capital_min_inr ({self.capital_min_inr:,}) exceeds "
+                f"capital_max_inr ({self.capital_max_inr:,})")
+        if self.capital_min_inr <= 0:
+            raise ValueError("capital_min_inr must be positive")
+        if not 0.0 <= self.ltv < 1.0:
+            raise ValueError(
+                f"ltv must be a fraction in [0, 1), got {self.ltv} "
+                "(70% is 0.70, not 70)")
+
     def capital_for(self, optimistic: bool = False) -> int:
         return self.capital_max_inr if optimistic else self.capital_min_inr
 
@@ -188,7 +206,19 @@ class InvestorProfile:
 
 
 def default_profile() -> InvestorProfile:
-    return InvestorProfile()
+    """The active profile, with capital and LTV read from settings.
+
+    Capital is env-overridable on purpose: it changes as you save and deploy,
+    and a stale figure mis-filters the briefing in both directions. The daily
+    briefing should always print the capital it assumed, so a stale value is
+    visible every morning rather than silently wrong.
+    """
+    settings = get_settings()
+    return InvestorProfile(
+        capital_min_inr=settings.atlas_capital_min_inr,
+        capital_max_inr=settings.atlas_capital_max_inr,
+        ltv=settings.atlas_ltv,
+    )
 
 
 def profile_with(**overrides) -> InvestorProfile:

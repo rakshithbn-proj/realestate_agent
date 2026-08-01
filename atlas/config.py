@@ -19,6 +19,16 @@ class Settings(BaseSettings):
     # Active listings unseen this many days are marked removed (staleness sweep)
     stale_after_days: int = 7
 
+    # --- Investor profile (atlas/profile.py) ---
+    # Capital is config, not a constant: it changes as you save and deploy, and
+    # a stale figure silently mis-filters the briefing in BOTH directions —
+    # hiding what you could buy, surfacing what you can't. Env-overridable so it
+    # can be corrected on the VPS without a code change and redeploy.
+    # Defaults are profile-v1; bump PROFILE_VERSION when the meaning changes.
+    atlas_capital_min_inr: int = 1_500_000     # Rs 15L own funds
+    atlas_capital_max_inr: int = 2_500_000     # Rs 25L own funds
+    atlas_ltv: float = 0.70                    # where financing is available
+
 
 @lru_cache
 def get_settings() -> Settings:

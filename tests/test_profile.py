@@ -129,6 +129,51 @@ def test_unknown_city_is_off_target():
     assert default_profile().corridor_for("chennai", "Anywhere") is None
 
 
+def test_capital_comes_from_settings_not_hardcoded(monkeypatch):
+    """Regression: .env.example advertised ATLAS_CAPITAL_* overrides that
+    nothing read, so setting them on the VPS silently changed nothing and the
+    briefing kept filtering against the wrong capital."""
+    from types import SimpleNamespace
+
+    import atlas.profile as profile_mod
+
+    monkeypatch.setattr(profile_mod, "get_settings", lambda: SimpleNamespace(
+        atlas_capital_min_inr=2_000_000,
+        atlas_capital_max_inr=2_000_000,
+        atlas_ltv=0.60))
+    p = profile_mod.default_profile()
+    assert p.capital_max_inr == 2_000_000
+    assert p.ltv == 0.60
+    # Compare against an explicit baseline, NOT default_profile() — that reads
+    # the same patched settings, so it would compare a value to itself.
+    baseline = profile_mod.InvestorProfile(
+        capital_min_inr=1_500_000, capital_max_inr=2_500_000, ltv=0.70)
+    assert p.max_price_for() < baseline.max_price_for()
+
+
+def test_ceiling_falling_in_a_stamp_slab_gap_errs_conservative():
+    """Rs 20L at 60% LTV lands in a genuine gap: the 3% slab solves to
+    Rs 45.06L (just above its own Rs 45L ceiling) while the 5% slab solves to
+    Rs 42.87L (below where 5% starts). Neither is self-consistent, so the
+    fallback applies the HIGHER duty — understating buying power rather than
+    overstating it. Wrong in the safe direction."""
+    p = profile_with(capital_min_inr=2_000_000, capital_max_inr=2_000_000, ltv=0.60)
+    ceiling = p.max_price_for()
+    assert 4_200_000 < ceiling < 4_350_000
+    assert p.cash_needed(ceiling) <= p.capital_max_inr
+
+
+def test_nonsense_capital_config_fails_loudly():
+    """A swapped band or an LTV typed as 70 must raise, not quietly compute a
+    ceiling that is wrong by an order of magnitude."""
+    with pytest.raises(ValueError, match="exceeds"):
+        profile_with(capital_min_inr=5_000_000, capital_max_inr=2_000_000)
+    with pytest.raises(ValueError, match="0.70, not 70"):
+        profile_with(ltv=70)
+    with pytest.raises(ValueError, match="positive"):
+        profile_with(capital_min_inr=0, capital_max_inr=0)
+
+
 def test_profile_is_versioned_and_overridable():
     p = default_profile()
     assert p.version == PROFILE_VERSION
