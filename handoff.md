@@ -57,74 +57,104 @@ If any two docs conflict, precedence is: **atlas_roadmap.md → overall_plan.md 
   and embeddings deferred (§4a / §9.4 decided — see the `atlas-phase0-decisions`
   memory). Local dev runs on portable Postgres (`.pgbin/`, no Docker); tests
   green in CI. `scripts/start.ps1` / `stop.ps1` run the local stack.
-- **Phase 1 (data spine + legal guardrail): CODE DONE, runtime gate NOT met.**
-  On `master`. Built: RERA collector **ported and proven live** (pulled the real
-  registry — 8,854 registered projects, ~5,600 deduped builders); live
-  MagicBricks via Apify (`APIFY_TOKEN`); new/updated/price-changed/removed/
-  relisted tracking with the dead-scraper sweep guard; legal-risk tags v1
-  (`rera_registered` fact vs khata/jurisdiction/layout listing-text claims);
-  per-source health monitoring; APScheduler + `python -m atlas.cli`. 50 tests
-  passing; two `/code-review` passes fixed 20 findings with regression tests.
-- **DEPLOYED. Phase 1 runtime gate is running on the VPS, streak 1/7 as of
-  2026-08-01** (all three sources `ok`; Phase 1 completes **2026-08-07** if
-  unbroken). Verified on the box: 300 bangalore + 147 mysore active listings and
-  8,869 `rera_projects` — the RERA count matched the local pull exactly, from an
-  independent fetch. The deploy is **image-only**: CI publishes
-  `ghcr.io/rakshithbn-proj/realestate_agent:latest` and the VPS holds no source,
-  with Atlas merged into the user's existing multi-service compose as
-  `atlas-db`/`atlas-app` behind their Traefik. Ship a change: push → CI builds →
-  `docker compose pull atlas-app && docker compose up -d atlas-app`. The local
-  Windows Scheduled Task is now redundant and should be unregistered — two
-  schedulers means two independent databases.
-- **The startup catch-up earned itself on day one:** the first VPS boot logged
-  "2026-08-01 is not clean (no runs yet) and the 05:30 window has passed -
-  running the daily sequence now" and collected immediately, and when the Apify
-  token was still a placeholder the sweep guard correctly refused to
-  manufacture removals from the failed runs.
-- **The clock is measurable** — `atlas.cli gate` (and `GET /gate`) reports
-  consecutive clean days off `scrape_runs`. A day is clean when every enabled
-  source that was live that day landed an `ok` run, counted in **Asia/Kolkata**;
-  a retry later the same day rescues the day, a new source doesn't retroactively
-  dirty history, and a not-yet-run today is `pending` rather than dirty.
-  Collection runs on this Windows box via Scheduled Task **`Atlas-Daily`**
-  (06:00 IST → `scripts\daily.ps1` → `atlas.cli daily`, logs to
-  `.run\daily-<date>.log`). It only counts days the laptop is awake — the VPS is
-  the durable answer.
-- **Third source live: MagicBricks Mysore** (`magicbricks_mysore`, 145 items,
-  100% parsed). Sources are keyed on `(name, city)`, so this was one registry
-  entry as designed in §4a.
-- **VPS: not provisioned yet.** Runbook is written and the deploy artifacts are
-  fixed: **[docs/deploy-vps.md](docs/deploy-vps.md)**. Compose previously never
-  passed `APIFY_TOKEN` or `ATLAS_ENABLE_SCHEDULER` to the app — a deploy would
-  have come up with a dead portal scraper and no jobs running. Both are now
-  required/defaulted in `docker-compose.yml`.
-- **Security fix:** the Apify token was being sent as a `?token=` query param,
-  and httpx logs full request URLs at INFO — so the token was written to the
-  logs on every run (and would land in `docker logs` daily on the VPS). Now sent
-  as an `Authorization: Bearer` header, with a regression test.
+- **Phase 1 (data spine + legal guardrail): code done, runtime gate RUNNING.**
+  Built: RERA collector ported and proven live; MagicBricks Bangalore **and
+  Mysore** via Apify; new/updated/price-changed/removed/relisted tracking with
+  the dead-scraper sweep guard; legal-risk tags v1 (`rera_registered` fact vs
+  khata/jurisdiction/layout listing-text claims); per-source health;
+  APScheduler + `python -m atlas.cli`. **110 tests passing, CI green.**
+- **DEPLOYED AND COLLECTING AUTONOMOUSLY (2026-08-01). Gate 1/7** — all three
+  sources `ok`; Phase 1 closes **2026-08-07** if unbroken. Verified on the box:
+  300 bangalore + 147 mysore active listings, 8,869 `rera_projects` (the RERA
+  count matched the local pull exactly, from an independent fetch). API live at
+  `https://atlas.srv922449.hstgr.cloud` with a real Let's Encrypt cert;
+  `/health` returns ok, `/gate` correctly returns **401** unauthenticated.
+- **Deploy model: image-only, merged into an existing multi-service stack.**
+  CI (`.github/workflows/release.yml`) publishes
+  `ghcr.io/rakshithbn-proj/realestate_agent:latest` (package public). The VPS
+  holds **no source** — just its own compose file, `.env`, and Atlas pasted in
+  as `atlas-db`/`atlas-app` (see [deploy/compose-snippet.yml](deploy/compose-snippet.yml)),
+  routed by the **user's own Traefik** (`mytlschallenge`, entrypoint
+  `websecure`) to `atlas-app:8000`. There is no host port and no Atlas Caddy.
+  Ship a change: push → CI builds → `docker compose pull atlas-app &&
+  docker compose up -d atlas-app`. Full runbook: **[docs/deploy-vps.md](docs/deploy-vps.md)**.
+  ⚠ The local Windows Scheduled Task `Atlas-Daily` is now redundant —
+  **unregister it**, or you run two independent databases and pay Apify twice.
+- **The clock is measured, not claimed** — `atlas.cli gate` and `GET /gate`
+  count consecutive clean days off `scrape_runs` in **Asia/Kolkata**. Clean =
+  every enabled source live that day landed an `ok` run. A retry rescues the
+  day; a new source never retroactively dirties history it couldn't join; a
+  not-yet-collected today is `pending`, not dirty; a source dead longer than
+  the lookback window still counts against you (that last one was a bug — it
+  would have certified Phase 1 on a dead scraper).
+- **Six real bugs found by running it, not by testing it** (all fixed, all with
+  regression tests): the Apify token rode in a `?token=` query param and httpx
+  logs full URLs at INFO, so it was written to the logs every run; compose never
+  passed `APIFY_TOKEN`/`ATLAS_ENABLE_SCHEDULER`, so a deploy would have come up
+  with a dead scraper; a 30s Postgres wait failed after an unclean shutdown
+  where crash recovery took 34s; **APScheduler's in-memory jobstore silently
+  loses a day when the container is down at 05:30** (`misfire_grace_time` only
+  covers a live process) — the app now catches up on boot; `.env.example`
+  advertised capital overrides nothing read; and CI was broken by `pgserver`
+  having no cp313 wheel plus `tests/` lacking `__init__.py`.
+  The startup catch-up earned itself on day one: the first VPS boot logged
+  *"2026-08-01 is not clean (no runs yet) and the 05:30 window has passed"* and
+  collected immediately; and while the Apify token was still a placeholder the
+  sweep guard correctly refused to manufacture removals from the failed runs.
 - **What was proven earlier** (see §7): Karnataka RERA is free/public/ingestible;
   **99.6% of portal listings with a RERA id join to the registry**; MagicBricks is
   a reliable free portal; 99acres' actor is dead (skip it); BaankNet auctions are
   blocked pending a browser-capture step.
 - **Business inputs: GIVEN (2026-08-01), encoded in
-  [atlas/profile.py](atlas/profile.py) as `profile-v1`.** Capital ₹15–25L own
-  funds at ~70% LTV; corridors South-East + North + East (Bangalore) plus
-  Mysore; both plots and apartments, equal weight; email via **Resend**.
-  Two things the profile makes deliberately more conservative than a naive read:
-  purchase costs (Karnataka stamp duty + registration, ~6.65% above ₹45L) come
-  out of **own funds, not the loan** — which drops the ceiling from a naive
-  ₹83L to **₹68L** (₹43.6L at the low end of the band) — and legal status gates
-  financeability, so a B-khata/revenue-site flag collapses the ticket to cash
-  (~₹23.9L). Affordability and the legal tag are coupled, not independent.
+  [atlas/profile.py](atlas/profile.py) as `profile-v2`.** Corridors South-East +
+  North + East (Bangalore) plus Mysore; both plots and apartments; email via
+  **Resend** (not yet wired). Corridors are matched as normalised **substrings**
+  — the portal emits `Sarjapur Road` / `Sarjapur` / `Sarjapura Attibele Road`
+  for one corridor, so exact matching would discard most of the inventory.
+- **Capital is modelled reserve-first, and the real position is tighter than it
+  first looks.** ₹25L sits in mutual funds and stocks, but only **~₹3.5L is
+  realistically withdrawable**; the rest is emergency fund plus long-term equity
+  that won't be broken into. So `liquid_total − reserved = deployable`, with
+  `committed_inr` tracked separately as *unlockable at a costed LTCG*, never
+  lumped into the reserve. Three rules the model enforces:
+  - **Purchase costs come out of own funds, not the loan.** Karnataka stamp duty
+    + registration is ~6.65% above ₹45L, cash at the sub-registrar. This is the
+    hard floor: **no amount of financing removes it.**
+  - **Legal status gates financeability.** A B-khata / revenue-site flag makes a
+    property largely un-financeable and collapses the ticket to cash.
+    Affordability and the legal tag are coupled, not independent factors.
+  - **`months_until_affordable()` can return `None`** — meaning savings never
+    catch up at that appreciation rate. That is the decision-relevant answer
+    ("buy smaller or further out **now**"), and a tool that only ever said
+    "keep saving" would hide it.
+- **`atlas.cli plan` is the Phase-2b product**: the ladder of cheapest *real*
+  reachable listings per market, with the cash bar and countdown for each. At
+  ₹3.5L accessible and ₹75k/month saved, against actually-collected data:
+  **Mysore flat ₹27L → bar ₹9.3L → 8 months**; **Attibele plot ₹45.8L → bar
+  ₹16.8L → 18 months (22 if the corridor runs +10%/yr)**. The Attibele plot is
+  the thesis-aligned one; the Mysore flat is buy-and-hold, which §1 explicitly
+  rejects.
 
 ### Three findings from the first live data pass (2026-08-01) — read before Phase 2
 
-1. **There are no plots in the pipeline at all.** All 521 Bangalore listings are
-   `apartment` (514) / `builder-floor` (5) / `penthouse` (2). "Both asset types"
-   is currently unachievable, not merely under-weighted: MagicBricks' actor
-   returns no land. Closing this needs a plot-capable source — §7 flags the paid
-   99acres actor (`fatihtahta/99acres-scraper-ppe`) as the candidate. This
-   directly blocks the land/JD value-creation thesis.
+1. **No plots in the pipeline — but the fix is validated and approved, not yet
+   wired.** All 521 Bangalore listings are `apartment` (514) / `builder-floor`
+   (5) / `penthouse` (2): MagicBricks returns no land, which blocks the land/JD
+   thesis outright. **The paid actor `fatihtahta/99acres-scraper-ppe` was
+   test-run on 2026-08-01 and works** — 25 real Bangalore land listings, e.g.
+   *Residential Plot, Tumkur Road ₹55.2L @ ₹4,600/sqft* and *Bidadi ₹51.6L*,
+   with **canonical RERA ids** (`PRM/KA/RERA/...`, no prefix-stripping needed),
+   GPS, seller type, and `posted_at` for days-on-market. Cost ~$0.0035/result
+   (~$1/day at 300/day). **User has approved funding it.**
+   ⚠ **Two traps to handle in the parser before wiring it in:**
+   - `property.area.min_area_sqft` is actually **square metres** — it returns
+     `111.4836` for a 1,200 sqft plot. Confirmed by arithmetic
+     (₹5,520,001 ÷ ₹4,600/sqft = 1,200 sqft). Ingesting it naively corrupts
+     every ₹/sqft figure by 10.76× and would silently poison the
+     guidance-value gap and the whole affordability ranking.
+   - The feed mixes **two record types** — individual resale listings (with
+     `property_id`) and builder *projects* (without one). A project is not a
+     purchasable unit and must not become a listing.
 2. **The capital band barely intersects Bangalore.** Of 656 active listings,
    490 sit in target corridors but only **40 are affordable — 38 Mysore, 2
    Bangalore.** Bangalore's median listing is ₹2.26Cr against a ₹68L ceiling.
@@ -373,12 +403,17 @@ Bangalore–Mysore Expressway) added in Phase 4 per §4a. Detailed in
 ## 9. Open decisions
 
 **Answered 2026-08-01** — all encoded in [atlas/profile.py](atlas/profile.py)
-(`profile-v1`; bump `PROFILE_VERSION` on any change, same discipline as
+(`profile-v2`; bump `PROFILE_VERSION` on any change, same discipline as
 `PARSER_VERSION`):
 
-1. **Capital band** — ₹15–25L own funds, ~70% LTV where financing is available.
-   Derived ceiling ₹68L (₹43.6L at the band's low end); cash-only ₹23.9L when
-   the legal tag blocks financing.
+1. **Capital** — ₹25L in mutual funds and stocks, but **only ~₹3.5L is
+   realistically withdrawable**; the rest is emergency fund plus long-term
+   equity. Saving monthly from today. Modelled reserve-first: `deployable =
+   liquid_total − reserved`, `committed_inr` unlockable at a costed LTCG.
+   ~70% LTV where financing is available. **Wealth accumulation is step one —
+   the first purchase is 8–18 months out**, so until the cash floor is cleared
+   the briefing's job is the countdown and the corridor, not "buy this"
+   (roadmap Phase 2b).
 2. **Target localities** — Bangalore South-East (Sarjapur/Attibele/Chandapura/
    Electronic City/Bommasandra), North (Devanahalli/Yelahanka/Hennur/
    Thanisandra/Jakkur), East (Whitefield/Varthur/Budigere/Hoskote/KR Puram),
@@ -397,9 +432,18 @@ Bangalore–Mysore Expressway) added in Phase 4 per §4a. Detailed in
 
 **Still open:**
 
-6. **A plot-capable source.** Blocks the land/JD thesis outright (§3 finding 1).
-   Candidate is the paid `fatihtahta/99acres-scraper-ppe` ($3.5/1k) — the free
-   `thirdwatch/acres99-scraper` is dead (§7).
+6. **Wire the plot source.** Decided and validated, just not built: the paid
+   `fatihtahta/99acres-scraper-ppe` was test-run and returns real Bangalore land
+   (§3 finding 1). Needs a `SourceSpec` + parser handling the m²-labelled-as-sqft
+   trap and the listing-vs-project split.
+7. **Plot-loan LTV and loan eligibility.** The 70% LTV is a generic assumption.
+   Plot loans are stricter (lower LTV, approved layout and clean title
+   required, revenue sites often refused), and banks also size on income/FOIR,
+   which the model does not know. **Worth one conversation with a banker** — it
+   moves the ceiling materially, and it is a one-line config change afterwards.
+8. **Guidance values were never built** despite the roadmap calling the
+   guidance-value gap the core arbitrage signal (§4.8). No code references them.
+   Deal Score v1 ships without it unless built first.
 7. **Embedding model + vector dimension** — deferred to Phase 3, *not* needed at
    migration time. The schema assumes Voyage `voyage-3.5` (1024-dim);
    embeddings are a separate provider from Claude. The `vector` columns were
@@ -440,12 +484,30 @@ Bangalore–Mysore Expressway) added in Phase 4 per §4a. Detailed in
 
 ### First message to paste into the new chat
 
-> "Read handoff.md, overall_plan.md, atlas_roadmap.md, and docs/schema.sql (and
-> plan.md §7–§9 for reliability engineering, cost model, and risks). We're
-> building the real Atlas app starting at Phase 0 (forget the trial). Confirm the
-> plan back to me — including the embedding-dimension decision (§9) and the
-> multi-city schema change for Bangalore + Mysore (§4a / §5 step 3a) — then
-> scaffold the FastAPI + Postgres 16 (pgvector + pg_trgm) + Alembic + Docker
-> Compose + Caddy project, migrate docs/schema.sql as the first Alembic migration
-> (with the `city`/`market` column added), and get one fixture source flowing
-> raw → parsed → stored with a passing test."
+> "Continue building Project Atlas. Read handoff.md §3 first (current state),
+> then CLAUDE.md, atlas_roadmap.md (note Phase 2b — Capital Plan), and my
+> auto-memory (atlas-progress, atlas-open-inputs). Confirm back where we are in
+> one short paragraph before doing anything.
+>
+> State: deployed on the VPS and collecting daily; Phase-1 gate was 1/7 on
+> 2026-08-01 — check `atlas.cli gate` for today's streak. 110 tests, CI green.
+>
+> Next up, in order:
+> 1. **Deal Score v1** — versioned weights in the `score_weights` /`scores` /
+>    `score_factors` tables (already migrated, no ORM classes yet), with the
+>    factor decomposition stored as evidence. Capital-aware via
+>    `atlas/profile.py`.
+> 2. **Wire the plot source** — `fatihtahta/99acres-scraper-ppe` is validated
+>    and funding approved. Handle the two traps in handoff §3 finding 1:
+>    `min_area_sqft` is really square metres, and the feed mixes listings with
+>    builder projects.
+> 3. **The Resend digest**, which must print the capital it assumed."
+
+### Where to pick up (2026-08-01)
+
+| | |
+|---|---|
+| **Running** | VPS collects 05:30/06:00/06:45 IST. `atlas.cli gate` = streak; `atlas.cli plan` = cash bar + countdown |
+| **Next build** | Deal Score v1 → plot source → Resend digest |
+| **Chores** | Unregister local `Atlas-Daily`; rotate the Apify token; pin `image: traefik` to a version |
+| **Ask a human** | A banker, about real plot-loan LTV — it moves the ceiling more than any code here |

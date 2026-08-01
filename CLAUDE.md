@@ -20,11 +20,19 @@ docker compose up -d --build                         # VPS deploy only (dev box 
 Manual source runs (idempotent — same code as the scheduler):
 
 ```sh
-.venv\Scripts\python -m atlas.cli run rera            # RERA registry (free, no token)
-.venv\Scripts\python -m atlas.cli run magicbricks     # portal (needs APIFY_TOKEN)
-.venv\Scripts\python -m atlas.cli sweep-and-tag       # staleness sweep + legal tagging
-.venv\Scripts\python -m atlas.cli health              # per-source health JSON
+.venv\Scripts\python -m atlas.cli run rera                  # RERA registry (free, no token)
+.venv\Scripts\python -m atlas.cli run magicbricks           # Bangalore portal (needs APIFY_TOKEN)
+.venv\Scripts\python -m atlas.cli run magicbricks_mysore    # Mysore portal
+.venv\Scripts\python -m atlas.cli daily                     # full sequence; exits non-zero on a bad day
+.venv\Scripts\python -m atlas.cli sweep-and-tag             # staleness sweep + legal tagging
+.venv\Scripts\python -m atlas.cli health                    # per-source health JSON
+.venv\Scripts\python -m atlas.cli gate                      # Phase-1 gate: consecutive clean days
+.venv\Scripts\python -m atlas.cli plan                      # capital plan: cash bar + countdown
 ```
+
+`run <source>` choices come from the registry, so a new `SourceSpec` is
+runnable immediately. On the VPS the same commands run as
+`docker compose exec atlas-app python -m atlas.cli <cmd>`.
 
 - Setup: `python -m venv .venv` then `.venv\Scripts\pip install -e .[dev]`.
 - **The dev machine (Windows) has no Docker, no WSL, no installed Postgres.** E2E tests get Postgres via the fallback chain in [tests/conftest.py](tests/conftest.py): `ATLAS_TEST_DATABASE_URL` env → `pgserver` (Linux/macOS only; no Windows wheels) → portable binaries in `.pgbin/pgsql/bin` (gitignored, already extracted on this machine; see [tests/_local_pg.py](tests/_local_pg.py)). Windows gotcha: never run `pg_ctl start` with captured pipes — the postmaster inherits them and the wait hangs forever.
@@ -73,7 +81,44 @@ matches on listing text — `evidence.kind = 'listing_text_claim'`, explicitly
 Document-verified checks are the separate, property-scoped `legal_checks` table
 (Phase 3+). Never conflate the two.
 
+**The Phase-1 gate is measured, not claimed** ([atlas/gate.py](atlas/gate.py),
+`atlas.cli gate`, `GET /gate`). A day is clean when every enabled source *that
+was live that day* landed an `ok` run, counted in **Asia/Kolkata**. Four rules
+are load-bearing and each has a regression test: a retry later the same day
+rescues the day; a newly-added source never retroactively dirties history it
+couldn't participate in; a not-yet-collected today is `pending`, not dirty
+(the jobs are staggered 05:30/06:00/06:45, so a check at 05:45 must not read
+as broken); and `first_run_day` comes from **all** history, not the lookback
+window — otherwise a source dead longer than the window vanishes and the gate
+certifies Phase 1 on a dead scraper.
+
+**Capital is modelled reserve-first** ([atlas/profile.py](atlas/profile.py),
+`profile-v2`; [atlas/plan.py](atlas/plan.py)). `deployable = liquid_total −
+reserved`; the emergency fund is never buying power, and `committed_inr` is
+long-term equity tracked apart as *unlockable at a costed LTCG*. Three
+invariants: **stamp duty + registration cannot be borrowed** (~6.65% above
+₹45L, cash — a hard floor no financing removes); a `flag` on `khata_type` or
+`layout_approval` makes a property un-financeable and collapses the ticket to
+cash, so affordability and the legal tag are **coupled**; and
+`months_until_affordable()` returns `None` when savings never catch the market,
+which is a decision ("buy smaller/further out now"), not an error. Capital is
+config (`ATLAS_LIQUID_TOTAL_INR`, `ATLAS_RESERVED_INR`,
+`ATLAS_MONTHLY_CONTRIBUTION_INR`, `ATLAS_COMMITTED_INR`) because it changes —
+and the briefing must always print the figures it assumed, so a stale value is
+visible daily instead of silently mis-filtering.
+
 **Auth:** every endpoint except `GET /health` requires `Authorization: Bearer $ATLAS_API_TOKEN`; an *unset* token must lock the API (503), never open it.
+
+**Deploy is image-only.** The dev box has no Docker, so CI
+([.github/workflows/release.yml](.github/workflows/release.yml)) builds and
+publishes to `ghcr.io`; the VPS holds no source and pastes
+[deploy/compose-snippet.yml](deploy/compose-snippet.yml) into its own
+multi-service compose (`atlas-db`/`atlas-app`, namespaced `ATLAS_*` env keys,
+no published ports, routed by the user's existing Traefik). `docker-compose.yml`
+has no `build:` for the app on purpose — building is the dev-box overlay
+`docker-compose.build.yml`. Runbook: [docs/deploy-vps.md](docs/deploy-vps.md).
+Note APScheduler uses an **in-memory** jobstore, so downtime across 05:30 IST
+would lose a day; `jobs.catch_up_if_missed()` collects on boot instead.
 
 ## Project rules (from the plans; treat as review criteria)
 
