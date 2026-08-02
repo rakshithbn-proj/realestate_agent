@@ -53,6 +53,11 @@ def main(argv: list[str] | None = None) -> int:
     reparse_p.add_argument("--source", default=None,
                            help="registry source name (default: all)")
     reparse_p.add_argument("--dry-run", action="store_true")
+    digest_p = sub.add_parser("digest", help="build and send the daily briefing")
+    digest_p.add_argument("--dry-run", action="store_true",
+                          help="render to stdout; store nothing, send nothing")
+    digest_p.add_argument("--force", action="store_true",
+                          help="re-send even if today's digest already went out")
     args = parser.parse_args(argv)
 
     from atlas import jobs
@@ -123,6 +128,17 @@ def main(argv: list[str] | None = None) -> int:
                       f"posted_at_filled={result.posted_at_filled} "
                       f"unmatched={result.unmatched}"
                       f"{'  (dry run)' if args.dry_run else ''}")
+    elif args.command == "digest":
+        from atlas.db import get_engine, make_session_factory
+        from atlas.report import send_digest
+        with make_session_factory(get_engine())() as session:
+            sent, text = send_digest(session, dry_run=args.dry_run,
+                                     force=args.force)
+            print(text)
+            print()
+            print("[sent]" if sent else
+                  "[not sent - dry run]" if args.dry_run else
+                  "[not sent - already delivered today, or delivery unconfigured]")
     return 0
 
 

@@ -98,6 +98,21 @@ def score_daily() -> None:
                  result.skipped)
 
 
+def digest_daily() -> None:
+    """Send the daily briefing.
+
+    Deliberately absent from run_daily(): that sequence is what the startup
+    catch-up replays, and a restart inside the morning window would otherwise
+    re-send the email. `report_runs.sent_at` guards the send as well, so this
+    is belt and braces on the one action that reaches outside the box.
+    """
+    from atlas.report import send_digest
+
+    with _session() as session:
+        sent, _ = send_digest(session)
+        log.info("digest for today: %s", "sent" if sent else "not sent")
+
+
 def run_daily() -> int:
     """The whole daily sequence in one call, for cron / Task Scheduler.
 
@@ -139,6 +154,7 @@ SCHEDULE: tuple[tuple[str, object, int, int], ...] = (
     ("portals_daily", ingest_portals, 6, 0),
     ("sweep_and_tag_daily", sweep_and_tag, 6, 45),
     ("score_daily", score_daily, 7, 0),
+    ("digest_daily", digest_daily, 7, 15),
 )
 
 

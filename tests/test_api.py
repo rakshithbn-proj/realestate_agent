@@ -76,3 +76,41 @@ def test_health_is_public():
     resp = client.get("/health")
     assert resp.status_code == 200
     assert "db" in resp.json()
+
+
+def test_feedback_endpoint_needs_a_valid_signature(monkeypatch):
+    """The feedback link sits OUTSIDE the bearer-token router because a mail
+    client cannot send an Authorization header. Its only protection is the
+    HMAC, so that must actually be enforced — and must fail closed when no
+    secret is configured."""
+    from atlas.config import get_settings
+
+    monkeypatch.setenv("ATLAS_FEEDBACK_SECRET", "s3cret")
+    get_settings.cache_clear()
+    client = TestClient(app)
+
+    # No token, bad token, and a token signed for the opposite vote.
+    assert client.get("/feedback/1/up").status_code == 422
+    assert client.get("/feedback/1/up?t=deadbeef").status_code == 403
+
+    from atlas.report import feedback_token
+    down_token = feedback_token(1, "down")
+    assert client.get(f"/feedback/1/up?t={down_token}").status_code == 403
+    # A bad vote word is rejected before any lookup.
+    assert client.get(f"/feedback/1/sideways?t={down_token}").status_code == 400
+    get_settings.cache_clear()
+
+
+def test_feedback_fails_closed_with_no_secret(monkeypatch):
+    from atlas.config import get_settings
+    from atlas.report import feedback_token
+
+    monkeypatch.setenv("ATLAS_FEEDBACK_SECRET", "s3cret")
+    get_settings.cache_clear()
+    token = feedback_token(1, "up")
+    monkeypatch.setenv("ATLAS_FEEDBACK_SECRET", "")
+    get_settings.cache_clear()
+
+    client = TestClient(app)
+    assert client.get(f"/feedback/1/up?t={token}").status_code == 403
+    get_settings.cache_clear()

@@ -24,6 +24,24 @@ class Settings(BaseSettings):
     # scoring every seller as unmotivated because nobody asked.
     anthropic_api_key: str = ""
 
+    # --- Daily briefing (atlas/report.py) ---
+    # Env vars: RESEND_API_KEY, ATLAS_DIGEST_TO, ATLAS_DIGEST_FROM.
+    # Unset means the digest is built and stored but not delivered — visible
+    # in the log, never a silent no-op.
+    resend_api_key: str = ""
+    atlas_digest_to: str = ""
+    atlas_digest_from: str = "Atlas <onboarding@resend.dev>"
+    # Signs the 👍/👎 links in the email. An email client cannot send an
+    # Authorization header, so the link carries its own proof; with no secret
+    # set the links are omitted and the endpoint rejects everything rather
+    # than accepting unauthenticated writes.
+    atlas_feedback_secret: str = ""
+    # Public origin the feedback links point at (e.g. https://atlas.example.com).
+    atlas_public_base_url: str = ""
+    # External dead-man's switch (plan §7): pinged on successful delivery, so
+    # a missed ping alerts you that the briefing never arrived.
+    healthchecks_ping_url: str = ""
+
     # --- Investor profile (atlas/profile.py) ---
     # Capital is config, not a constant: it changes as you save and deploy, and
     # a stale figure silently mis-filters the briefing in BOTH directions —

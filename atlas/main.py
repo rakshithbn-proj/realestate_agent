@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 
-from fastapi import APIRouter, Depends, FastAPI, Query
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
 from sqlalchemy import select, text
 
 import atlas
@@ -45,6 +45,38 @@ def health() -> dict:
         db_ok = False
     return {"status": "ok" if db_ok else "degraded", "db": db_ok,
             "version": atlas.__version__}
+
+
+@app.get("/feedback/{recommendation_id}/{vote}")
+def record_feedback(recommendation_id: int, vote: str, t: str = Query(...)) -> dict:
+    """👍/👎 from the daily email — the only way weights ever get tuned from
+    evidence rather than taste (roadmap Phase 2, seeding the Phase-6 learning
+    engine).
+
+    Deliberately outside the bearer-token router: a mail client cannot send an
+    Authorization header, so the link carries an HMAC over BOTH the id and the
+    vote instead. Signing the vote too means a link cannot be edited from a
+    down-vote into an up-vote. GET because that is what an email client can
+    do; the handler is idempotent and a second click overwrites rather than
+    appends.
+    """
+    from atlas.models import Recommendation
+    from atlas.report import verify_feedback_token
+
+    if vote not in ("up", "down"):
+        raise HTTPException(status_code=400, detail="vote must be 'up' or 'down'")
+    if not verify_feedback_token(recommendation_id, vote, t):
+        raise HTTPException(status_code=403, detail="invalid feedback token")
+
+    factory = make_session_factory(get_engine())
+    with factory() as session:
+        rec = session.get(Recommendation, recommendation_id)
+        if rec is None:
+            raise HTTPException(status_code=404, detail="no such recommendation")
+        rec.feedback = 1 if vote == "up" else -1
+        session.commit()
+        return {"status": "recorded", "recommendation_id": recommendation_id,
+                "feedback": rec.feedback}
 
 
 api = APIRouter(dependencies=[Depends(require_token)])
