@@ -5,9 +5,10 @@ run) and reshaped to target the `listings` table. Bump PARSER_VERSION on any
 change to the mapping — it is stamped on every parsed row (plan.md §7).
 """
 import re
+from datetime import datetime, timezone
 from typing import Any
 
-PARSER_VERSION = "magicbricks/1.0.0"
+PARSER_VERSION = "magicbricks/1.1.0"
 
 # Per canonical field: ordered candidate keys in the raw actor item.
 CANDIDATES: dict[str, list[str]] = {
@@ -30,6 +31,13 @@ CANDIDATES: dict[str, list[str]] = {
     "lister_phone": ["contact_phone", "contactPhone", "phone", "mobile"],
     "description": ["description", "propertyDescription", "desc"],
     "url": ["url", "detail_url", "detailUrl", "link", "property_url"],
+    # The portal's own posting date. Present in the actor payload since the
+    # trial and discarded until v1.1.0 — without it, days-on-market can only
+    # mean "days since Atlas noticed", which reads every listing as brand new
+    # until Atlas has been collecting for months. Backfillable by re-parsing
+    # raw_payloads (`atlas.cli reparse`).
+    "posted_at": ["posted_at", "postedAt", "postedOn", "listedOn",
+                  "created_at", "listing_posted_at"],
 }
 
 # Number must start with a digit ("Rs. 95 Lac" must match "95", not the dot in
@@ -74,6 +82,37 @@ def norm_text(value: Any) -> str | None:
         return None
     s = re.sub(r"\s+", " ", str(value)).strip()
     return s or None
+
+
+def parse_timestamp(value: Any) -> str | None:
+    """ISO-8601 string for the listings.posted_at column, or None.
+
+    Returned as a string rather than a datetime so the parsed dict stays
+    JSON-serialisable — it is archived verbatim in listing_versions.snapshot.
+    An unparseable date yields None: a wrong posting date is worse than a
+    missing one, because days-on-market is a distress signal and a bogus
+    'listed 400 days ago' would manufacture urgency that isn't there.
+    """
+    if value is None:
+        return None
+    if isinstance(value, (int, float)):
+        # Epoch seconds vs milliseconds: anything past ~2001 in seconds is
+        # beyond 1e9, so a value above 1e11 can only be milliseconds.
+        seconds = float(value) / 1000 if float(value) > 1e11 else float(value)
+        try:
+            return datetime.fromtimestamp(seconds, tz=timezone.utc).isoformat()
+        except (OverflowError, OSError, ValueError):
+            return None
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.isoformat()
 
 
 def _to_float(v: Any) -> float | None:
@@ -135,4 +174,5 @@ def parse(raw: dict) -> dict | None:
         "rera_ids": canon_rera_ids(_pick(raw, "rera_id")),
         "description": norm_text(_pick(raw, "description")),
         "url": norm_text(_pick(raw, "url")),
+        "posted_at": parse_timestamp(_pick(raw, "posted_at")),
     }

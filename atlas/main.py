@@ -70,6 +70,25 @@ def phase1_gate() -> dict:
         return gate_status_dict(session)
 
 
+@api.get("/scores/top")
+def top_scores(
+    limit: int = Query(default=20, ge=1, le=100),
+    city: str | None = None,
+    include_unreachable: bool = False,
+) -> list[dict]:
+    """Ranked listings with the full factor decomposition.
+
+    Defaults to what can actually be funded today (roadmap Phase 2b); pass
+    `include_unreachable=true` for market context.
+    """
+    from atlas.scoring.engine import latest_scores
+
+    factory = make_session_factory(get_engine())
+    with factory() as session:
+        return latest_scores(session, limit=limit, city=city,
+                             reachable_only=not include_unreachable)
+
+
 @api.get("/runs")
 def recent_runs(limit: int = Query(default=20, ge=1, le=200)) -> list[dict]:
     factory = make_session_factory(get_engine())

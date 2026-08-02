@@ -7,6 +7,10 @@
   sweep-and-tag           staleness sweep + legal tagging pass
   health                  per-source health summary
   gate                    Phase-1 gate: consecutive clean ingestion days
+  plan                    capital plan: cash bar + countdown
+  score                   Deal Score pass (--dry-run / --explain <listing_id>)
+  top                     ranked listings with their factor decomposition
+  reparse                 replay raw_payloads through the current parser
 """
 import argparse
 import json
@@ -33,6 +37,22 @@ def main(argv: list[str] | None = None) -> int:
     gate_p = sub.add_parser("gate", help="Phase-1 gate: consecutive clean days")
     gate_p.add_argument("--days", type=int, default=None,
                         help="clean days required (default 7)")
+
+    score_p = sub.add_parser("score", help="compute Deal Scores")
+    score_p.add_argument("--dry-run", action="store_true",
+                         help="show the score distribution; write nothing")
+    score_p.add_argument("--explain", type=int, metavar="LISTING_ID",
+                         help="full factor decomposition for one listing")
+    top_p = sub.add_parser("top", help="ranked listings with evidence")
+    top_p.add_argument("--limit", type=int, default=10)
+    top_p.add_argument("--city", default=None)
+    top_p.add_argument("--all", action="store_true",
+                       help="include listings you cannot fund today")
+    reparse_p = sub.add_parser("reparse",
+                               help="replay raw_payloads through the parser")
+    reparse_p.add_argument("--source", default=None,
+                           help="registry source name (default: all)")
+    reparse_p.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
 
     from atlas import jobs
@@ -72,6 +92,37 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{day.day}  {mark:<8} {detail}")
         print(f"\nStreak: {status.streak}/{status.required_days} clean days "
               f"-> Phase-1 gate {'MET' if status.met else 'NOT MET'}")
+    elif args.command == "score":
+        from atlas.db import get_engine, make_session_factory
+        from atlas.scoring.report import format_explain, format_score_run
+        from atlas.scoring.engine import score_listings
+        with make_session_factory(get_engine())() as session:
+            if args.explain:
+                result = score_listings(session, listing_ids=[args.explain],
+                                        dry_run=True)
+                print(format_explain(session, result, args.explain))
+            else:
+                result = score_listings(session, dry_run=args.dry_run)
+                print(format_score_run(result))
+    elif args.command == "top":
+        from atlas.db import get_engine, make_session_factory
+        from atlas.scoring.engine import latest_scores
+        from atlas.scoring.report import format_top
+        with make_session_factory(get_engine())() as session:
+            rows = latest_scores(session, limit=args.limit, city=args.city,
+                                 reachable_only=not args.all)
+            print(format_top(rows, reachable_only=not args.all))
+    elif args.command == "reparse":
+        from atlas.db import get_engine, make_session_factory
+        from atlas.ingest.reparse import reparse
+        with make_session_factory(get_engine())() as session:
+            for result in reparse(session, source=args.source,
+                                  dry_run=args.dry_run):
+                print(f"{result.source:<24} payloads={result.payloads} "
+                      f"parsed={result.parsed} updated={result.listings_updated} "
+                      f"posted_at_filled={result.posted_at_filled} "
+                      f"unmatched={result.unmatched}"
+                      f"{'  (dry run)' if args.dry_run else ''}")
     return 0
 
 

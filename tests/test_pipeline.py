@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 from sqlalchemy import func, select
 
+from atlas.ingest.parsers import magicbricks
 from atlas.ingest.pipeline import run_source
 from atlas.ingest.registry import SourceSpec
 from atlas.models import (
@@ -49,7 +50,10 @@ def test_fixture_flows_raw_parsed_stored(session):
     assert listing is not None
     # TOR/-prefixed RERA id canonicalised to the registry form (handoff §7)
     assert listing.rera_ids == ["PRM/KA/RERA/1251/310/PR/250304/000047"]
-    assert listing.parser_version == "magicbricks/1.0.0"
+    # Stamped with whatever version parsed it (plan §7) — asserted against the
+    # module constant, not a literal, so a deliberate bump doesn't read as a
+    # regression here. The golden file is what guards the mapping itself.
+    assert listing.parser_version == magicbricks.PARSER_VERSION
     assert listing.city == "bangalore"
     assert listing.lister_kind == "broker"          # 'agent' mapped
     assert listing.price_inr == 15_390_000

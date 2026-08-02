@@ -126,6 +126,25 @@ def _upsert_tag(session: Session, listing_id: int, item: str, status: str,
         tag.checked_at = _now()
 
 
+def legal_tags_by_listing(session: Session,
+                          with_detail: bool = False) -> dict[int, dict]:
+    """{listing_id: {item: status}} for every tagged listing.
+
+    Shared by the capital plan and the scorer — both need "is this
+    financeable?", and two copies of this query would be two places for the
+    flag semantics to drift apart. With `with_detail`, values are the full row
+    ({id, status, detail}) so a score can cite the tag it read.
+    """
+    out: dict[int, dict] = {}
+    for tag in session.scalars(select(ListingLegalTag)):
+        entry = out.setdefault(tag.listing_id, {})
+        entry[tag.item] = (
+            {"id": tag.id, "status": tag.status, "detail": tag.detail}
+            if with_detail else tag.status
+        )
+    return out
+
+
 def tag_recent_listings(session: Session, since_days: int = 7) -> TagResult:
     """Tag listings seen within the window — the daily path.
 

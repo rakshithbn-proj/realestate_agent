@@ -12,6 +12,12 @@
 --     then (assumed default voyage-3.5 → vector(1024)). Nothing writes
 --     embeddings before that, so the later ALTER is metadata-only — and
 --     Phase 0/1 runs on stock Postgres 16 (pg_trgm is bundled; pgvector isn't).
+-- Later migrations folded in below:
+--   * 0002 — listing_legal_tags (per-listing claims, never conflated with the
+--     property-scoped, document-verified legal_checks)
+--   * 0003 — Deal Score v1: listings.posted_at; scores/recommendations become
+--     listing-scoped-or-property-scoped; scores.score_date + coverage;
+--     report_runs.sent_at
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm;     -- trigram indexes for fuzzy name matching
 -- CREATE EXTENSION vector;                 -- pgvector: Phase-3 migration (see header)
@@ -91,12 +97,17 @@ CREATE TABLE listings (
     -- description_emb vector(1024),             -- DEFERRED to Phase-3 migration (see header)
     image_hashes   text[],                       -- pHash per photo, for entity resolution
     parser_version text NOT NULL,                -- plan §7: version everything that judges
+    -- The PORTAL's own posting date. Distinct from first_seen_at, which is only
+    -- "when Atlas noticed" — using that for days-on-market makes every listing
+    -- look new until Atlas has been running for months.
+    posted_at      timestamptz,
     first_seen_at  timestamptz NOT NULL DEFAULT now(),
     last_seen_at   timestamptz NOT NULL DEFAULT now(),
     removed_at     timestamptz,
     UNIQUE (source_id, external_id)
 );
 CREATE INDEX ON listings (property_id);
+CREATE INDEX ON listings (posted_at);
 CREATE INDEX ON listings (geohash6, bhk, property_type);   -- blocking key 2
 CREATE INDEX ON listings (lister_phone) WHERE lister_phone IS NOT NULL;  -- blocking key 3
 CREATE INDEX ON listings USING gin (project_norm gin_trgm_ops);          -- blocking key 1
@@ -161,13 +172,28 @@ CREATE TABLE score_weights (
     note         text
 );
 
+-- A score judges exactly ONE subject. Listing-scoped today (migration 0003);
+-- property-scoped once entity resolution exists in Phase 4. Minting a
+-- degenerate properties row per listing was rejected — it would pre-empt the
+-- Phase-4 merge semantics with rows nothing produced.
 CREATE TABLE scores (
     id              bigserial PRIMARY KEY,
-    property_id     bigint NOT NULL REFERENCES properties(id),
+    listing_id      bigint REFERENCES listings(id),
+    property_id     bigint REFERENCES properties(id),
     weights_version int NOT NULL REFERENCES score_weights(version),
     overall         numeric NOT NULL,            -- 0-100
-    computed_at     timestamptz NOT NULL DEFAULT now()
+    -- Fraction of non-zero weight that produced a value. Factors with no data
+    -- for this listing ABSTAIN and `overall` is renormalised over what was
+    -- covered, so a thin locality lowers coverage rather than the score.
+    coverage        numeric NOT NULL DEFAULT 1.0,
+    -- The Asia/Kolkata day this score is for: append-only across days,
+    -- idempotent within one, so a delivered recommendation's score never moves.
+    score_date      date NOT NULL DEFAULT current_date,
+    computed_at     timestamptz NOT NULL DEFAULT now(),
+    CHECK (num_nonnulls(listing_id, property_id) = 1)
 );
+CREATE UNIQUE INDEX ON scores (listing_id, weights_version, score_date);
+CREATE INDEX ON scores (listing_id, computed_at DESC);
 
 CREATE TABLE score_factors (
     id           bigserial PRIMARY KEY,
@@ -271,14 +297,18 @@ CREATE TABLE report_runs (
     report_date  date NOT NULL UNIQUE,
     generated_at timestamptz NOT NULL DEFAULT now(),
     content      jsonb NOT NULL,                 -- structured report; rendered to email/html
-    source_health jsonb NOT NULL                 -- per-source status included in every report
+    source_health jsonb NOT NULL,                -- per-source status included in every report
+    -- Double-send guard. UNIQUE(report_date) prevents a duplicate ROW, not a
+    -- duplicate EMAIL: a restart after the digest job would otherwise re-send.
+    sent_at      timestamptz                     -- null until actually delivered
 );
 
 CREATE TABLE recommendations (
     id           bigserial PRIMARY KEY,
     -- NULL for instant-tier alerts (fired outside a daily run); set for daily digest items
     report_run_id bigint REFERENCES report_runs(id),
-    property_id  bigint REFERENCES properties(id),
+    listing_id   bigint REFERENCES listings(id),   -- subject today (migration 0003)
+    property_id  bigint REFERENCES properties(id), -- subject from Phase 4
     tier         text NOT NULL,                  -- instant | daily
     headline     text NOT NULL,
     score_id     bigint REFERENCES scores(id),
@@ -286,6 +316,7 @@ CREATE TABLE recommendations (
     feedback     smallint                        -- +1 / -1 from the user, null = no feedback
 );
 CREATE INDEX ON recommendations (property_id, sent_at);
+CREATE INDEX ON recommendations (listing_id, sent_at);
 
 -- ============================================================
 -- Legal screening & documents (M6 checklist, per-property EC pulls)

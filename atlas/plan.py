@@ -16,7 +16,8 @@ from dataclasses import dataclass, field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from atlas.models import Listing, ListingLegalTag, Locality
+from atlas.ingest.legal import legal_tags_by_listing
+from atlas.models import Listing, Locality
 from atlas.profile import InvestorProfile, default_profile, is_financeable
 
 
@@ -50,13 +51,6 @@ class CapitalPlan:
     rungs: list[Rung] = field(default_factory=list)
 
 
-def _legal_tags(session: Session) -> dict[int, dict[str, str]]:
-    tags: dict[int, dict[str, str]] = {}
-    for t in session.scalars(select(ListingLegalTag)):
-        tags.setdefault(t.listing_id, {})[t.item] = t.status
-    return tags
-
-
 def build_plan(session: Session, profile: InvestorProfile | None = None,
                per_market: int = 3,
                market_appreciation: float = 0.10) -> CapitalPlan:
@@ -67,7 +61,7 @@ def build_plan(session: Session, profile: InvestorProfile | None = None,
     price cannot be planned against at all.
     """
     profile = profile or default_profile()
-    tags = _legal_tags(session)
+    tags = legal_tags_by_listing(session)
     localities = {loc.id: loc.name for loc in session.scalars(select(Locality))}
 
     candidates: list[Rung] = []

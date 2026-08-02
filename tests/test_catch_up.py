@@ -120,7 +120,9 @@ def test_schedule_and_scheduler_agree(monkeypatch):
     scheduler = jobs.build_scheduler()
     ids = {j.id for j in scheduler.get_jobs()}
     assert ids == {job_id for job_id, _, _, _ in jobs.SCHEDULE}
-    assert len(ids) == 3
+    # One scheduled job per SCHEDULE entry: a duplicate id would silently
+    # collapse two jobs into one and the set comparison above would still pass.
+    assert len(ids) == len(jobs.SCHEDULE) > 0
 
 
 def test_catch_up_failure_is_contained_not_swallowed(monkeypatch, caplog):

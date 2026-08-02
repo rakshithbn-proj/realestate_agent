@@ -9,9 +9,15 @@ from sqlalchemy.orm import sessionmaker
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# Tables the ingestion layer writes; TRUNCATE ... CASCADE handles FK order.
+# Tables the app writes; TRUNCATE ... CASCADE handles FK order.
+#
+# `score_weights` must be listed explicitly: it is the one table here with no
+# foreign key into the listing spine, so CASCADE never reaches it and a
+# weights row written by one test would survive into the next.
 SPINE_TABLES = ("raw_payloads", "price_events", "listing_versions",
-                "listing_legal_tags", "listings", "scrape_runs", "sources",
+                "listing_legal_tags", "listing_motivation", "score_factors",
+                "scores", "score_weights", "recommendations", "report_runs",
+                "listings", "scrape_runs", "sources",
                 "localities", "rera_projects", "builders")
 
 

@@ -18,6 +18,11 @@ class Settings(BaseSettings):
     atlas_enable_scheduler: bool = False
     # Active listings unseen this many days are marked removed (staleness sweep)
     stale_after_days: int = 7
+    # Env var: ANTHROPIC_API_KEY — seller-motivation extraction (Batch API).
+    # Unset is a supported state: the seller_motivation factor abstains for
+    # every listing and the score renormalises over the rest, rather than
+    # scoring every seller as unmotivated because nobody asked.
+    anthropic_api_key: str = ""
 
     # --- Investor profile (atlas/profile.py) ---
     # Capital is config, not a constant: it changes as you save and deploy, and

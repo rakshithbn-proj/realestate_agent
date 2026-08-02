@@ -72,6 +72,31 @@ def sweep_and_tag() -> None:
                  tag_result.tagged_listings, tag_result.tags_written)
 
 
+def score_daily() -> None:
+    """Deal Score pass, after collection and tagging.
+
+    Seller-motivation extraction runs first and is asynchronous by design (the
+    Batch API answers in minutes to hours), so today's pass consumes whatever
+    finished since yesterday and queues the rest. Listings with no extraction
+    yet simply abstain on that factor — the score renormalises over the rest.
+    """
+    from atlas.scoring import motivation
+    from atlas.scoring.engine import score_listings
+
+    with _session() as session:
+        try:
+            collected, batch_id = motivation.run(session)
+            log.info("motivation: collected %d, new batch %s", collected, batch_id)
+        except Exception:
+            # A billing, quota, or network failure on an optional enrichment
+            # must never cost the whole day's scoring.
+            log.exception("motivation pass failed; scoring without it")
+        result = score_listings(session)
+        log.info("scored %d listings (weights v%d, %s), skipped %d",
+                 result.scored, result.weights_version, result.score_date,
+                 result.skipped)
+
+
 def run_daily() -> int:
     """The whole daily sequence in one call, for cron / Task Scheduler.
 
@@ -85,6 +110,10 @@ def run_daily() -> int:
     steps: list[tuple[str, callable]] = [("rera", ingest_rera)]
     steps += [(name, lambda n=name: ingest_portal(n)) for name in SOURCES]
     steps.append(("sweep_and_tag", sweep_and_tag))
+    # Scoring last: it reads the legal tags the sweep step writes. Note the
+    # digest is deliberately NOT here — it fires only from its own job, so a
+    # startup catch-up cannot re-send the morning's email.
+    steps.append(("score", score_daily))
 
     errors = 0
     for label, step in steps:
@@ -107,6 +136,7 @@ SCHEDULE: tuple[tuple[str, object, int, int], ...] = (
     ("rera_daily", ingest_rera, 5, 30),
     ("portals_daily", ingest_portals, 6, 0),
     ("sweep_and_tag_daily", sweep_and_tag, 6, 45),
+    ("score_daily", score_daily, 7, 0),
 )
 
 

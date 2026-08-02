@@ -70,6 +70,20 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def _parse_posted_at(value) -> datetime | None:
+    """Parsers emit posted_at as an ISO string (the parsed dict is archived as
+    JSON); the column is timestamptz."""
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        return value if value.tzinfo else value.replace(tzinfo=timezone.utc)
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+
+
 def _get_or_create_source(session: Session, spec: SourceSpec) -> Source:
     source = session.scalar(
         select(Source).where(Source.name == spec.name, Source.city == spec.city)
@@ -130,6 +144,13 @@ def _apply_parsed(listing: Listing, parsed: dict, market_city: str,
     listing.rera_ids = parsed["rera_ids"]
     listing.description = parsed["description"]
     listing.url = parsed["url"]
+    # The portal's posting date only ever moves backwards in confidence: once
+    # known it is a fact about the listing, so a later payload that omits it
+    # (a thinner search-result record, a parser regression) must not erase it
+    # and silently reset days-on-market to zero.
+    posted_at = _parse_posted_at(parsed.get("posted_at"))
+    if posted_at is not None:
+        listing.posted_at = posted_at
     listing.parser_version = parser_version
     listing.last_seen_at = _now()
 
