@@ -61,6 +61,19 @@ services:
       # atlas/jobs.py).
       ATLAS_ENABLE_SCHEDULER: ${ATLAS_ENABLE_SCHEDULER:-1}
       TZ: Asia/Kolkata
+      # --- Investor capital (atlas/profile.py) ---------------------------
+      # WITHOUT THESE THE CONTAINER SILENTLY USES THE profile-v1 DEFAULTS
+      # (Rs 25L liquid, Rs 6L reserved, Rs 0/month) and every affordability
+      # decision downstream is made against the wrong number. Nothing fails;
+      # the briefing just filters to the wrong band. This is why the digest
+      # prints the figures it assumed at the top of every send — that is the
+      # only thing that makes a stale value visible.
+      ATLAS_LIQUID_TOTAL_INR: ${ATLAS_LIQUID_TOTAL_INR:-2500000}
+      ATLAS_RESERVED_INR: ${ATLAS_RESERVED_INR:-600000}
+      ATLAS_MONTHLY_CONTRIBUTION_INR: ${ATLAS_MONTHLY_CONTRIBUTION_INR:-0}
+      ATLAS_LTV: ${ATLAS_LTV:-0.70}
+      ATLAS_COMMITTED_INR: ${ATLAS_COMMITTED_INR:-0}
+      ATLAS_COMMITTED_GAIN_FRACTION: ${ATLAS_COMMITTED_GAIN_FRACTION:-0.35}
       # --- Phase 2: scoring and the daily briefing -----------------------
       # Every key below is OPTIONAL and defaults to empty, unlike the two
       # above. That is deliberate: each one degrades to a visible no-op

@@ -137,6 +137,32 @@ Also unset on the VPS and therefore inert: `ANTHROPIC_API_KEY` (so
 `ATLAS_DIGEST_TO` (digest is built and stored but not delivered), and
 `ATLAS_FEEDBACK_SECRET` / `ATLAS_PUBLIC_BASE_URL` (feedback links omitted).
 
+### The capital block caught a live bug on its first run (2026-08-02)
+
+The first `digest --dry-run` on the VPS printed **deployable ₹19,00,000 and
+saving ₹0/month** against a real position of ~₹3.5L and ₹75k/month. Cause:
+`deploy/compose-snippet.yml` never passed the `ATLAS_LIQUID_TOTAL_INR` /
+`ATLAS_RESERVED_INR` / `ATLAS_MONTHLY_CONTRIBUTION_INR` / `ATLAS_LTV` /
+`ATLAS_COMMITTED_*` keys into the container, so the app fell back to the
+profile-v1 defaults no matter what the VPS `.env` said.
+
+**This is the same bug class already in the record** — §3 lists "`.env.example`
+advertised capital overrides nothing read" among the six found by running it.
+That fix went to `.env.example`; the compose passthrough was never done, so the
+setting was documented, settable, and ignored.
+
+Nothing crashed, and nothing would have. Every affordability decision was
+simply made against the wrong number: a ₹51.8L ceiling instead of ₹9.5L, so the
+briefing would have recommended property that cannot be bought. The only reason
+it surfaced is that the digest prints the figures it assumed at the top of every
+send — which is precisely what roadmap Phase 2b asked for and why it is the
+first thing on the page.
+
+Fixed, plus `tests/test_deploy_config.py`: every setting whose absence is
+*silent* must appear in the compose snippet, with a reverse check that a
+newly-added setting cannot be left unwired. Settings that fail loudly
+(`APIFY_TOKEN`) are excluded — a deploy that refuses to start is its own alarm.
+
 ---
 
 ## 3a. Previous state (2026-08-01)
