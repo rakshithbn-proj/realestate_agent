@@ -10,7 +10,7 @@ from atlas.config import get_settings
 from atlas.db import get_engine, make_session_factory
 from atlas.ingest import legal, rera
 from atlas.ingest.pipeline import run_source, sweep_stale_listings
-from atlas.ingest.registry import SOURCES
+from atlas.ingest.registry import SOURCES, enabled_sources
 
 log = logging.getLogger(__name__)
 
@@ -45,21 +45,22 @@ def ingest_portals() -> None:
     """Run every portal source. One portal raising must not skip the rest —
     otherwise a single dead actor costs every source ordered after it a day of
     ingestion (and, with the gate counting clean days, the whole streak)."""
+    active = enabled_sources()
     errors = 0
-    for name in SOURCES:
+    for name in active:
         try:
             ingest_portal(name)
         except Exception:
             errors += 1
             log.exception("portal %r failed; continuing with the rest", name)
     if errors:
-        log.error("%d/%d portal(s) failed", errors, len(SOURCES))
+        log.error("%d/%d portal(s) failed", errors, len(active))
 
 
 def sweep_and_tag() -> None:
     settings = get_settings()
     with _session() as session:
-        for spec in SOURCES.values():
+        for spec in enabled_sources().values():
             removed = sweep_stale_listings(session, spec,
                                            stale_days=settings.stale_after_days)
             log.info("sweep %s/%s: %d marked removed", spec.name, spec.city, removed)
@@ -108,7 +109,8 @@ def run_daily() -> int:
     steps that raised, so a scheduled run can exit non-zero and be noticed.
     """
     steps: list[tuple[str, callable]] = [("rera", ingest_rera)]
-    steps += [(name, lambda n=name: ingest_portal(n)) for name in SOURCES]
+    steps += [(name, lambda n=name: ingest_portal(n))
+              for name in enabled_sources()]
     steps.append(("sweep_and_tag", sweep_and_tag))
     # Scoring last: it reads the legal tags the sweep step writes. Note the
     # digest is deliberately NOT here — it fires only from its own job, so a

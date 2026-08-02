@@ -1,0 +1,4938 @@
+[
+ {
+  "record_type": "property_listing",
+  "record_id": "92378920",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-sarjapur-bangalore-east-133-sqyd-spid-Z92378920",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-sarjapur-bangalore-east-133-sqyd-spid-Z92378920",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "92378920",
+    "property_id": "Z92378920"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "Project masterplan: Rooted in bengalurus green heritage, the master plan balances form and flow. A pedestrian-First layout where luxury villa plots in sarjapur embrace gardens, courtyards anchor every cluster, and open spaces knit the community together. Discover plots in sarjapur within this visionary plotted development in sarjapur, offering premium villa plots in sarjapur designed for intentional, human-Centric living deeply connected to nature. Sarjapur plot for sale strategic advantages include 5-10 mins to whitefield it park, electronic city, orr, top schools, hospitals, malls, and metro. Gated luxury, 2400-5000 sq.Ft. Plots from 1.25 cr. Secure your slice of sustainable elegance now!",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-sarjapur-bangalore-east-133-sqyd-spid-Z92378920",
+   "external_ids": {
+    "spid": "92378920",
+    "property_id": "Z92378920"
+   }
+  },
+  "listing": {
+   "spid": "92378920",
+   "property_id": "Z92378920",
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "Project masterplan: Rooted in bengalurus green heritage, the master plan balances form and flow. A pedestrian-First layout where luxury villa plots in sarjapur embrace gardens, courtyards anchor every cluster, and open spaces knit the community together. Discover plots in sarjapur within this visionary plotted development in sarjapur, offering premium villa plots in sarjapur designed for intentional, human-Centric living deeply connected to nature. Sarjapur plot for sale strategic advantages include 5-10 mins to whitefield it park, electronic city, orr, top schools, hospitals, malls, and metro. Gated luxury, 2400-5000 sq.Ft. Plots from 1.25 cr. Secure your slice of sustainable elegance now!",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-sarjapur-bangalore-east-133-sqyd-spid-Z92378920",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "T",
+   "product_type": "AI_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-03T15:14:52",
+   "posted_at": "2026-07-03T09:44:51+00:00",
+   "updated_at": "2026-07-10T05:08:33+00:00",
+   "expires_at": "2026-09-01T00:00:00",
+   "registered_display": "1 month ago"
+  },
+  "pricing": {
+   "display_price": "90 Lac",
+   "price_in_words": "Rs. 90 Lac",
+   "min_price": 9000000,
+   "max_price": 9000000,
+   "average_price": 9000000,
+   "price_per_unit_area": 7500,
+   "price_sqft": 7500,
+   "currency": "INR",
+   "brokerage": 0,
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 3,
+   "availability_code": "H",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "H",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "listing_registered_at": "2026-07-03T15:14:52",
+   "listing_posted_at": "2026-07-03T09:44:51+00:00",
+   "listing_updated_at": "2026-07-10T05:08:33+00:00",
+   "listing_expires_at": "2026-09-01T00:00:00",
+   "registered_display": "1 month ago",
+   "age_code": "0"
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur, Bangalore",
+   "locality_without_city": "Sarjapur, Bangalore",
+   "locality_id": "11256",
+   "locality_name": "Sarjapur",
+   "building_id": "0",
+   "coordinates": {
+    "latitude": 12.860004,
+    "longitude": 77.785842,
+    "zoom_level": 12,
+    "source": "LOCALITY"
+   },
+   "total_landmark_count": 3
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 1",
+   "company_name": "Redacted Contact 2",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "A",
+   "class_label": "Dealer",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 1",
+    "contact_company_name": "Redacted Contact 2",
+    "class_label": "A",
+    "contact_city": 23,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 2",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1568442005000,
+     "total_eoi": 30
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "0",
+    "builder_id": "0",
+    "building_id": "0",
+    "project_metadata": {
+     "projectid": 0,
+     "builderid": 0
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "rera_registration_id": "PRM/KA/RERA/1251/446/PR/171225/008348",
+    "poster_rera_registered": "YES",
+    "dealer_rera_registered": "YES",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26,5",
+    "overlooking": "2,5",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "fd": "Y",
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1783071891000,
+    "update_date_u": 1783660113000,
+    "expiry_date_u": "2026-09-01 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 7500,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹7,500 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "92299100",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-anthill-silverfields-sarjapur-bangalore-east-133-sqyd-spid-Y92299100",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-anthill-silverfields-sarjapur-bangalore-east-133-sqyd-spid-Y92299100",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "92299100",
+    "property_id": "Y92299100"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "Development type: Gated premium plot community.Land area: Spread across 12.62 to 13.5 acres of bmrda-Approved land.Total inventory: Encompasses 211 plotted residential units.Rera approval: Officially registered with rera under certificate registration number",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-anthill-silverfields-sarjapur-bangalore-east-133-sqyd-spid-Y92299100",
+   "external_ids": {
+    "spid": "92299100",
+    "property_id": "Y92299100"
+   }
+  },
+  "listing": {
+   "spid": "92299100",
+   "property_id": "Y92299100",
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "Development type: Gated premium plot community.Land area: Spread across 12.62 to 13.5 acres of bmrda-Approved land.Total inventory: Encompasses 211 plotted residential units.Rera approval: Officially registered with rera under certificate registration number",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-anthill-silverfields-sarjapur-bangalore-east-133-sqyd-spid-Y92299100",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "T",
+   "product_type": "AI_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-06-30T16:41:05",
+   "posted_at": "2026-06-30T11:11:05+00:00",
+   "updated_at": "2026-07-03T10:38:48+00:00",
+   "expires_at": "2026-08-29T00:00:00",
+   "registered_display": "1 month ago"
+  },
+  "pricing": {
+   "display_price": "86 Lac",
+   "price_in_words": "Rs. 86 Lac",
+   "min_price": 8600000,
+   "max_price": 8600000,
+   "average_price": 8600000,
+   "price_per_unit_area": 7166,
+   "price_sqft": 7166,
+   "currency": "INR",
+   "brokerage": 0,
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 4,
+   "availability_code": "H",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "total_floors": 2,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "corner_property": true,
+   "gated": true,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "H",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "listing_registered_at": "2026-06-30T16:41:05",
+   "listing_posted_at": "2026-06-30T11:11:05+00:00",
+   "listing_updated_at": "2026-07-03T10:38:48+00:00",
+   "listing_expires_at": "2026-08-29T00:00:00",
+   "registered_display": "1 month ago",
+   "age_code": "0"
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur, Bangalore",
+   "locality_without_city": "Sarjapur, Bangalore",
+   "locality_id": "11256",
+   "locality_name": "Sarjapur",
+   "building_id": "1198863",
+   "building_name": "Anthill Silverfields",
+   "society_name": "Anthill Silverfields",
+   "coordinates": {
+    "latitude": 13.066093,
+    "longitude": 77.789783,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 8
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 1",
+   "company_name": "Redacted Contact 2",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "A",
+   "class_label": "Dealer",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 1",
+    "contact_company_name": "Redacted Contact 2",
+    "class_label": "A",
+    "contact_city": 23,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 2",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1568442005000,
+     "total_eoi": 30
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "446209",
+    "project_name": "Anthill Silverfields",
+    "builder_id": "0",
+    "building_id": "1198863",
+    "building_name": "Anthill Silverfields",
+    "project_metadata": {
+     "projectid": 446209,
+     "proj_name": "Anthill Silverfields",
+     "builderid": 0,
+     "xid_url": "/anthill-silverfields-hoskote-bangalore-east-npxid-r446209",
+     "proj_rera_registration_id": "PRM/KA/RERA/1250/304/PR/030625/007805",
+     "registration_status": "REGISTERED"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "rera_registration_id": "PRM/KA/RERA/1251/446/PR/171225/008348",
+    "project_rera_registration_id": "PRM/KA/RERA/1250/304/PR/030625/007805",
+    "registration_status": "REGISTERED",
+    "poster_rera_registered": "YES",
+    "dealer_rera_registered": "YES",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26,5",
+    "overlooking": "4,1,3,2",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "fd": "Y",
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1782817865000,
+    "update_date_u": 1783075128000,
+    "expiry_date_u": "2026-08-29 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 7166,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹7,166 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "88301854",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-melodies-of-life-sarjapur-road-bangalore-east-67-sqyd-r2-spid-Y88301854",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-melodies-of-life-sarjapur-road-bangalore-east-67-sqyd-r2-spid-Y88301854",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "88301854",
+    "property_id": "Y88301854"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur Road, Bangalore",
+   "description": "Assetz melodies of life, 39 acres of refined living surrounded by nature and excellent connectivity. Located in southeast bangalore, a destination for those seeking a harmonious blend of modern accessibility and scenic beauty. Assetz melodies of life offers an impressive array of outdoor amenities for residents to relax and unwind or exercise and stay active. Immerse yourself in the perfect blend of serenity and nature with the project, an impressive array of 1000+ trees creating a tranquil oasis for residents. * prime strategic location * 45% open space & 15% green cover * scenic views with biodiversity * well planned social infrastructure",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-melodies-of-life-sarjapur-road-bangalore-east-67-sqyd-r2-spid-Y88301854",
+   "external_ids": {
+    "spid": "88301854",
+    "property_id": "Y88301854"
+   }
+  },
+  "listing": {
+   "spid": "88301854",
+   "property_id": "Y88301854",
+   "title": "Residential land / Plot in Sarjapur Road, Bangalore",
+   "description": "Assetz melodies of life, 39 acres of refined living surrounded by nature and excellent connectivity. Located in southeast bangalore, a destination for those seeking a harmonious blend of modern accessibility and scenic beauty. Assetz melodies of life offers an impressive array of outdoor amenities for residents to relax and unwind or exercise and stay active. Immerse yourself in the perfect blend of serenity and nature with the project, an impressive array of 1000+ trees creating a tranquil oasis for residents. * prime strategic location * 45% open space & 15% green cover * scenic views with biodiversity * well planned social infrastructure",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-melodies-of-life-sarjapur-road-bangalore-east-67-sqyd-r2-spid-Y88301854",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "T",
+   "product_type": "AI_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-06-11T12:38:35",
+   "posted_at": "2026-01-24T09:57:49+00:00",
+   "updated_at": "2026-07-09T07:50:46+00:00",
+   "expires_at": "2026-08-10T00:00:00",
+   "registered_display": "1 month ago"
+  },
+  "pricing": {
+   "display_price": "87 Lac",
+   "price_in_words": "Rs. 87 Lac",
+   "min_price": 8700000,
+   "max_price": 8700000,
+   "average_price": 8700000,
+   "price_per_unit_area": 14500,
+   "price_sqft": 14500,
+   "currency": "INR",
+   "brokerage": 1,
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 3,
+   "availability_code": "H",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "total_floors": 3,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "600 sqft",
+    "secondary_area": "55.74 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 600,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 600,
+    "min_area_sqft": 55.7418,
+    "max_area_sqft": 55.7418
+   }
+  },
+  "availability": {
+   "availability_code": "H",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "listing_registered_at": "2026-06-11T12:38:35",
+   "listing_posted_at": "2026-01-24T09:57:49+00:00",
+   "listing_updated_at": "2026-07-09T07:50:46+00:00",
+   "listing_expires_at": "2026-08-10T00:00:00",
+   "registered_display": "1 month ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur Road, Bangalore",
+   "locality_without_city": "Sarjapur Road, Bangalore",
+   "locality_id": "2268",
+   "locality_name": "Sarjapur Road",
+   "building_id": "1157833",
+   "building_name": "Melodies of Life",
+   "society_name": "Melodies of Life",
+   "address": "201",
+   "coordinates": {
+    "latitude": 12.889609,
+    "longitude": 77.685377,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 8
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 3",
+   "company_name": "Redacted Contact 4",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "A",
+   "class_label": "Dealer",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 3",
+    "contact_company_name": "Redacted Contact 4",
+    "class_label": "A",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 4",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1724738590000,
+     "total_eoi": 117
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "422989",
+    "project_name": "Melodies of Life",
+    "builder_id": "0",
+    "building_id": "1157833",
+    "building_name": "Melodies of Life",
+    "project_metadata": {
+     "projectid": 422989,
+     "proj_name": "Melodies of Life",
+     "builderid": 0,
+     "xid_url": "/melodies-of-life-sarjapur-road-bangalore-east-npxid-r422989",
+     "proj_rera_registration_id": "PRM/KA/RERA/1251/310/PR/300124/006594",
+     "registration_status": "REGISTERED"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "project_rera_registration_id": "PRM/KA/RERA/1251/310/PR/300124/006594",
+    "registration_status": "REGISTERED",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "booking_amount": 100000,
+    "features": "23,24,26,5",
+    "overlooking": "3,2",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "fd": "Y",
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1769248669000,
+    "update_date_u": 1783583446000,
+    "expiry_date_u": "2026-08-10 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 600,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 14500,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹14,500 /sqft",
+    "localized_area": "600 sqft",
+    "localized_area_value": 600,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "55.74 sq.m.",
+    "localized_secondary_area_sqft": "600 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "92378908",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-sarjapur-road-bangalore-east-133-sqyd-spid-V92378908",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-sarjapur-road-bangalore-east-133-sqyd-spid-V92378908",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "92378908",
+    "property_id": "V92378908"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur Road, Bangalore",
+   "description": "Aikam aananda is a premium plotted villa development in sarjapura, bengaluru. Prices range from 95 lakhs to 2.4 crore for 1,241 to 3,180 sq. Ft. Plots. While praised for its quiet, green environment and planned amenities Location: Off sarjapur road in chikkadasarahalli, providing decent connectivity to whitefield, electronic city, and major it hubs.The pros: Reviewers on housing.Com appreciate the peaceful atmosphere, gated security, and proximity to international schools like oakridge and greenwood high. The expansive 45-Acre gated layout promises more than 30 lifestyle amenities including parks and sports courts.The cons: Real estate discussions on reddit note that sarjapura and chikkadasarahalli suffer from peak-Hour traffic congestion and occasional infrastructural or road connectivity issues. Additionally, as a plotted development, you will incur extra time and construction costs to build your villa.7 sitessaikam aananda sarjapur, bangalore - Price sheet - Nobrokerabout the saikam aananda. * saikam aananda offers luxurious plotted villa living in the heart of sarjapur, bengaluru, karnataka. S...Nobrokerresidential land / plot for sale in saikam aananda sarjapur road ...",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-sarjapur-road-bangalore-east-133-sqyd-spid-V92378908",
+   "external_ids": {
+    "spid": "92378908",
+    "property_id": "V92378908"
+   }
+  },
+  "listing": {
+   "spid": "92378908",
+   "property_id": "V92378908",
+   "title": "Residential land / Plot in Sarjapur Road, Bangalore",
+   "description": "Aikam aananda is a premium plotted villa development in sarjapura, bengaluru. Prices range from 95 lakhs to 2.4 crore for 1,241 to 3,180 sq. Ft. Plots. While praised for its quiet, green environment and planned amenities Location: Off sarjapur road in chikkadasarahalli, providing decent connectivity to whitefield, electronic city, and major it hubs.The pros: Reviewers on housing.Com appreciate the peaceful atmosphere, gated security, and proximity to international schools like oakridge and greenwood high. The expansive 45-Acre gated layout promises more than 30 lifestyle amenities including parks and sports courts.The cons: Real estate discussions on reddit note that sarjapura and chikkadasarahalli suffer from peak-Hour traffic congestion and occasional infrastructural or road connectivity issues. Additionally, as a plotted development, you will incur extra time and construction costs to build your villa.7 sitessaikam aananda sarjapur, bangalore - Price sheet - Nobrokerabout the saikam aananda. * saikam aananda offers luxurious plotted villa living in the heart of sarjapur, bengaluru, karnataka. S...Nobrokerresidential land / plot for sale in saikam aananda sarjapur road ...",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-sarjapur-road-bangalore-east-133-sqyd-spid-V92378908",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "T",
+   "product_type": "AI_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-03T15:14:37",
+   "posted_at": "2026-07-03T09:44:37+00:00",
+   "updated_at": "2026-07-03T18:58:01+00:00",
+   "expires_at": "2026-09-01T00:00:00",
+   "registered_display": "1 month ago"
+  },
+  "pricing": {
+   "display_price": "89 Lac",
+   "price_in_words": "Rs. 89 Lac",
+   "min_price": 8900000,
+   "max_price": 8900000,
+   "average_price": 8900000,
+   "price_per_unit_area": 7416,
+   "price_sqft": 7416,
+   "currency": "INR",
+   "brokerage": 0,
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 4,
+   "availability_code": "H",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "total_floors": 2,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "H",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "listing_registered_at": "2026-07-03T15:14:37",
+   "listing_posted_at": "2026-07-03T09:44:37+00:00",
+   "listing_updated_at": "2026-07-03T18:58:01+00:00",
+   "listing_expires_at": "2026-09-01T00:00:00",
+   "registered_display": "1 month ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur Road, Bangalore",
+   "locality_without_city": "Sarjapur Road, Bangalore",
+   "locality_id": "2268",
+   "locality_name": "Sarjapur Road",
+   "building_id": "0",
+   "building_name": "Saikam Aananda",
+   "society_name": "Saikam Aananda",
+   "coordinates": {
+    "latitude": 77.618233,
+    "longitude": 13.002091,
+    "zoom_level": 11,
+    "source": "CITY"
+   }
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 1",
+   "company_name": "Redacted Contact 2",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "A",
+   "class_label": "Dealer",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 1",
+    "contact_company_name": "Redacted Contact 2",
+    "class_label": "A",
+    "contact_city": 23,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 2",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1568442005000,
+     "total_eoi": 30
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "0",
+    "project_name": "Saikam Aananda",
+    "builder_id": "0",
+    "building_id": "0",
+    "building_name": "Saikam Aananda",
+    "project_metadata": {
+     "projectid": 0,
+     "builderid": 0
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "rera_registration_id": "PRM/KA/RERA/1251/446/PR/171225/008348",
+    "poster_rera_registered": "YES",
+    "dealer_rera_registered": "YES",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": 5,
+    "overlooking": "1,3",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "fd": "Y",
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1783071877000,
+    "update_date_u": 1783105081000,
+    "expiry_date_u": "2026-09-01 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 7416,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹7,416 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "91718760",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-palm-paradise-by-westbury-sarjapur-bangalore-east-133-sqyd-spid-P91718760",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-palm-paradise-by-westbury-sarjapur-bangalore-east-133-sqyd-spid-P91718760",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "91718760",
+    "property_id": "P91718760"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "Beautiful landscape and ready to construct property with good connectivity to hsr, electronic city and kormangala",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-palm-paradise-by-westbury-sarjapur-bangalore-east-133-sqyd-spid-P91718760",
+   "external_ids": {
+    "spid": "91718760",
+    "property_id": "P91718760"
+   }
+  },
+  "listing": {
+   "spid": "91718760",
+   "property_id": "P91718760",
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "Beautiful landscape and ready to construct property with good connectivity to hsr, electronic city and kormangala",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-palm-paradise-by-westbury-sarjapur-bangalore-east-133-sqyd-spid-P91718760",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "P",
+   "product_type": "AI_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-07T13:05:55",
+   "posted_at": "2026-06-07T09:12:08+00:00",
+   "updated_at": "2026-08-02T01:37:35+00:00",
+   "expires_at": "2026-10-06T00:00:00",
+   "registered_display": "3 weeks ago"
+  },
+  "pricing": {
+   "display_price": "72 Lac",
+   "price_in_words": "Rs. 72 Lac",
+   "min_price": 7200000,
+   "max_price": 7200000,
+   "average_price": 7200000,
+   "price_per_unit_area": 6000,
+   "price_sqft": 6000,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 4,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-07-07T13:05:55",
+   "listing_posted_at": "2026-06-07T09:12:08+00:00",
+   "listing_updated_at": "2026-08-02T01:37:35+00:00",
+   "listing_expires_at": "2026-10-06T00:00:00",
+   "registered_display": "3 weeks ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur, Bangalore",
+   "locality_without_city": "Sarjapur, Bangalore",
+   "locality_id": "11256",
+   "locality_name": "Sarjapur",
+   "building_id": "1173944",
+   "building_name": "Palm Paradise by Westbury",
+   "society_name": "Palm Paradise by Westbury",
+   "coordinates": {
+    "latitude": 12.85398,
+    "longitude": 77.8137,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 15
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 5",
+   "company_name": "Redacted Contact 5",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 5",
+    "contact_company_name": "Redacted Contact 5",
+    "class_label": "O",
+    "contact_city": 20,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 5",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1757121742000,
+     "total_eoi": 20
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "431473",
+    "project_name": "Palm Paradise by Westbury",
+    "builder_id": "0",
+    "building_id": "1173944",
+    "building_name": "Palm Paradise by Westbury",
+    "project_metadata": {
+     "projectid": 431473,
+     "proj_name": "Palm Paradise by Westbury",
+     "builderid": 0,
+     "xid_url": "/palm-paradise-by-westbury-sarjapur-road-bangalore-east-npxid-r431473",
+     "proj_rera_registration_id": "TN/30/Layout/2758/2024dated 16-07-2024",
+     "registration_status": "REGISTERED"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "project_rera_registration_id": "TN/30/Layout/2758/2024dated 16-07-2024",
+    "registration_status": "REGISTERED",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26,5,52",
+    "overlooking": "4,1,3,2,5",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1780823528000,
+    "update_date_u": 1785634655000,
+    "expiry_date_u": "2026-10-06 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 6000,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹6,000 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "86332470",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-melodies-of-life-sarjapur-road-bangalore-east-67-sqyd-spid-M86332470",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-melodies-of-life-sarjapur-road-bangalore-east-67-sqyd-spid-M86332470",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "86332470",
+    "property_id": "M86332470"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur Road, Bangalore",
+   "description": "Assetz melodies of life is a 39-Acre community in scenic southeast bangalore, blending natures calm with city convenience. With seamless access to 15+ it hubs and key routes like orr, electronic city, whitefield, and sarjapur road, it offers unmatched connectivity. Surrounded by top schools, hospitals, and leisure hubs, and enhanced by upcoming prr and strr links, its a future-Ready, well-Connected, and serene residential destination in one of bengalurus most sought-After locales.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-melodies-of-life-sarjapur-road-bangalore-east-67-sqyd-spid-M86332470",
+   "external_ids": {
+    "spid": "86332470",
+    "property_id": "M86332470"
+   }
+  },
+  "listing": {
+   "spid": "86332470",
+   "property_id": "M86332470",
+   "title": "Residential land / Plot in Sarjapur Road, Bangalore",
+   "description": "Assetz melodies of life is a 39-Acre community in scenic southeast bangalore, blending natures calm with city convenience. With seamless access to 15+ it hubs and key routes like orr, electronic city, whitefield, and sarjapur road, it offers unmatched connectivity. Surrounded by top schools, hospitals, and leisure hubs, and enhanced by upcoming prr and strr links, its a future-Ready, well-Connected, and serene residential destination in one of bengalurus most sought-After locales.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-melodies-of-life-sarjapur-road-bangalore-east-67-sqyd-spid-M86332470",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "P",
+   "product_type": "AI_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-09T18:05:27",
+   "posted_at": "2025-11-04T10:40:07+00:00",
+   "updated_at": "2026-07-24T18:28:50+00:00",
+   "expires_at": "2026-11-07T00:00:00",
+   "registered_display": "3 weeks ago"
+  },
+  "pricing": {
+   "display_price": "83 Lac",
+   "price_in_words": "Rs. 83 Lac",
+   "min_price": 8300000,
+   "max_price": 8300000,
+   "average_price": 8300000,
+   "price_per_unit_area": 13833,
+   "price_sqft": 13833,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 4,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 3,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "600 sqft",
+    "secondary_area": "55.74 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 600,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 600,
+    "min_area_sqft": 55.7418,
+    "max_area_sqft": 55.7418
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-07-09T18:05:27",
+   "listing_posted_at": "2025-11-04T10:40:07+00:00",
+   "listing_updated_at": "2026-07-24T18:28:50+00:00",
+   "listing_expires_at": "2026-11-07T00:00:00",
+   "registered_display": "3 weeks ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur Road, Bangalore",
+   "locality_without_city": "Sarjapur Road, Bangalore",
+   "locality_id": "2268",
+   "locality_name": "Sarjapur Road",
+   "building_id": "1157833",
+   "building_name": "Melodies of Life",
+   "society_name": "Melodies of Life",
+   "address": "156",
+   "coordinates": {
+    "latitude": 12.889609,
+    "longitude": 77.685377,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 8
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 6",
+   "company_name": "Redacted Contact 6",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 6",
+    "contact_company_name": "Redacted Contact 6",
+    "class_label": "O",
+    "contact_city": 27,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 6",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1347828633000,
+     "total_eoi": 1
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "422989",
+    "project_name": "Melodies of Life",
+    "builder_id": "0",
+    "building_id": "1157833",
+    "building_name": "Melodies of Life",
+    "project_metadata": {
+     "projectid": 422989,
+     "proj_name": "Melodies of Life",
+     "builderid": 0,
+     "xid_url": "/melodies-of-life-sarjapur-road-bangalore-east-npxid-r422989",
+     "proj_rera_registration_id": "PRM/KA/RERA/1251/310/PR/300124/006594",
+     "registration_status": "REGISTERED"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "project_rera_registration_id": "PRM/KA/RERA/1251/310/PR/300124/006594",
+    "registration_status": "REGISTERED",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26,5",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1762252807000,
+    "update_date_u": 1784917730000,
+    "expiry_date_u": "2026-11-07 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 600,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 13833,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹13,833 /sqft",
+    "localized_area": "600 sqft",
+    "localized_area_value": 600,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "55.74 sq.m.",
+    "localized_secondary_area_sqft": "600 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "93154652",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-psr-icon-coral-sarjapur-bangalore-east-180-sqyd-spid-Z93154652",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-psr-icon-coral-sarjapur-bangalore-east-180-sqyd-spid-Z93154652",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "93154652",
+    "property_id": "Z93154652"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "Available immediately, this 1620 sq.Ft. Residential plot at psr icon coral, sarjapur offers ample space for your new home. Situated in bangalore east, the location benefits from nearby essentials like town hospital, ganesh medicals, and atithi sagar. This land is ideal for those seeking a well-Connected, developing neighborhood.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-psr-icon-coral-sarjapur-bangalore-east-180-sqyd-spid-Z93154652",
+   "external_ids": {
+    "spid": "93154652",
+    "property_id": "Z93154652"
+   }
+  },
+  "listing": {
+   "spid": "93154652",
+   "property_id": "Z93154652",
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "Available immediately, this 1620 sq.Ft. Residential plot at psr icon coral, sarjapur offers ample space for your new home. Situated in bangalore east, the location benefits from nearby essentials like town hospital, ganesh medicals, and atithi sagar. This land is ideal for those seeking a well-Connected, developing neighborhood.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-psr-icon-coral-sarjapur-bangalore-east-180-sqyd-spid-Z93154652",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-08-01T09:58:42",
+   "posted_at": "2026-08-01T04:28:41+00:00",
+   "updated_at": "2026-08-01T09:12:41+00:00",
+   "expires_at": "2027-03-30T00:00:00",
+   "registered_display": "Yesterday"
+  },
+  "pricing": {
+   "display_price": "64.8 Lac",
+   "price_in_words": "Rs. 64.8 Lac",
+   "min_price": 6480000,
+   "max_price": 6480000,
+   "average_price": 6480000,
+   "price_per_unit_area": 4000,
+   "price_sqft": 4000,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 1,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 4,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "corner_property": true,
+   "area": {
+    "display_area": "1620 sqft",
+    "secondary_area": "150.5 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1620,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1620,
+    "min_area_sqft": 150.50286,
+    "max_area_sqft": 150.50286
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-08-01T09:58:42",
+   "listing_posted_at": "2026-08-01T04:28:41+00:00",
+   "listing_updated_at": "2026-08-01T09:12:41+00:00",
+   "listing_expires_at": "2027-03-30T00:00:00",
+   "registered_display": "Yesterday",
+   "age_code": "0"
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur, Bangalore",
+   "locality_without_city": "Sarjapur, Bangalore",
+   "locality_id": "11256",
+   "locality_name": "Sarjapur",
+   "building_id": "57796",
+   "building_name": "PSR Icon Coral",
+   "society_name": "PSR Icon Coral",
+   "coordinates": {
+    "latitude": 12.855039,
+    "longitude": 77.787869,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 3
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 7",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 7",
+    "class_label": "O",
+    "contact_city": 22,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1775627589000,
+     "total_eoi": 1
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "43756",
+    "project_name": "PSR Icon Coral",
+    "builder_id": "0",
+    "building_id": "57796",
+    "building_name": "PSR Icon Coral",
+    "project_metadata": {
+     "projectid": 43756,
+     "proj_name": "PSR Icon Coral",
+     "builderid": 0,
+     "xid_url": "/psr-icon-coral-sarjapur-bangalore-east-npxid-r43756",
+     "registration_status": "NOT_AVAILABLE"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "registration_status": "NOT_AVAILABLE",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": 18,
+    "overlooking": "4,1,3,2,5",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1785558521000,
+    "update_date_u": 1785575561000,
+    "expiry_date_u": "2027-03-30 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1620,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 4000,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹4,000 /sqft",
+    "localized_area": "1620 sqft",
+    "localized_area_value": 1620,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "150.5 sq.m.",
+    "localized_secondary_area_sqft": "1620 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "91299320",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-the-county-address-sarjapur-bangalore-east-133-sqyd-r2-spid-O91299320",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-the-county-address-sarjapur-bangalore-east-133-sqyd-r2-spid-O91299320",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "91299320",
+    "property_id": "O91299320"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "East facing, 24 security, water , clubhouse, swiming pool. Well develpoed , 50+ families residing",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-the-county-address-sarjapur-bangalore-east-133-sqyd-r2-spid-O91299320",
+   "external_ids": {
+    "spid": "91299320",
+    "property_id": "O91299320"
+   }
+  },
+  "listing": {
+   "spid": "91299320",
+   "property_id": "O91299320",
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "East facing, 24 security, water , clubhouse, swiming pool. Well develpoed , 50+ families residing",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-the-county-address-sarjapur-bangalore-east-133-sqyd-r2-spid-O91299320",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-29T14:41:35",
+   "posted_at": "2026-05-21T17:22:59+00:00",
+   "updated_at": "2026-08-01T17:37:01+00:00",
+   "expires_at": "2026-11-27T00:00:00",
+   "registered_display": "4 days ago"
+  },
+  "pricing": {
+   "display_price": "96 Lac",
+   "price_in_words": "Rs. 96 Lac",
+   "min_price": 9600000,
+   "max_price": 9600000,
+   "average_price": 9600000,
+   "price_per_unit_area": 7500,
+   "price_sqft": 7500,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 3,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 3,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-07-29T14:41:35",
+   "listing_posted_at": "2026-05-21T17:22:59+00:00",
+   "listing_updated_at": "2026-08-01T17:37:01+00:00",
+   "listing_expires_at": "2026-11-27T00:00:00",
+   "registered_display": "4 days ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur, Bangalore",
+   "locality_without_city": "Sarjapur, Bangalore",
+   "locality_id": "11256",
+   "locality_name": "Sarjapur",
+   "building_id": "503679",
+   "building_name": "The County Address",
+   "society_name": "The County Address",
+   "address": "308",
+   "coordinates": {
+    "latitude": 12.880837,
+    "longitude": 77.78759,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 10
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 8",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 8",
+    "class_label": "O",
+    "contact_city": 22,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1410928122000,
+     "total_eoi": 6
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "277213",
+    "project_name": "The County Address",
+    "builder_id": "0",
+    "building_id": "503679",
+    "building_name": "The County Address",
+    "project_metadata": {
+     "projectid": 277213,
+     "proj_name": "The County Address",
+     "builderid": 0,
+     "xid_url": "/the-county-address-sarjapur-bangalore-east-npxid-r277213",
+     "proj_rera_registration_id": "PRM/KA/RERA/1251/308/PR/171014/000124",
+     "registration_status": "REGISTERED"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "project_rera_registration_id": "PRM/KA/RERA/1251/308/PR/171014/000124",
+    "registration_status": "REGISTERED",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1779384179000,
+    "update_date_u": 1785605821000,
+    "expiry_date_u": "2026-11-27 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 8000,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹8,000 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "92951516",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-godrej-woodland-sarjapur-road-bangalore-east-171-sqyd-spid-Y92951516",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-godrej-woodland-sarjapur-road-bangalore-east-171-sqyd-spid-Y92951516",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "92951516",
+    "property_id": "Y92951516"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur Road, Bangalore",
+   "description": "Located in godrej woodland, sarjapur road, this 1535 sqft residential land plot offers immediate availability for sale. Positioned on the ground floor, the unfurnished, newly available plot is ideal for building your dream home. Enjoy excellent connectivity via nh 648 and proximity to top schools, hospitals, and the airport in bangalore east.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-godrej-woodland-sarjapur-road-bangalore-east-171-sqyd-spid-Y92951516",
+   "external_ids": {
+    "spid": "92951516",
+    "property_id": "Y92951516"
+   }
+  },
+  "listing": {
+   "spid": "92951516",
+   "property_id": "Y92951516",
+   "title": "Residential land / Plot in Sarjapur Road, Bangalore",
+   "description": "Located in godrej woodland, sarjapur road, this 1535 sqft residential land plot offers immediate availability for sale. Positioned on the ground floor, the unfurnished, newly available plot is ideal for building your dream home. Enjoy excellent connectivity via nh 648 and proximity to top schools, hospitals, and the airport in bangalore east.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-godrej-woodland-sarjapur-road-bangalore-east-171-sqyd-spid-Y92951516",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-24T14:43:58",
+   "posted_at": "2026-07-24T09:13:57+00:00",
+   "updated_at": "2026-08-01T04:51:31+00:00",
+   "expires_at": "2027-03-22T00:00:00",
+   "registered_display": "1 week ago"
+  },
+  "pricing": {
+   "display_price": "99.77 Lac",
+   "price_in_words": "Rs. 99.77 Lac",
+   "min_price": 9977000,
+   "max_price": 9977000,
+   "average_price": 9977000,
+   "price_per_unit_area": 6384,
+   "price_sqft": 6384,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 3,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 5,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1535 sqft",
+    "secondary_area": "142.61 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1535,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1535,
+    "min_area_sqft": 142.60610499999999,
+    "max_area_sqft": 142.60610499999999
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-07-24T14:43:58",
+   "listing_posted_at": "2026-07-24T09:13:57+00:00",
+   "listing_updated_at": "2026-08-01T04:51:31+00:00",
+   "listing_expires_at": "2027-03-22T00:00:00",
+   "registered_display": "1 week ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur Road, Bangalore",
+   "locality_without_city": "Sarjapur Road, Bangalore",
+   "locality_id": "2268",
+   "locality_name": "Sarjapur Road",
+   "building_id": "1055097",
+   "building_name": "Godrej Woodland",
+   "society_name": "Godrej Woodland",
+   "address": "C81",
+   "coordinates": {
+    "latitude": 12.89904,
+    "longitude": 77.83639,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 6
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 9",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 9",
+    "class_label": "O",
+    "contact_city": 22,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1784883584000,
+     "total_eoi": 3
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "374540",
+    "project_name": "Godrej Woodland",
+    "builder_id": "0",
+    "building_id": "1055097",
+    "building_name": "Godrej Woodland",
+    "project_metadata": {
+     "projectid": 374540,
+     "proj_name": "Godrej Woodland",
+     "builderid": 0,
+     "xid_url": "/godrej-woodland-sarjapur-road-bangalore-east-npxid-r374540",
+     "proj_rera_registration_id": "PRM/KA/RERA/1250/304/PR/210208/003856",
+     "registration_status": "REGISTERED"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "project_rera_registration_id": "PRM/KA/RERA/1250/304/PR/210208/003856",
+    "registration_status": "REGISTERED",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26,6,82,83,84,52,85,53,54",
+    "overlooking": "1,3,2",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1784884437000,
+    "update_date_u": 1785559891000,
+    "expiry_date_u": "2027-03-22 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1535,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 6499,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹6,499 /sqft",
+    "localized_area": "1535 sqft",
+    "localized_area_value": 1535,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "142.61 sq.m.",
+    "localized_secondary_area_sqft": "1535 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "92631778",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-telecom-layout-sarjapur-bangalore-east-133-sqyd-spid-Z92631778",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-telecom-layout-sarjapur-bangalore-east-133-sqyd-spid-Z92631778",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "92631778",
+    "property_id": "Z92631778"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "This 1200 sqft residential land plot in telecom layout, sarjapur offers immediate availability for sale. Situated on a prime floor level, the unfurnished, vacant plot is ideal for building your dream home. Enjoy proximity to town hospital, ganesh medicals, and atithi sagar, making this location in bangalore east both convenient and well-Connected.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-telecom-layout-sarjapur-bangalore-east-133-sqyd-spid-Z92631778",
+   "external_ids": {
+    "spid": "92631778",
+    "property_id": "Z92631778"
+   }
+  },
+  "listing": {
+   "spid": "92631778",
+   "property_id": "Z92631778",
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "This 1200 sqft residential land plot in telecom layout, sarjapur offers immediate availability for sale. Situated on a prime floor level, the unfurnished, vacant plot is ideal for building your dream home. Enjoy proximity to town hospital, ganesh medicals, and atithi sagar, making this location in bangalore east both convenient and well-Connected.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-telecom-layout-sarjapur-bangalore-east-133-sqyd-spid-Z92631778",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-12T23:16:56",
+   "posted_at": "2026-07-12T17:46:56+00:00",
+   "updated_at": "2026-07-30T10:06:10+00:00",
+   "expires_at": "2027-03-10T00:00:00",
+   "registered_display": "3 weeks ago"
+  },
+  "pricing": {
+   "display_price": "72 Lac",
+   "price_in_words": "Rs. 72 Lac",
+   "min_price": 7200000,
+   "max_price": 7200000,
+   "average_price": 7200000,
+   "price_per_unit_area": 6000,
+   "price_sqft": 6000,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 0,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-07-12T23:16:56",
+   "listing_posted_at": "2026-07-12T17:46:56+00:00",
+   "listing_updated_at": "2026-07-30T10:06:10+00:00",
+   "listing_expires_at": "2027-03-10T00:00:00",
+   "registered_display": "3 weeks ago",
+   "age_code": "0"
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur, Bangalore",
+   "locality_without_city": "Sarjapur, Bangalore",
+   "locality_id": "11256",
+   "locality_name": "Sarjapur",
+   "building_id": "88144",
+   "building_name": "Telecom Layout",
+   "society_name": "Telecom Layout",
+   "coordinates": {
+    "latitude": 12.87527,
+    "longitude": 77.799476,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 3
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 10",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 10",
+    "class_label": "O",
+    "contact_city": 125,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1163012642000,
+     "total_eoi": 6
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "0",
+    "project_name": "Telecom Layout",
+    "builder_id": "0",
+    "building_id": "88144",
+    "building_name": "Telecom Layout",
+    "project_metadata": {
+     "projectid": 0,
+     "builderid": 0
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "N",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1783878416000,
+    "update_date_u": 1785405970000,
+    "expiry_date_u": "2027-03-10 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 6000,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹6,000 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "92623140",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-slv-sri-sai-gardens-sarjapur-bangalore-east-125-sqyd-spid-B92623140",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-slv-sri-sai-gardens-sarjapur-bangalore-east-125-sqyd-spid-B92623140",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "92623140",
+    "property_id": "B92623140"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "Situated in slv sri sai gardens, sarjapur, this 1125 sqft residential plot is available for immediate sale. Offering three-Side openness, the land is ideal for constructing a home in a well-Connected area near town hospital, ganesh medicals, and atithi sagar. The plot lies in bangalore east, promising a balanced urban lifestyle.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-slv-sri-sai-gardens-sarjapur-bangalore-east-125-sqyd-spid-B92623140",
+   "external_ids": {
+    "spid": "92623140",
+    "property_id": "B92623140"
+   }
+  },
+  "listing": {
+   "spid": "92623140",
+   "property_id": "B92623140",
+   "title": "Residential land / Plot in Sarjapur, Bangalore",
+   "description": "Situated in slv sri sai gardens, sarjapur, this 1125 sqft residential plot is available for immediate sale. Offering three-Side openness, the land is ideal for constructing a home in a well-Connected area near town hospital, ganesh medicals, and atithi sagar. The plot lies in bangalore east, promising a balanced urban lifestyle.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-slv-sri-sai-gardens-sarjapur-bangalore-east-125-sqyd-spid-B92623140",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-12T15:42:21",
+   "posted_at": "2026-07-12T10:12:20+00:00",
+   "updated_at": "2026-07-29T04:11:13+00:00",
+   "expires_at": "2027-03-10T00:00:00",
+   "registered_display": "3 weeks ago"
+  },
+  "pricing": {
+   "display_price": "90 Lac",
+   "price_in_words": "Rs. 90 Lac",
+   "min_price": 9000000,
+   "max_price": 9000000,
+   "average_price": 9000000,
+   "price_per_unit_area": 8000,
+   "price_sqft": 8000,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 7,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 4,
+   "age_code": "0",
+   "ownership_type": "0",
+   "transaction_type": "1",
+   "corner_property": true,
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1125 sqft",
+    "secondary_area": "104.52 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1125,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1125,
+    "min_area_sqft": 104.515875,
+    "max_area_sqft": 104.515875
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-07-12T15:42:21",
+   "listing_posted_at": "2026-07-12T10:12:20+00:00",
+   "listing_updated_at": "2026-07-29T04:11:13+00:00",
+   "listing_expires_at": "2027-03-10T00:00:00",
+   "registered_display": "3 weeks ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur, Bangalore",
+   "locality_without_city": "Sarjapur, Bangalore",
+   "locality_id": "11256",
+   "locality_name": "Sarjapur",
+   "building_id": "253399",
+   "building_name": "SLV Sri Sai Gardens",
+   "society_name": "SLV Sri Sai Gardens",
+   "address": "145",
+   "coordinates": {
+    "latitude": 12.84368,
+    "longitude": 77.784171,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 3
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 11",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 11",
+    "class_label": "O",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1397749883000,
+     "total_eoi": 6
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "251159",
+    "project_name": "SLV Sri Sai Gardens",
+    "builder_id": "0",
+    "building_id": "253399",
+    "building_name": "SLV Sri Sai Gardens",
+    "project_metadata": {
+     "projectid": 251159,
+     "proj_name": "SLV Sri Sai Gardens",
+     "builderid": 0,
+     "xid_url": "/slv-sri-sai-gardens-sarjapur-bangalore-east-npxid-r251159",
+     "registration_status": "NOT_AVAILABLE"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "registration_status": "NOT_AVAILABLE",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "24,18,82,52,85,53,54",
+    "overlooking": "1,2",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1783851140000,
+    "update_date_u": 1785298273000,
+    "expiry_date_u": "2027-03-10 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1125,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 8000,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹8,000 /sqft",
+    "localized_area": "1125 sqft",
+    "localized_area_value": 1125,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "104.52 sq.m.",
+    "localized_secondary_area_sqft": "1125 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "92250284",
+  "source_context": {
+   "seed_id": "4311644dfc07",
+   "seed_type": "query",
+   "seed_value": "Sarjapur",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=22&groupByConfigurations=true&lazy=true&locality=2268&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-global-white-pearl-sarjapur-road-bangalore-east-220-sqyd-spid-Z92250284",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-global-white-pearl-sarjapur-road-bangalore-east-220-sqyd-spid-Z92250284",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:39+00:00",
+   "external_ids": {
+    "spid": "92250284",
+    "property_id": "Z92250284"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapur Road, Bangalore",
+   "description": "East-Facing residential plot for sale Own your dream plot in a premium gated community with excellent amenities and a peaceful environment. Perfect for building your dream home. East-Facing | gated community | ready to build",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-global-white-pearl-sarjapur-road-bangalore-east-220-sqyd-spid-Z92250284",
+   "external_ids": {
+    "spid": "92250284",
+    "property_id": "Z92250284"
+   }
+  },
+  "listing": {
+   "spid": "92250284",
+   "property_id": "Z92250284",
+   "title": "Residential land / Plot in Sarjapur Road, Bangalore",
+   "description": "East-Facing residential plot for sale Own your dream plot in a premium gated community with excellent amenities and a peaceful environment. Perfect for building your dream home. East-Facing | gated community | ready to build",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-global-white-pearl-sarjapur-road-bangalore-east-220-sqyd-spid-Z92250284",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-06-28T15:04:02",
+   "posted_at": "2026-06-28T09:34:02+00:00",
+   "updated_at": "2026-07-20T16:03:36+00:00",
+   "expires_at": "2027-02-24T00:00:00",
+   "registered_display": "1 month ago"
+  },
+  "pricing": {
+   "display_price": "99 Lac",
+   "price_in_words": "Rs. 99 Lac",
+   "min_price": 9900000,
+   "max_price": 9900000,
+   "average_price": 9900000,
+   "price_per_unit_area": 5002,
+   "price_sqft": 5002,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 3,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "area": {
+    "display_area": "1979 sqft",
+    "secondary_area": "183.86 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1979,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1979,
+    "min_area_sqft": 183.855037,
+    "max_area_sqft": 183.855037
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-06-28T15:04:02",
+   "listing_posted_at": "2026-06-28T09:34:02+00:00",
+   "listing_updated_at": "2026-07-20T16:03:36+00:00",
+   "listing_expires_at": "2027-02-24T00:00:00",
+   "registered_display": "1 month ago",
+   "age_code": "0"
+  },
+  "location": {
+   "city": "Bangalore East",
+   "city_id": "22",
+   "locality": "Sarjapur Road, Bangalore",
+   "locality_without_city": "Sarjapur Road, Bangalore",
+   "locality_id": "2268",
+   "locality_name": "Sarjapur Road",
+   "building_id": "1062971",
+   "building_name": "Global White Pearl",
+   "society_name": "Global White Pearl",
+   "coordinates": {
+    "latitude": 12.880494,
+    "longitude": 77.821012,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 15
+  },
+  "contact_details": {
+   "contact_city_id": "22",
+   "contact_name": "Redacted Contact 12",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 12",
+    "class_label": "O",
+    "contact_city": 22,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1352134733000,
+     "total_eoi": 3
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "379459",
+    "project_name": "Global White Pearl",
+    "builder_id": "0",
+    "building_id": "1062971",
+    "building_name": "Global White Pearl",
+    "project_metadata": {
+     "projectid": 379459,
+     "proj_name": "Global White Pearl",
+     "builderid": 0,
+     "xid_url": "/global-white-pearl-sarjapur-road-bangalore-east-npxid-r379459",
+     "registration_status": "NOT_AVAILABLE"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "registration_status": "NOT_AVAILABLE",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26,5",
+    "overlooking": "4,3,2",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1782639242000,
+    "update_date_u": 1784563416000,
+    "expiry_date_u": "2027-02-24 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1979,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 5002,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹5,002 /sqft",
+    "localized_area": "1979 sqft",
+    "localized_area_value": 1979,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "183.86 sq.m.",
+    "localized_secondary_area_sqft": "1979 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "85637264",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-khb-suryanagar-phase-3-attibele-bangalore-south-133-sqyd-npspid-E85637264",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-khb-suryanagar-phase-3-attibele-bangalore-south-133-sqyd-npspid-E85637264",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "85637264",
+    "property_id": "E85637264"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "Khb suryanagar phase 3 in attibele, bangalore south by karnataka housing board is a residential project. The project offers land with perfect combination of contemporary architecture and features to provide comfortable living. The size of the land is 111.48 sq. Mt. Khb suryanagar phase 3 price ranges from 32.00 lacs to 53.00 lacs. It also offers car parking. The project is vastu complaint. This is a rera registered project with registration number prm/ka/rera/1251/308/pr/180313/001955. It is a ready to move project with possession offered in dec, 2017. The project is spread over a total area of 976.31 acres of land. It has 42% of open space. An accommodation of 11035 units has been provided. About city: The center of india's tech industry, bangalore has a positive real estate market. The city is located in southern india on the deccan plateau and is the fifth most populous urban agglomeration in india. Presence of it industries and a number of startups make it a forefront of the it industry in india. The positivity in the real estate market can be attributed to the establishment of it industries embarking new job opportunities in the city. This allows a number of professionals to move in the city creating a demand especially in the residential real estate market. Other factors attributing to this real estate scenario are presence of good infrastructure giving ease connectivity, education and healthcare facilities and the weather conditions.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-khb-suryanagar-phase-3-attibele-bangalore-south-133-sqyd-npspid-E85637264",
+   "external_ids": {
+    "spid": "85637264",
+    "property_id": "E85637264"
+   }
+  },
+  "listing": {
+   "spid": "85637264",
+   "property_id": "E85637264",
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "Khb suryanagar phase 3 in attibele, bangalore south by karnataka housing board is a residential project. The project offers land with perfect combination of contemporary architecture and features to provide comfortable living. The size of the land is 111.48 sq. Mt. Khb suryanagar phase 3 price ranges from 32.00 lacs to 53.00 lacs. It also offers car parking. The project is vastu complaint. This is a rera registered project with registration number prm/ka/rera/1251/308/pr/180313/001955. It is a ready to move project with possession offered in dec, 2017. The project is spread over a total area of 976.31 acres of land. It has 42% of open space. An accommodation of 11035 units has been provided. About city: The center of india's tech industry, bangalore has a positive real estate market. The city is located in southern india on the deccan plateau and is the fifth most populous urban agglomeration in india. Presence of it industries and a number of startups make it a forefront of the it industry in india. The positivity in the real estate market can be attributed to the establishment of it industries embarking new job opportunities in the city. This allows a number of professionals to move in the city creating a demand especially in the residential real estate market. Other factors attributing to this real estate scenario are presence of good infrastructure giving ease connectivity, education and healthcare facilities and the weather conditions.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-khb-suryanagar-phase-3-attibele-bangalore-south-133-sqyd-npspid-E85637264",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "P",
+   "product_type": "PSEUDO_LISTING",
+   "property_number": "1",
+   "registered_at": "2025-10-03T10:57:37",
+   "posted_at": "2025-10-03T05:27:37+00:00",
+   "updated_at": "2025-10-03T05:27:38+00:00",
+   "expires_at": "2026-09-30T00:00:00",
+   "registered_display": "10 months ago"
+  },
+  "pricing": {
+   "display_price": "60 Lac",
+   "price_in_words": "Rs. 60 Lac",
+   "min_price": 6000000,
+   "max_price": 6000000,
+   "average_price": 6000000,
+   "price_per_unit_area": 5000,
+   "price_sqft": 5000,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 0,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 0,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "2",
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2025-10-03T10:57:37",
+   "listing_posted_at": "2025-10-03T05:27:37+00:00",
+   "listing_updated_at": "2025-10-03T05:27:38+00:00",
+   "listing_expires_at": "2026-09-30T00:00:00",
+   "registered_display": "10 months ago",
+   "age_code": "0"
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "Attibele, Bangalore",
+   "locality_without_city": "Attibele, Bangalore",
+   "locality_id": "7986",
+   "locality_name": "Attibele",
+   "building_id": "764778",
+   "building_name": "KHB Suryanagar Phase 3",
+   "society_name": "KHB Suryanagar Phase 3",
+   "coordinates": {
+    "latitude": 12.809745,
+    "longitude": 77.758087,
+    "zoom_level": 16,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 10
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 13",
+   "company_name": "Redacted Contact 14",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "A",
+   "class_label": "Dealer",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 13",
+    "contact_company_name": "Redacted Contact 14",
+    "class_label": "A",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 14",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1747127931000,
+     "total_eoi": 139
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "302691",
+    "project_name": "KHB Suryanagar Phase 3",
+    "builder_id": "0",
+    "building_id": "764778",
+    "building_name": "KHB Suryanagar Phase 3",
+    "project_metadata": {
+     "projectid": 302691,
+     "proj_name": "KHB Suryanagar Phase 3",
+     "builderid": 0,
+     "xid_url": "/khb-suryanagar-phase-3-attibele-bangalore-south-npxid-r302691",
+     "proj_rera_registration_id": "PRM/KA/RERA/1251/308/PR/180313/001955",
+     "registration_status": "REGISTERED"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "project_rera_registration_id": "PRM/KA/RERA/1251/308/PR/180313/001955",
+    "registration_status": "REGISTERED",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "4,5,9,26",
+    "min_area": 1200,
+    "max_area": 1200,
+    "conf_id": "4656862",
+    "fsl_data": {
+     "locality_id": 38175,
+     "type": "FSL"
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_GROUP_FSL",
+    "superarea_unit_u": 1,
+    "posting_date_u": 1759469257000,
+    "update_date_u": 1759469258000,
+    "expiry_date_u": "2026-09-30 00:00:00",
+    "page": 1,
+    "is_fsl": "Y",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 5000,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹5,000 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "91019844",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-khb-suryanagar-phase-3-attibele-bangalore-south-67-sqyd-r1-spid-L91019844",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-khb-suryanagar-phase-3-attibele-bangalore-south-67-sqyd-r1-spid-L91019844",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "91019844",
+    "property_id": "L91019844"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "Karnataka housing board phase 3 Allotte plot Investment choice Clear titles Ready to register Ready to construct",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-khb-suryanagar-phase-3-attibele-bangalore-south-67-sqyd-r1-spid-L91019844",
+   "external_ids": {
+    "spid": "91019844",
+    "property_id": "L91019844"
+   }
+  },
+  "listing": {
+   "spid": "91019844",
+   "property_id": "L91019844",
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "Karnataka housing board phase 3 Allotte plot Investment choice Clear titles Ready to register Ready to construct",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-khb-suryanagar-phase-3-attibele-bangalore-south-67-sqyd-r1-spid-L91019844",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "T",
+   "product_type": "AI_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-18T13:06:30",
+   "posted_at": "2026-05-11T04:18:49+00:00",
+   "updated_at": "2026-07-18T07:37:34+00:00",
+   "expires_at": "2026-09-16T00:00:00",
+   "registered_display": "2 weeks ago"
+  },
+  "pricing": {
+   "display_price": "33 Lac",
+   "price_in_words": "Rs. 33 Lac",
+   "min_price": 3300000,
+   "max_price": 3300000,
+   "average_price": 3300000,
+   "price_per_unit_area": 5500,
+   "price_sqft": 5500,
+   "currency": "INR",
+   "brokerage": 2,
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 2,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 3,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "area": {
+    "display_area": "600 sqft",
+    "secondary_area": "55.74 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 600,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 600,
+    "min_area_sqft": 55.7418,
+    "max_area_sqft": 55.7418
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-07-18T13:06:30",
+   "listing_posted_at": "2026-05-11T04:18:49+00:00",
+   "listing_updated_at": "2026-07-18T07:37:34+00:00",
+   "listing_expires_at": "2026-09-16T00:00:00",
+   "registered_display": "2 weeks ago",
+   "age_code": "0"
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "Attibele, Bangalore",
+   "locality_without_city": "Attibele, Bangalore",
+   "locality_id": "7986",
+   "locality_name": "Attibele",
+   "building_id": "764778",
+   "building_name": "KHB Suryanagar Phase 3",
+   "society_name": "KHB Suryanagar Phase 3",
+   "coordinates": {
+    "latitude": 12.809745,
+    "longitude": 77.758087,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 10
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 13",
+   "company_name": "Redacted Contact 14",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "A",
+   "class_label": "Dealer",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 13",
+    "contact_company_name": "Redacted Contact 14",
+    "class_label": "A",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 14",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1747127931000,
+     "total_eoi": 137
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "302691",
+    "project_name": "KHB Suryanagar Phase 3",
+    "builder_id": "0",
+    "building_id": "764778",
+    "building_name": "KHB Suryanagar Phase 3",
+    "project_metadata": {
+     "projectid": 302691,
+     "proj_name": "KHB Suryanagar Phase 3",
+     "builderid": 0,
+     "xid_url": "/khb-suryanagar-phase-3-attibele-bangalore-south-npxid-r302691",
+     "proj_rera_registration_id": "PRM/KA/RERA/1251/308/PR/180313/001955",
+     "registration_status": "REGISTERED"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "project_rera_registration_id": "PRM/KA/RERA/1251/308/PR/180313/001955",
+    "registration_status": "REGISTERED",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "24,5",
+    "overlooking": "1,2,5",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1778473129000,
+    "update_date_u": 1784360254000,
+    "expiry_date_u": "2026-09-16 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 600,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 5500,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹5,500 /sqft",
+    "localized_area": "600 sqft",
+    "localized_area_value": 600,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "55.74 sq.m.",
+    "localized_secondary_area_sqft": "600 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "90082760",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-annciya-isha-serene-attibele-bangalore-south-186-sqyd-spid-Y90082760",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-annciya-isha-serene-attibele-bangalore-south-186-sqyd-spid-Y90082760",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "90082760",
+    "property_id": "Y90082760"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "Annciya isha serene, its a bmrda and rera approved residential layout in bhaktipura village, attibele, anekal, bengaluru. Its a fully developed layout with good amenities. Near to attibele industrial area, close to blr district by roach lifescapes and harvest international school. Located in bhaktipura, anekal, bangalore south, this 1677 sq.Ft. Residential plot is available for immediate sale.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-annciya-isha-serene-attibele-bangalore-south-186-sqyd-spid-Y90082760",
+   "external_ids": {
+    "spid": "90082760",
+    "property_id": "Y90082760"
+   }
+  },
+  "listing": {
+   "spid": "90082760",
+   "property_id": "Y90082760",
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "Annciya isha serene, its a bmrda and rera approved residential layout in bhaktipura village, attibele, anekal, bengaluru. Its a fully developed layout with good amenities. Near to attibele industrial area, close to blr district by roach lifescapes and harvest international school. Located in bhaktipura, anekal, bangalore south, this 1677 sq.Ft. Residential plot is available for immediate sale.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-annciya-isha-serene-attibele-bangalore-south-186-sqyd-spid-Y90082760",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "P",
+   "product_type": "AI_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-05-22T15:23:41",
+   "posted_at": "2026-04-04T08:28:11+00:00",
+   "updated_at": "2026-07-31T18:22:45+00:00",
+   "expires_at": "2026-09-19T00:00:00",
+   "registered_display": "2 months ago"
+  },
+  "pricing": {
+   "display_price": "79 Lac",
+   "price_in_words": "Rs. 79 Lac",
+   "min_price": 7900000,
+   "max_price": 7900000,
+   "average_price": 7900000,
+   "price_per_unit_area": 5307,
+   "price_sqft": 5307,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 4,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 4,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "corner_property": true,
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1677 sqft",
+    "secondary_area": "155.8 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1677,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1677,
+    "min_area_sqft": 155.798331,
+    "max_area_sqft": 155.798331
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-05-22T15:23:41",
+   "listing_posted_at": "2026-04-04T08:28:11+00:00",
+   "listing_updated_at": "2026-07-31T18:22:45+00:00",
+   "listing_expires_at": "2026-09-19T00:00:00",
+   "registered_display": "2 months ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "Attibele, Bangalore",
+   "locality_without_city": "Attibele, Bangalore",
+   "locality_id": "7986",
+   "locality_name": "Attibele",
+   "building_id": "1094062",
+   "building_name": "Annciya Isha Serene",
+   "society_name": "Annciya Isha Serene",
+   "coordinates": {
+    "latitude": 12.776671,
+    "longitude": 77.771353,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 12
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 15",
+   "company_name": "Redacted Contact 15",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 15",
+    "contact_company_name": "Redacted Contact 15",
+    "class_label": "O",
+    "contact_city": 343,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 15",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1598291422000,
+     "total_eoi": 6
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "400751",
+    "project_name": "Annciya Isha Serene",
+    "builder_id": "0",
+    "building_id": "1094062",
+    "building_name": "Annciya Isha Serene",
+    "project_metadata": {
+     "projectid": 400751,
+     "proj_name": "Annciya Isha Serene",
+     "builderid": 0,
+     "xid_url": "/annciya-isha-serene-attibele-bangalore-south-npxid-r400751",
+     "proj_rera_registration_id": "PRM/KA/RERA/1251/308/PR/091122/005431",
+     "registration_status": "REGISTERED"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "project_rera_registration_id": "PRM/KA/RERA/1251/308/PR/091122/005431",
+    "registration_status": "REGISTERED",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26,5,18",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1775291291000,
+    "update_date_u": 1785522165000,
+    "expiry_date_u": "2026-09-19 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1677,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 4710,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹4,710 /sqft",
+    "localized_area": "1677 sqft",
+    "localized_area_value": 1677,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "155.8 sq.m.",
+    "localized_secondary_area_sqft": "1677 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "92505384",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-attibele-bangalore-south-133-sqyd-spid-N92505384",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-attibele-bangalore-south-133-sqyd-spid-N92505384",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "92505384",
+    "property_id": "N92505384"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "This plot in attibele provides you great opportunity to build a fabulous residence in bangalore south. The plot is around super built up area of 1200 sq.Ft. In size. Construction on this property can be easily done upto 5 floors. Boundary wall is already constructed to separate the plot from nearby properties. Immediately, possession of property can be transferred. The type of ownership is freehold. The price of this massive plot is just 59.4 lac. Further negotiations can be done. This residential plot is east-Facing direction. This property is located very close to metro station, close to school, close to hospital and close to market etc.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-attibele-bangalore-south-133-sqyd-spid-N92505384",
+   "external_ids": {
+    "spid": "92505384",
+    "property_id": "N92505384"
+   }
+  },
+  "listing": {
+   "spid": "92505384",
+   "property_id": "N92505384",
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "This plot in attibele provides you great opportunity to build a fabulous residence in bangalore south. The plot is around super built up area of 1200 sq.Ft. In size. Construction on this property can be easily done upto 5 floors. Boundary wall is already constructed to separate the plot from nearby properties. Immediately, possession of property can be transferred. The type of ownership is freehold. The price of this massive plot is just 59.4 lac. Further negotiations can be done. This residential plot is east-Facing direction. This property is located very close to metro station, close to school, close to hospital and close to market etc.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-attibele-bangalore-south-133-sqyd-spid-N92505384",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "T",
+   "product_type": "AI_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-08T13:27:20",
+   "posted_at": "2026-07-08T07:57:19+00:00",
+   "updated_at": "2026-07-16T21:26:00+00:00",
+   "expires_at": "2026-09-06T00:00:00",
+   "registered_display": "3 weeks ago"
+  },
+  "pricing": {
+   "display_price": "59.4 Lac",
+   "price_in_words": "Rs. 59.4 Lac",
+   "min_price": 5940000,
+   "max_price": 5940000,
+   "average_price": 5940000,
+   "price_per_unit_area": 4950,
+   "price_sqft": 4950,
+   "currency": "INR",
+   "brokerage": 0,
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 3,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 5,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-07-08T13:27:20",
+   "listing_posted_at": "2026-07-08T07:57:19+00:00",
+   "listing_updated_at": "2026-07-16T21:26:00+00:00",
+   "listing_expires_at": "2026-09-06T00:00:00",
+   "registered_display": "3 weeks ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "Attibele, Bangalore",
+   "locality_without_city": "Attibele, Bangalore",
+   "locality_id": "7986",
+   "locality_name": "Attibele",
+   "building_id": "0",
+   "coordinates": {
+    "latitude": 12.78088,
+    "longitude": 77.77141,
+    "zoom_level": 12,
+    "source": "LOCALITY"
+   },
+   "total_landmark_count": 11
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 16",
+   "company_name": "Redacted Contact 17",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "A",
+   "class_label": "Dealer",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 16",
+    "contact_company_name": "Redacted Contact 17",
+    "class_label": "A",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 17",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1782712107000,
+     "total_eoi": 44
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "0",
+    "builder_id": "0",
+    "building_id": "0",
+    "project_metadata": {
+     "projectid": 0,
+     "builderid": 0
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26,5,6,82,83,84,85,52,53,54",
+    "overlooking": "4,1,2,5",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1783497439000,
+    "update_date_u": 1784237160000,
+    "expiry_date_u": "2026-09-06 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 4950,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹4,950 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "93165024",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-C93165024",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-C93165024",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "93165024",
+    "property_id": "C93165024"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "Discover this 1200 sqft residential plot at purvankar residency, attibele, bangalore south, available from march 2027. Featuring a boundary wall and two-Side open layout, it's ideal for your dream home. Well-Connected via sh 35 and close to schools, hospital, and airport, this land offers both convenience and potential. Ready for sale, unfurnished.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-C93165024",
+   "external_ids": {
+    "spid": "93165024",
+    "property_id": "C93165024"
+   }
+  },
+  "listing": {
+   "spid": "93165024",
+   "property_id": "C93165024",
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "Discover this 1200 sqft residential plot at purvankar residency, attibele, bangalore south, available from march 2027. Featuring a boundary wall and two-Side open layout, it's ideal for your dream home. Well-Connected via sh 35 and close to schools, hospital, and airport, this land offers both convenience and potential. Ready for sale, unfurnished.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-C93165024",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-08-01T15:14:02",
+   "posted_at": "2026-08-01T09:44:02+00:00",
+   "updated_at": "2026-08-02T03:38:52+00:00",
+   "expires_at": "2027-03-30T00:00:00",
+   "registered_display": "Yesterday"
+  },
+  "pricing": {
+   "display_price": "40 Lac",
+   "price_in_words": "Rs. 40 Lac",
+   "min_price": 4000000,
+   "max_price": 4000000,
+   "average_price": 4000000,
+   "price_per_unit_area": 3333,
+   "price_sqft": 3333,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 3,
+   "availability_code": "L",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "total_floors": 2,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "corner_property": true,
+   "gated": true,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "L",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "listing_registered_at": "2026-08-01T15:14:02",
+   "listing_posted_at": "2026-08-01T09:44:02+00:00",
+   "listing_updated_at": "2026-08-02T03:38:52+00:00",
+   "listing_expires_at": "2027-03-30T00:00:00",
+   "registered_display": "Yesterday",
+   "age_code": "0"
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "Attibele, Bangalore",
+   "locality_without_city": "Attibele, Bangalore",
+   "locality_id": "7986",
+   "locality_name": "Attibele",
+   "building_id": "1184337",
+   "building_name": "Purvankar Residency",
+   "society_name": "Purvankar Residency",
+   "coordinates": {
+    "latitude": 12.73421,
+    "longitude": 77.73629,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 7
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 18",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 18",
+    "class_label": "O",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1785577170000,
+     "total_eoi": 2
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "437351",
+    "project_name": "Purvankar Residency",
+    "builder_id": "0",
+    "building_id": "1184337",
+    "building_name": "Purvankar Residency",
+    "project_metadata": {
+     "projectid": 437351,
+     "proj_name": "Purvankar Residency",
+     "builderid": 0,
+     "xid_url": "/purvankar-residency-attibele-bangalore-south-npxid-r437351",
+     "registration_status": "NOT_AVAILABLE"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "registration_status": "NOT_AVAILABLE",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "24,26,6,82,83,84,52,85,53",
+    "overlooking": "1,3,2,5",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1785577442000,
+    "update_date_u": 1785641932000,
+    "expiry_date_u": "2027-03-30 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 3333,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹3,333 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "93164634",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-N93164634",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-N93164634",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "93164634",
+    "property_id": "N93164634"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "I am looking for buyer to purchase land available for sale in attibele, bangalore south. Available at price of rs 4000000. It has plot area of 1200 sqft. It is a freehold property",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-N93164634",
+   "external_ids": {
+    "spid": "93164634",
+    "property_id": "N93164634"
+   }
+  },
+  "listing": {
+   "spid": "93164634",
+   "property_id": "N93164634",
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "I am looking for buyer to purchase land available for sale in attibele, bangalore south. Available at price of rs 4000000. It has plot area of 1200 sqft. It is a freehold property",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-N93164634",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-08-01T15:03:57",
+   "posted_at": "2026-08-01T09:33:57+00:00",
+   "updated_at": "2026-08-01T10:50:26+00:00",
+   "expires_at": "2027-03-30T00:00:00",
+   "registered_display": "Yesterday"
+  },
+  "pricing": {
+   "display_price": "40 Lac",
+   "price_in_words": "Rs. 40 Lac",
+   "min_price": 4000000,
+   "max_price": 4000000,
+   "average_price": 4000000,
+   "price_per_unit_area": 3333,
+   "price_sqft": 3333,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 0,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 2,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-08-01T15:03:57",
+   "listing_posted_at": "2026-08-01T09:33:57+00:00",
+   "listing_updated_at": "2026-08-01T10:50:26+00:00",
+   "listing_expires_at": "2027-03-30T00:00:00",
+   "registered_display": "Yesterday",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "Attibele, Bangalore",
+   "locality_without_city": "Attibele, Bangalore",
+   "locality_id": "7986",
+   "locality_name": "Attibele",
+   "building_id": "1184337",
+   "building_name": "Purvankar Residency",
+   "society_name": "Purvankar Residency",
+   "coordinates": {
+    "latitude": 12.73421,
+    "longitude": 77.73629,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 7
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 19",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 19",
+    "class_label": "O",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1780114387000,
+     "total_eoi": 2
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "437351",
+    "project_name": "Purvankar Residency",
+    "builder_id": "0",
+    "building_id": "1184337",
+    "building_name": "Purvankar Residency",
+    "project_metadata": {
+     "projectid": 437351,
+     "proj_name": "Purvankar Residency",
+     "builderid": 0,
+     "xid_url": "/purvankar-residency-attibele-bangalore-south-npxid-r437351",
+     "registration_status": "NOT_AVAILABLE"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "registration_status": "NOT_AVAILABLE",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "N",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1785576837000,
+    "update_date_u": 1785581426000,
+    "expiry_date_u": "2027-03-30 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 3333,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹3,333 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "93101562",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-E93101562",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-E93101562",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "93101562",
+    "property_id": "E93101562"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "Set in purvankar residency, attibele, this 1200 &1500 sqft residential plot individual e khata and 9/11 a khata offers a two-Side open boundary wall, ready for sale with possession from march 2027. Situated near state highway 35 for easy connectivity, and close to schools, hospital, railway station and this land parcel is ideal for building your home with convenience and accessibility.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-E93101562",
+   "external_ids": {
+    "spid": "93101562",
+    "property_id": "E93101562"
+   }
+  },
+  "listing": {
+   "spid": "93101562",
+   "property_id": "E93101562",
+   "title": "Residential land / Plot in Attibele, Bangalore",
+   "description": "Set in purvankar residency, attibele, this 1200 &1500 sqft residential plot individual e khata and 9/11 a khata offers a two-Side open boundary wall, ready for sale with possession from march 2027. Situated near state highway 35 for easy connectivity, and close to schools, hospital, railway station and this land parcel is ideal for building your home with convenience and accessibility.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-purvankar-residency-attibele-bangalore-south-133-sqyd-spid-E93101562",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-30T11:29:04",
+   "posted_at": "2026-07-30T05:59:04+00:00",
+   "updated_at": "2026-08-01T04:19:43+00:00",
+   "expires_at": "2027-07-29T00:00:00",
+   "registered_display": "3 days ago"
+  },
+  "pricing": {
+   "display_price": "38 Lac",
+   "price_in_words": "Rs. 38 Lac",
+   "min_price": 3800000,
+   "max_price": 3800000,
+   "average_price": 3800000,
+   "price_per_unit_area": 3000,
+   "price_sqft": 3000,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 3,
+   "availability_code": "L",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "total_floors": 2,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "L",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "listing_registered_at": "2026-07-30T11:29:04",
+   "listing_posted_at": "2026-07-30T05:59:04+00:00",
+   "listing_updated_at": "2026-08-01T04:19:43+00:00",
+   "listing_expires_at": "2027-07-29T00:00:00",
+   "registered_display": "3 days ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "Attibele, Bangalore",
+   "locality_without_city": "Attibele, Bangalore",
+   "locality_id": "7986",
+   "locality_name": "Attibele",
+   "building_id": "1184337",
+   "building_name": "Purvankar Residency",
+   "society_name": "Purvankar Residency",
+   "coordinates": {
+    "latitude": 12.73421,
+    "longitude": 77.73629,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 7
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 20",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 20",
+    "class_label": "O",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1785389759000,
+     "total_eoi": 6
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "437351",
+    "project_name": "Purvankar Residency",
+    "builder_id": "0",
+    "building_id": "1184337",
+    "building_name": "Purvankar Residency",
+    "project_metadata": {
+     "projectid": 437351,
+     "proj_name": "Purvankar Residency",
+     "builderid": 0,
+     "xid_url": "/purvankar-residency-attibele-bangalore-south-npxid-r437351",
+     "registration_status": "NOT_AVAILABLE"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "registration_status": "NOT_AVAILABLE",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "24,26,6,82,83,84,52,85,53,54",
+    "overlooking": "1,3",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1785391144000,
+    "update_date_u": 1785557983000,
+    "expiry_date_u": "2027-07-29 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 3166,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹3,166 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "93101416",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-smedihalli-bangalore-south-167-sqyd-spid-I93101416",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-smedihalli-bangalore-south-167-sqyd-spid-I93101416",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "93101416",
+    "property_id": "I93101416"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in S.Medihalli, Sarjapura Attibele Road",
+   "description": "Our property located in main road. Very close to upcoming international stadium.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-smedihalli-bangalore-south-167-sqyd-spid-I93101416",
+   "external_ids": {
+    "spid": "93101416",
+    "property_id": "I93101416"
+   }
+  },
+  "listing": {
+   "spid": "93101416",
+   "property_id": "I93101416",
+   "title": "Residential land / Plot in S.Medihalli, Sarjapura Attibele Road",
+   "description": "Our property located in main road. Very close to upcoming international stadium.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-smedihalli-bangalore-south-167-sqyd-spid-I93101416",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-30T11:25:28",
+   "posted_at": "2026-07-30T05:55:28+00:00",
+   "updated_at": "2026-08-01T22:44:49+00:00",
+   "expires_at": "2027-03-28T00:00:00",
+   "registered_display": "3 days ago"
+  },
+  "pricing": {
+   "display_price": "45 Lac",
+   "price_in_words": "Rs. 45 Lac",
+   "min_price": 4500000,
+   "max_price": 4500000,
+   "average_price": 4500000,
+   "price_per_unit_area": 2400,
+   "price_sqft": 2400,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 4,
+   "availability_code": "L",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "total_floors": 2,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1500 sqft",
+    "secondary_area": "139.35 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1500,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1500,
+    "min_area_sqft": 139.3545,
+    "max_area_sqft": 139.3545
+   }
+  },
+  "availability": {
+   "availability_code": "L",
+   "availability": {
+    "availability": 1,
+    "sub_availability": 0
+   },
+   "listing_registered_at": "2026-07-30T11:25:28",
+   "listing_posted_at": "2026-07-30T05:55:28+00:00",
+   "listing_updated_at": "2026-08-01T22:44:49+00:00",
+   "listing_expires_at": "2027-03-28T00:00:00",
+   "registered_display": "3 days ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "S.Medihalli, Sarjapura Attibele Road",
+   "locality_without_city": "S.Medihalli, Sarjapura Attibele Road",
+   "locality_id": "1102562",
+   "locality_name": "S.Medihalli",
+   "building_id": "0",
+   "coordinates": {
+    "latitude": 12.819624554908,
+    "longitude": 77.783206082161,
+    "zoom_level": 12,
+    "source": "LOCALITY"
+   },
+   "total_landmark_count": 1
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 21",
+   "company_name": "Redacted Contact 21",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 21",
+    "contact_company_name": "Redacted Contact 21",
+    "class_label": "O",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "contact_company_name": "Redacted Contact 21",
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1785390594000,
+     "total_eoi": 6
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "0",
+    "builder_id": "0",
+    "building_id": "0",
+    "project_metadata": {
+     "projectid": 0,
+     "builderid": 0
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "24,26,6,82,83,84,52,85,53",
+    "overlooking": "1,3,2",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1785390928000,
+    "update_date_u": 1785624289000,
+    "expiry_date_u": "2027-03-28 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1500,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 3000,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹3,000 /sqft",
+    "localized_area": "1500 sqft",
+    "localized_area_value": 1500,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "139.35 sq.m.",
+    "localized_secondary_area_sqft": "1500 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "92607712",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-confident-aries-3-beml-cooperative-society-bangalore-south-layout-130-sqyd-spid-V92607712",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-confident-aries-3-beml-cooperative-society-bangalore-south-layout-130-sqyd-spid-V92607712",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "92607712",
+    "property_id": "V92607712"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in BEML Cooperative Society Layout, Sarjapura Attibele Road",
+   "description": "Premium 1166 sq ft corner plot available for sale in the well-Established gated community of confident aries phase 3. Key highlights: Corner plot with two-Side open access One of the first plots after the entrance gate Very close to the main road, offering excellent accessibility Good ventilation and abundant natural light Ready for construction Ideal for both investment and end-Use Located in a rapidly developing corridor with strong appreciation potential Community features: Gated and secure layout Well-Developed internal roads Peaceful residential environment Close to schools, supermarkets and daily conveniences Excellent connectivity to sarjapur, attibele, electronic city and major it hubs Clear title and documents available. Genuine buyers only. Contact for more details and site visit.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-confident-aries-3-beml-cooperative-society-bangalore-south-layout-130-sqyd-spid-V92607712",
+   "external_ids": {
+    "spid": "92607712",
+    "property_id": "V92607712"
+   }
+  },
+  "listing": {
+   "spid": "92607712",
+   "property_id": "V92607712",
+   "title": "Residential land / Plot in BEML Cooperative Society Layout, Sarjapura Attibele Road",
+   "description": "Premium 1166 sq ft corner plot available for sale in the well-Established gated community of confident aries phase 3. Key highlights: Corner plot with two-Side open access One of the first plots after the entrance gate Very close to the main road, offering excellent accessibility Good ventilation and abundant natural light Ready for construction Ideal for both investment and end-Use Located in a rapidly developing corridor with strong appreciation potential Community features: Gated and secure layout Well-Developed internal roads Peaceful residential environment Close to schools, supermarkets and daily conveniences Excellent connectivity to sarjapur, attibele, electronic city and major it hubs Clear title and documents available. Genuine buyers only. Contact for more details and site visit.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-confident-aries-3-beml-cooperative-society-bangalore-south-layout-130-sqyd-spid-V92607712",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-07-11T20:28:37",
+   "posted_at": "2026-07-11T14:58:37+00:00",
+   "updated_at": "2026-07-21T05:54:31+00:00",
+   "expires_at": "2027-03-09T00:00:00",
+   "registered_display": "3 weeks ago"
+  },
+  "pricing": {
+   "display_price": "99 Lac",
+   "price_in_words": "Rs. 99 Lac",
+   "min_price": 9900000,
+   "max_price": 9900000,
+   "average_price": 9900000,
+   "price_per_unit_area": 8490,
+   "price_sqft": 8490,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 2,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 3,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "corner_property": true,
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1166 sqft",
+    "secondary_area": "108.32 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1166,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1166,
+    "min_area_sqft": 108.324898,
+    "max_area_sqft": 108.324898
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-07-11T20:28:37",
+   "listing_posted_at": "2026-07-11T14:58:37+00:00",
+   "listing_updated_at": "2026-07-21T05:54:31+00:00",
+   "listing_expires_at": "2027-03-09T00:00:00",
+   "registered_display": "3 weeks ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "BEML Cooperative Society Layout, Sarjapura Attibele Road",
+   "locality_without_city": "BEML Cooperative Society Layout, Sarjapura Attibele Road",
+   "locality_id": "1151054",
+   "locality_name": "BEML Cooperative Society Layout",
+   "building_id": "81888",
+   "building_name": "Confident Aries 3",
+   "society_name": "Confident Aries 3",
+   "coordinates": {
+    "latitude": 12.815874,
+    "longitude": 77.788685,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 1
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 22",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 22",
+    "class_label": "O",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1360866346000,
+     "total_eoi": 4
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "59856",
+    "project_name": "Confident Aries 3",
+    "builder_id": "0",
+    "building_id": "81888",
+    "building_name": "Confident Aries 3",
+    "project_metadata": {
+     "projectid": 59856,
+     "proj_name": "Confident Aries 3",
+     "builderid": 0,
+     "xid_url": "/confident-aries-3-beml-cooperative-society-bangalore-south-layout-npxid-r59856",
+     "registration_status": "NOT_AVAILABLE"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "registration_status": "NOT_AVAILABLE",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,6,18,82,84,52,85,53,54",
+    "overlooking": "1,3,2",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1783781917000,
+    "update_date_u": 1784613271000,
+    "expiry_date_u": "2027-03-09 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1166,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 8490,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹8,490 /sqft",
+    "localized_area": "1166 sqft",
+    "localized_area_value": 1166,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "108.32 sq.m.",
+    "localized_secondary_area_sqft": "1166 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "90769806",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-celebrity-natures-habitat-phase-2-beml-cooperative-society-bangalore-south-layout-167-sqyd-spid-E90769806",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-celebrity-natures-habitat-phase-2-beml-cooperative-society-bangalore-south-layout-167-sqyd-spid-E90769806",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "90769806",
+    "property_id": "E90769806"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in BEML Cooperative Society Layout, Sarjapura Attibele Road",
+   "description": "Located in celebrity natures habitat phase 2, this 1500 sq.Ft. Residential plot in beml cooperative society layout offers immediate availability. Situated on sarjapura attibele road, bangalore south, the land is ideal for building your home with easy access to multiple hospitals nearby, including elite and aastha hospitals. Sale opportunity only.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-celebrity-natures-habitat-phase-2-beml-cooperative-society-bangalore-south-layout-167-sqyd-spid-E90769806",
+   "external_ids": {
+    "spid": "90769806",
+    "property_id": "E90769806"
+   }
+  },
+  "listing": {
+   "spid": "90769806",
+   "property_id": "E90769806",
+   "title": "Residential land / Plot in BEML Cooperative Society Layout, Sarjapura Attibele Road",
+   "description": "Located in celebrity natures habitat phase 2, this 1500 sq.Ft. Residential plot in beml cooperative society layout offers immediate availability. Situated on sarjapura attibele road, bangalore south, the land is ideal for building your home with easy access to multiple hospitals nearby, including elite and aastha hospitals. Sale opportunity only.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-celebrity-natures-habitat-phase-2-beml-cooperative-society-bangalore-south-layout-167-sqyd-spid-E90769806",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-04-30T22:28:05",
+   "posted_at": "2026-04-30T16:58:04+00:00",
+   "updated_at": "2026-07-15T20:45:54+00:00",
+   "expires_at": "2026-12-27T00:00:00",
+   "registered_display": "3 months ago"
+  },
+  "pricing": {
+   "display_price": "90 Lac",
+   "price_in_words": "Rs. 90 Lac",
+   "min_price": 9000000,
+   "max_price": 9000000,
+   "average_price": 9000000,
+   "price_per_unit_area": 6000,
+   "price_sqft": 6000,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 4,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 3,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1500 sqft",
+    "secondary_area": "139.35 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1500,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1500,
+    "min_area_sqft": 139.3545,
+    "max_area_sqft": 139.3545
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-04-30T22:28:05",
+   "listing_posted_at": "2026-04-30T16:58:04+00:00",
+   "listing_updated_at": "2026-07-15T20:45:54+00:00",
+   "listing_expires_at": "2026-12-27T00:00:00",
+   "registered_display": "3 months ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "BEML Cooperative Society Layout, Sarjapura Attibele Road",
+   "locality_without_city": "BEML Cooperative Society Layout, Sarjapura Attibele Road",
+   "locality_id": "1151054",
+   "locality_name": "BEML Cooperative Society Layout",
+   "building_id": "414261",
+   "building_name": "Celebrity Natures Habitat Phase 2",
+   "society_name": "Celebrity Natures Habitat Phase 2",
+   "coordinates": {
+    "latitude": 12.780976,
+    "longitude": 77.773653,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 12
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 23",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 23",
+    "class_label": "O",
+    "contact_city": 28,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1565345615000,
+     "total_eoi": 4
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "0",
+    "project_name": "Celebrity Natures Habitat Phase 2",
+    "builder_id": "0",
+    "building_id": "414261",
+    "building_name": "Celebrity Natures Habitat Phase 2",
+    "project_metadata": {
+     "projectid": 0,
+     "builderid": 0
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "N",
+    "overlooking": "5,1",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1777568284000,
+    "update_date_u": 1784148354000,
+    "expiry_date_u": "2026-12-27 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1500,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 6000,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹6,000 /sqft",
+    "localized_area": "1500 sqft",
+    "localized_area_value": 1500,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "139.35 sq.m.",
+    "localized_secondary_area_sqft": "1500 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "85453158",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-sowparnika-swastika-sarjapura-attibele-road-bangalore-south-133-sqyd-spid-B85453158",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-sowparnika-swastika-sarjapura-attibele-road-bangalore-south-133-sqyd-spid-B85453158",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "85453158",
+    "property_id": "B85453158"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapura Attibele Road, Bangalore",
+   "description": "Plot for sale in sarjapura attibele road is available in bangalore south. This locality resonates with your modern lifestyle. This 1200 sq.Ft. Super built up area plot is your opportunity to build a exceptional residence. Up to 3 floors can be easily built on this land. The property is enclosed by boundary wall. Possession of land can be secured within 6 months. The owner of the property has freehold entitlement over the land. The asking price is only 78.2 lac. Negotiable.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-sowparnika-swastika-sarjapura-attibele-road-bangalore-south-133-sqyd-spid-B85453158",
+   "external_ids": {
+    "spid": "85453158",
+    "property_id": "B85453158"
+   }
+  },
+  "listing": {
+   "spid": "85453158",
+   "property_id": "B85453158",
+   "title": "Residential land / Plot in Sarjapura Attibele Road, Bangalore",
+   "description": "Plot for sale in sarjapura attibele road is available in bangalore south. This locality resonates with your modern lifestyle. This 1200 sq.Ft. Super built up area plot is your opportunity to build a exceptional residence. Up to 3 floors can be easily built on this land. The property is enclosed by boundary wall. Possession of land can be secured within 6 months. The owner of the property has freehold entitlement over the land. The asking price is only 78.2 lac. Negotiable.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-sowparnika-swastika-sarjapura-attibele-road-bangalore-south-133-sqyd-spid-B85453158",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-05-07T00:00:00",
+   "posted_at": "2025-09-24T12:14:39+00:00",
+   "updated_at": "2026-07-31T22:57:53+00:00",
+   "expires_at": "2026-09-23T00:00:00",
+   "registered_display": "2 months ago"
+  },
+  "pricing": {
+   "display_price": "78.2 Lac",
+   "price_in_words": "Rs. 78.2 Lac",
+   "min_price": 7820000,
+   "max_price": 7820000,
+   "average_price": 7820000,
+   "price_per_unit_area": 6516,
+   "price_sqft": 6516,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 3,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 3,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-05-07T00:00:00",
+   "listing_posted_at": "2025-09-24T12:14:39+00:00",
+   "listing_updated_at": "2026-07-31T22:57:53+00:00",
+   "listing_expires_at": "2026-09-23T00:00:00",
+   "registered_display": "2 months ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "Sarjapura Attibele Road, Bangalore",
+   "locality_without_city": "Sarjapura Attibele Road, Bangalore",
+   "locality_id": "38175",
+   "locality_name": "Sarjapura Attibele Road",
+   "building_id": "457779",
+   "building_name": "Sowparnika Swastika",
+   "society_name": "Sowparnika Swastika",
+   "coordinates": {
+    "latitude": 12.801064,
+    "longitude": 77.784159,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   },
+   "total_landmark_count": 9
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 24",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 24",
+    "class_label": "O",
+    "contact_city": 217,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1758715229000
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "263311",
+    "project_name": "Sowparnika Swastika",
+    "builder_id": "0",
+    "building_id": "457779",
+    "building_name": "Sowparnika Swastika",
+    "project_metadata": {
+     "projectid": 263311,
+     "proj_name": "Sowparnika Swastika",
+     "builderid": 0,
+     "xid_url": "/sowparnika-swastika-sarjapura-attibele-road-bangalore-south-npxid-r263311",
+     "proj_rera_registration_id": "PRM/KA/RERA/1251/308/PR/171031/001150",
+     "registration_status": "REGISTERED"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "project_rera_registration_id": "PRM/KA/RERA/1251/308/PR/171031/001150",
+    "registration_status": "REGISTERED",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26,5",
+    "overlooking": "4,1",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1758716079000,
+    "update_date_u": 1785538673000,
+    "expiry_date_u": "2026-09-23 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 6516,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹6,516 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ },
+ {
+  "record_type": "property_listing",
+  "record_id": "85027408",
+  "source_context": {
+   "seed_id": "79ad74fc22c2",
+   "seed_type": "query",
+   "seed_value": "Attibele",
+   "source_name": "99acres",
+   "source_domain": "99acres.com",
+   "source_url": "https://www.99acres.com/api-aggregator/srp/search?budget_max=13&city=217&groupByConfigurations=true&lazy=true&locality=38175&moduleName=GRAILS_SRP&nl=3&page=1&pageName=SRP&page_size=25&platform=DESKTOP&preference=S&property_type=3&recomGroupType=VSP&reraType=RERA&rera_type=RERA&res_com=R&seoUrlType=DEFAULT&workflow=GRAILS_SRP",
+   "canonical_url": "https://www.99acres.com/residential-land-plot-for-sale-in-confident-gardenia-sarjapura-attibele-road-bangalore-south-133-sqyd-spid-P85027408",
+   "listing_url": "https://www.99acres.com/residential-land-plot-for-sale-in-confident-gardenia-sarjapura-attibele-road-bangalore-south-133-sqyd-spid-P85027408",
+   "page_index": 1,
+   "scrape_method": "embedded_json",
+   "scraped_at": "2026-08-02T05:01:42+00:00",
+   "external_ids": {
+    "spid": "85027408",
+    "property_id": "P85027408"
+   }
+  },
+  "entity": {
+   "title": "Residential land / Plot in Sarjapura Attibele Road, Bangalore",
+   "description": "Check out this plot for sale in sarjapura attibele road, one of the best locations in bangalore south. It spans over spectacular 1200 sq.Ft. Super built up area. Up to 3 floors can be easily built on this land. The property is enclosed by boundary wall. Possession of land can be secured within 3 months. The property belongs to owner through freehold ownership. This residential plot is all yours for 69 lac. Open for negotiation.",
+   "url": "https://www.99acres.com/residential-land-plot-for-sale-in-confident-gardenia-sarjapura-attibele-road-bangalore-south-133-sqyd-spid-P85027408",
+   "external_ids": {
+    "spid": "85027408",
+    "property_id": "P85027408"
+   }
+  },
+  "listing": {
+   "spid": "85027408",
+   "property_id": "P85027408",
+   "title": "Residential land / Plot in Sarjapura Attibele Road, Bangalore",
+   "description": "Check out this plot for sale in sarjapura attibele road, one of the best locations in bangalore south. It spans over spectacular 1200 sq.Ft. Super built up area. Up to 3 floors can be easily built on this land. The property is enclosed by boundary wall. Possession of land can be secured within 3 months. The property belongs to owner through freehold ownership. This residential plot is all yours for 69 lac. Open for negotiation.",
+   "details_url": "https://www.99acres.com/residential-land-plot-for-sale-in-confident-gardenia-sarjapura-attibele-road-bangalore-south-133-sqyd-spid-P85027408",
+   "deal_type": "residential_sale",
+   "market": "residential",
+   "preference_code": "S",
+   "res_com_code": "R",
+   "property_type": "Residential Land",
+   "property_type_code": "3",
+   "listing_type": "F",
+   "product_type": "FREE_OWNER_LISTING",
+   "property_number": "1",
+   "registered_at": "2026-04-21T00:00:00",
+   "posted_at": "2025-09-07T12:04:31+00:00",
+   "updated_at": "2026-07-31T22:57:53+00:00",
+   "expires_at": "2026-09-06T00:00:00",
+   "registered_display": "3 months ago"
+  },
+  "pricing": {
+   "display_price": "69 Lac",
+   "price_in_words": "Rs. 69 Lac",
+   "min_price": 6900000,
+   "max_price": 6900000,
+   "average_price": 6900000,
+   "price_per_unit_area": 5750,
+   "price_sqft": 5750,
+   "currency": "INR",
+   "show_bsp": true
+  },
+  "property": {
+   "bathrooms": 0,
+   "furnishing_code": "0",
+   "facing_code": 3,
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "total_floors": 3,
+   "age_code": "0",
+   "ownership_type": "1",
+   "ownership_label": "Freehold",
+   "transaction_type": "1",
+   "gated": true,
+   "is_preleased": false,
+   "preleased_current_rent": 0,
+   "area": {
+    "display_area": "1200 sqft",
+    "secondary_area": "111.48 sq.m.",
+    "area_unit_code": "0",
+    "super_area": 1200,
+    "super_area_unit": "sq.ft.",
+    "super_sqft": 1200,
+    "min_area_sqft": 111.4836,
+    "max_area_sqft": 111.4836
+   }
+  },
+  "availability": {
+   "availability_code": "I",
+   "availability": {
+    "availability": 2,
+    "sub_availability": 1001
+   },
+   "listing_registered_at": "2026-04-21T00:00:00",
+   "listing_posted_at": "2025-09-07T12:04:31+00:00",
+   "listing_updated_at": "2026-07-31T22:57:53+00:00",
+   "listing_expires_at": "2026-09-06T00:00:00",
+   "registered_display": "3 months ago",
+   "age_code": "0",
+   "is_preleased": false,
+   "preleased_current_rent": 0
+  },
+  "location": {
+   "city": "Bangalore South",
+   "city_id": "217",
+   "locality": "Sarjapura Attibele Road, Bangalore",
+   "locality_without_city": "Sarjapura Attibele Road, Bangalore",
+   "locality_id": "38175",
+   "locality_name": "Sarjapura Attibele Road",
+   "building_id": "81892",
+   "building_name": "Confident Gardenia",
+   "society_name": "Confident Gardenia",
+   "coordinates": {
+    "latitude": 12.826326,
+    "longitude": 77.789381,
+    "zoom_level": 14,
+    "source": "BUILDING"
+   }
+  },
+  "contact_details": {
+   "contact_city_id": "217",
+   "contact_name": "Redacted Contact 25",
+   "dealer_photo_url": "https://example.invalid/redacted.png",
+   "class_code": "O",
+   "class_label": "Owner",
+   "class_heading": "Redacted",
+   "profile": {
+    "contact_name": "Redacted Contact 25",
+    "class_label": "O",
+    "contact_city": 22,
+    "photo_url": "https://example.invalid/redacted.png",
+    "super": {
+     "photo_url": "https://example.invalid/redacted.png",
+     "since": 1757245677000
+    }
+   }
+  },
+  "relationships": {
+   "project": {
+    "project_id": "59846",
+    "project_name": "Confident Gardenia",
+    "builder_id": "0",
+    "building_id": "81892",
+    "building_name": "Confident Gardenia",
+    "project_metadata": {
+     "projectid": 59846,
+     "proj_name": "Confident Gardenia",
+     "builderid": 0,
+     "xid_url": "/confident-gardenia-sarjapura-attibele-road-bangalore-south-npxid-r59846",
+     "registration_status": "NOT_AVAILABLE"
+    }
+   },
+   "builder": {
+    "builder_id": "0"
+   }
+  },
+  "attributes": {
+   "compliance": {
+    "verified": false,
+    "self_verified": false,
+    "rera_type": "RERA",
+    "registration_status": "NOT_AVAILABLE",
+    "poster_rera_registered": "NO",
+    "dealer_rera_registered": "NO",
+    "mask_contact": false
+   },
+   "source_specific": {
+    "features": "23,24,26,5",
+    "overlooking": "1,4,3,2",
+    "conf_id": "0",
+    "fsl_data": {
+     "locality_id": 0
+    },
+    "per_unit_area_type": "SUPER_AREA",
+    "area_type": "SUPER_AREA",
+    "localized_area_type": "Plot Area",
+    "group_name": "SPID_CONF_GROUPING",
+    "group_count": 0,
+    "superarea_unit_u": 1,
+    "posting_date_u": 1757246671000,
+    "update_date_u": 1785538673000,
+    "expiry_date_u": "2026-09-06 00:00:00",
+    "page": 1,
+    "is_fsl": "N",
+    "shortlisted": "N",
+    "reported": "N",
+    "localized_super_area": 1200,
+    "localized_superarea_unit_u": 1,
+    "localized_superarea_unit": "sqft",
+    "localized_price_sqft": 5750,
+    "localized_price_sqft_unit": 1,
+    "localized_price_sqft_unit_label": "sqft",
+    "localized_price_sqft_text": "₹5,750 /sqft",
+    "localized_area": "1200 sqft",
+    "localized_area_value": 1200,
+    "localized_area_unit": 1,
+    "localized_area_unit_label": "sqft",
+    "localized_secondary_area": "111.48 sq.m.",
+    "localized_secondary_area_sqft": "1200 sqft"
+   }
+  }
+ }
+]

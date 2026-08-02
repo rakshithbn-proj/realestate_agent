@@ -231,6 +231,87 @@ def test_mostly_stub_run_is_anomalous(session, tmp_path):
     assert "unparsed ratio" in session.get(ScrapeRun, result.run_id).error
 
 
+def _acres_spec(path: Path) -> SourceSpec:
+    return SourceSpec(name="99acres", city="bangalore", kind="portal",
+                      fetcher="fixture", parser="acres99",
+                      params={"path": str(path)})
+
+
+ACRES_FIXTURE = Path(__file__).parent / "fixtures" / "99acres_land_sample.json"
+
+
+def test_project_heavy_feed_still_ends_ok(session, tmp_path):
+    """99acres mixes builder projects into the feed. Counting them as parse
+    failures would push a project-heavy run past ANOMALY_UNPARSED_RATIO, mark
+    it 'anomalous', and freeze the staleness sweep for that source — because
+    the sweep only trusts sources with a recent 'ok' run. A skip is a
+    decision, not a failure."""
+    listings = json.loads(ACRES_FIXTURE.read_text(encoding="utf-8"))[:8]
+    # 12 projects to 8 listings = 60% of the feed.
+    projects = [{"record_type": "project",
+                 "entity": {"title": f"Some Layout Phase {i}"},
+                 "relationships": {"project": {"project_name": f"Layout {i}"}}}
+                for i in range(12)]
+    mixed = tmp_path / "mixed.json"
+    mixed.write_text(json.dumps(projects + listings), encoding="utf-8")
+
+    result = run_source(session, _acres_spec(mixed))
+
+    assert result.status == "ok"
+    assert result.skipped == 12
+    assert result.failed == 0
+    assert result.new == 8
+    assert session.scalar(select(func.count(Listing.id))) == 8
+    # Raw-first still holds: every record is archived, projects included, so
+    # the skip judgement is re-derivable if it ever turns out to be wrong.
+    assert session.scalar(select(func.count(RawPayload.id))) == 20
+
+
+def test_feed_of_only_projects_is_anomalous_not_failed(session, tmp_path):
+    """Nothing broke, but a land search returning no purchasable unit is not a
+    normal day either."""
+    projects = [{"record_type": "project", "entity": {"title": f"Layout {i}"}}
+                for i in range(6)]
+    only = tmp_path / "projects.json"
+    only.write_text(json.dumps(projects), encoding="utf-8")
+
+    result = run_source(session, _acres_spec(only))
+    assert result.status == "anomalous"
+    assert result.skipped == 6
+    assert "builder projects" in session.get(ScrapeRun, result.run_id).error
+
+
+def test_plot_listings_flow_end_to_end_with_correct_area(session):
+    """The m2 trap, guarded at the pipeline level rather than only in the
+    parser: what lands in the DB is what the score reads."""
+    result = run_source(session, _acres_spec(ACRES_FIXTURE))
+    assert result.status == "ok"
+    assert result.new == 24
+
+    listing = session.scalar(
+        select(Listing).where(Listing.external_id == "Z92378920"))
+    assert float(listing.area_sqft) == pytest.approx(1200.0)
+    assert listing.price_inr == 9_000_000
+    # price_per_sqft is a generated column — this is the number a corrupted
+    # area would have poisoned.
+    assert float(listing.price_per_sqft) == pytest.approx(7500.0, rel=0.01)
+    assert listing.posted_at is not None
+    assert listing.property_type == "Residential Land"
+
+
+def test_disabled_source_is_created_disabled(session):
+    """The Phase-1 gate reads sources.enabled, so a source shipped off must
+    not start demanding a daily 'ok' run the moment it first appears."""
+    from atlas.models import Source
+
+    spec = SourceSpec(name="99acres", city="bangalore", kind="portal",
+                      fetcher="fixture", parser="acres99", enabled=False,
+                      params={"path": str(ACRES_FIXTURE)})
+    run_source(session, spec)
+    source = session.scalar(select(Source).where(Source.name == "99acres"))
+    assert source.enabled is False
+
+
 def test_empty_fetch_is_anomalous_not_ok(session, tmp_path):
     # A portal returning zero items is a block, not an empty market
     empty = tmp_path / "empty.json"

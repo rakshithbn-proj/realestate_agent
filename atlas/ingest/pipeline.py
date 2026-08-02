@@ -24,7 +24,7 @@ from sqlalchemy.orm import Session
 
 from atlas.ingest import geohash
 from atlas.ingest.fetchers import FETCHERS
-from atlas.ingest.parsers import PARSERS
+from atlas.ingest.parsers import PARSERS, SKIP
 from atlas.ingest.registry import SourceSpec
 from atlas.models import (
     Listing,
@@ -64,6 +64,10 @@ class RunResult:
     price_changed: int
     relisted: int
     unchanged: int
+    # Valid records that are deliberately not listings (99acres mixes builder
+    # projects into the feed). Counted apart from `failed` so a project-heavy
+    # feed can never look like a dying scraper.
+    skipped: int = 0
 
 
 def _now() -> datetime:
@@ -95,6 +99,9 @@ def _get_or_create_source(session: Session, spec: SourceSpec) -> Source:
             kind=spec.kind,
             fetcher=f"{spec.fetcher}:{spec.params.get('actor', spec.params.get('path', ''))}",
             expected_daily_volume=spec.expected_daily_volume,
+            # Mirrors the spec so the Phase-1 gate, which reads sources.enabled,
+            # never demands a daily `ok` run from a source that is switched off.
+            enabled=spec.enabled,
         )
         session.add(source)
         session.flush()
@@ -296,6 +303,7 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
     counts = {"new": 0, "updated": 0, "price_changed": 0, "relisted": 0,
               "unchanged": 0}
     failed = 0
+    skipped = 0
     errors: list[str] = []
     try:
         # Parse first (pure python, per-item containment) so the raw archive
@@ -314,10 +322,11 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
         # listing-write failure can never roll back raw data.
         payload_rows = []
         for raw, parsed in parsed_items:
+            usable = isinstance(parsed, dict)
             row = RawPayload(
                 scrape_run_id=run.id,
-                external_id=parsed["external_id"] if parsed else None,
-                url=parsed["url"] if parsed else None,
+                external_id=parsed["external_id"] if usable else None,
+                url=parsed["url"] if usable else None,
                 payload=raw,
             )
             session.add(row)
@@ -325,6 +334,12 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
         session.commit()
 
         for (raw, parsed), payload_row in zip(parsed_items, payload_rows):
+            if parsed is SKIP:
+                # A valid record that isn't a listing (a builder project).
+                # Archived above like everything else, so if that judgement is
+                # ever wrong it is re-derivable from raw_payloads.
+                skipped += 1
+                continue
             if parsed is None:
                 failed += 1
                 continue
@@ -356,14 +371,19 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
         return RunResult(run.id, "failed", len(raw_items),
                          sum(counts.values()), failed, counts["new"],
                          counts["updated"], counts["price_changed"],
-                         counts["relisted"], counts["unchanged"])
+                         counts["relisted"], counts["unchanged"], skipped)
 
     run.items_found = len(raw_items)
     run.finished_at = _now()
     parsed_total = sum(counts.values())
     error_summary = "; ".join(errors)[:2000] or None
     volume_avg = _trailing_avg_items(session, source.id, exclude_run_id=run.id)
-    unparsed_ratio = failed / len(raw_items) if raw_items else 0.0
+    # Skips are excluded from the denominator: they are records the parser
+    # understood and chose not to store. Counting them as unparsed would let a
+    # project-heavy feed cross ANOMALY_UNPARSED_RATIO, mark healthy runs
+    # 'anomalous', and freeze the staleness sweep for that source.
+    considered = len(raw_items) - skipped
+    unparsed_ratio = failed / considered if considered else 0.0
 
     # Status classification. A run stays 'ok' — and so keeps authorizing the
     # staleness sweep — through a low rate of item failures; only a real
@@ -375,14 +395,21 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
         # market — never 'ok' (which would also poison the trailing average).
         run.status = "anomalous"
         run.error = "empty fetch: 0 items returned"
+    elif parsed_total == 0 and considered == 0:
+        # Every record was a builder project. Nothing broke, but a land search
+        # that returns no purchasable unit is not a normal day either — flag
+        # it without calling the parser dead.
+        run.status = "anomalous"
+        run.error = (f"no listings in {len(raw_items)} items: all were "
+                     "non-listing records (builder projects)")
     elif parsed_total == 0:
         run.status = "failed"
-        run.error = f"all {len(raw_items)} items failed: {error_summary}"
+        run.error = f"all {considered} listing items failed: {error_summary}"
     elif unparsed_ratio > ANOMALY_UNPARSED_RATIO:
         # Actor reported success but pushed mostly stubs — the acres99 failure
         # mode (handoff §7): silent data-quality collapse behind a green status.
         run.status = "anomalous"
-        run.error = (f"unparsed ratio {failed}/{len(raw_items)} exceeds "
+        run.error = (f"unparsed ratio {failed}/{considered} exceeds "
                      f"{ANOMALY_UNPARSED_RATIO}: {error_summary}")
     elif volume_avg is not None and len(raw_items) < volume_avg * ANOMALY_VOLUME_RATIO:
         run.status = "anomalous"
@@ -392,7 +419,7 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
         # Healthy run. Note any tolerated item failures without downgrading —
         # visible in the run row, but the source stays authorized to sweep.
         run.status = "ok"
-        run.error = (f"{failed}/{len(raw_items)} items failed (within tolerance): "
+        run.error = (f"{failed}/{considered} items failed (within tolerance): "
                      f"{error_summary}") if failed else None
     session.commit()
 
@@ -401,6 +428,7 @@ def run_source(session: Session, spec: SourceSpec) -> RunResult:
         parsed=parsed_total, failed=failed, new=counts["new"],
         updated=counts["updated"], price_changed=counts["price_changed"],
         relisted=counts["relisted"], unchanged=counts["unchanged"],
+        skipped=skipped,
     )
 
 
