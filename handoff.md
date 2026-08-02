@@ -95,14 +95,38 @@ If any two docs conflict, precedence is: **atlas_roadmap.md → overall_plan.md 
 
 ### Before the next deploy — two things need a human
 
-1. **Read `atlas.cli score --dry-run` on the VPS before the first real scoring
-   pass.** Weights v1 is written to `score_weights` the first time scoring runs
-   non-dry, and changing it afterwards requires a version bump. Four constants
-   were reasoned, not measured: `MIN_COMPS = 5`, the DOM ramp (30→180 days),
-   the `months_away` bands, and `seller_motivation` at 8. On the 15-listing
-   MagicBricks fixture `price_vs_locality` abstained **100%** of the time (too
-   few same-locality comps); on the 24 plots it fired on all of them. Which of
-   those the 656-listing production set looks like is the open question.
+1. ~~**Read `atlas.cli score --dry-run` before the first real scoring pass.**~~
+   **DONE 2026-08-02 — weights v1 validated against production data, no change
+   made.** Measured on 677 live listings:
+
+   | factor | weight | coverage |
+   |---|---|---|
+   | `legal_risk` | 30 | 100% |
+   | `capital_fit` | 25 | 98.4% |
+   | `price_vs_locality` | 15 | **67.8%** |
+   | `thesis_fit` | 12 | 100% |
+   | `distress` | 10 | 100% |
+   | `seller_motivation` | 8 | 0% (see below) |
+
+   Distribution: min 24.1, **median 42.4**, max 82.8 — 20 listings above 60,
+   325 in the 40–50 bulge. Genuinely discriminating, not crushed into one band.
+
+   **`MIN_COMPS = 5` was the open question and it survives.** On the
+   15-listing MagicBricks fixture `price_vs_locality` abstained 100% of the
+   time; production has enough same-locality, same-asset-class comps to fire
+   on two thirds of listings. No constant was changed, so weights v1 is the
+   version that was reasoned *and* measured.
+
+   **`distress` at 100% is the `reparse` backfill paying off**: 677/677
+   listings got `posted_at` from the raw archive (`unmatched=0`), so
+   days-on-market is real across the whole history rather than starting from
+   the day the column landed. Without it this factor would have read 0%.
+
+   **`seller_motivation` at 0% is expected on day one and is not a failure.**
+   The Batch API is asynchronous: the 07:00 job submits a batch, and the
+   results are collected by the *next* morning's run. It goes live on day 2 —
+   provided `ATLAS_ANTHROPIC_API_KEY` is set. If it is still 0% on day 3, the
+   key is missing and the factor is permanently abstaining.
 2. **Do not enable the 99acres sources until the gate reads 7/7.** They ship
    `enabled=False` for exactly this reason: a newly enabled source must land an
    `ok` run every day from its first one, so switching them on mid-streak bets
