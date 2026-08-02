@@ -129,6 +129,27 @@ so they can't clash with what's already in there:
 unset. `DATABASE_URL` is assembled by compose (host `atlas-db`) — you do not
 set it on the VPS.
 
+### Phase-2 keys — all optional, each degrades to a visible no-op
+
+Unlike the four above, none of these will stop the container. Every one is
+designed so that *absent* is a safe, honest state rather than a failure, which
+is what makes a partial rollout sane: turn them on one at a time and watch.
+
+| Var | Unset means | Cost |
+|---|---|---|
+| `ATLAS_ANTHROPIC_API_KEY` | The `seller_motivation` factor **abstains for every listing** and the score renormalises over the remaining weight. It must never read as "no seller here is motivated". | A few cents/day (Haiku, Batch API, ~650 short descriptions) |
+| `ATLAS_RESEND_API_KEY` + `ATLAS_DIGEST_TO` | The briefing is still built and stored in `report_runs` every morning, just not delivered. Logged, never silent. | Free (3k/month) |
+| `ATLAS_DIGEST_FROM` | Defaults to Resend's shared `onboarding@resend.dev`, which works without domain verification when sending to yourself. | — |
+| `ATLAS_FEEDBACK_SECRET` | 👍/👎 links are omitted from the email **and** `/feedback` rejects everything. It fails closed on purpose: that endpoint is unauthenticated by design, so no secret must mean no writes, not open writes. | — |
+| `ATLAS_PUBLIC_BASE_URL` | Links omitted. Set to the same origin as your Traefik `Host` rule, e.g. `https://atlas.example.com`. | — |
+| `ATLAS_HEALTHCHECKS_PING_URL` | No dead-man's switch — a silent delivery failure goes unnoticed. | Free tier |
+
+Generate the feedback secret with:
+
+```sh
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
 There is no `ATLAS_DOMAIN`: the hostname lives in *your* proxy's config, not
 Atlas's.
 
@@ -196,6 +217,53 @@ Checklist before you walk away:
 - `atlas.cli gate` prints a CLEAN line for today covering **all three** sources
   (`rera_karnataka/karnataka`, `magicbricks/bangalore`, `magicbricks/mysore`).
 
+### 4a. First deploy of Phase 2 — order matters, twice
+
+Two steps here are one-way doors. Do them in this order on the deploy that
+first carries Deal Score and the digest.
+
+**1. Read the score distribution before writing weights v1.**
+
+```sh
+docker compose exec atlas-app python -m atlas.cli reparse --source magicbricks
+docker compose exec atlas-app python -m atlas.cli reparse --source magicbricks_mysore
+docker compose exec atlas-app python -m atlas.cli score --dry-run
+```
+
+`--dry-run` writes nothing. The row in `score_weights` is created by the first
+*non-dry* run, and from then on changing any weight requires bumping
+`WEIGHTS_VERSION` — deliberately, so stored scores stay attributable. So read
+the output first. What you are looking for:
+
+- **The FACTOR COVERAGE block.** Any factor abstaining on most listings is
+  carrying its weight in name only. `price_vs_locality` is the one to watch:
+  it needs ≥5 same-locality, same-asset-class comps, and on a thin sample it
+  abstains everywhere.
+- **The DISTRIBUTION block.** If every listing lands in one band the ranking
+  is not discriminating and the weights need a rethink before they are fixed.
+
+`reparse` first because it backfills `listings.posted_at` from the raw
+archive, which is what makes days-on-market real rather than "days since Atlas
+noticed". Scoring before it would read every listing as brand new.
+
+**2. Leave the 99acres plot sources disabled until the gate reads 7/7.**
+
+They ship `enabled=False` and the daily job skips them. The Phase-1 gate
+requires every *enabled* source to land an `ok` run every day **from its first
+run onward**, so switching on a scraper that has never run in production puts
+the streak at the mercy of its first bad morning. After 7/7:
+
+```sh
+# edit atlas/ingest/registry.py: enabled=False -> True on both acres99 specs,
+# push, let CI publish, then
+docker compose pull atlas-app && docker compose up -d atlas-app
+docker compose exec atlas-app python -m atlas.cli run acres99_land
+```
+
+Budget once enabled: ~$0.98/day (~$29/mo) for Bangalore plus the Mysore spec.
+`limit` is **per location**, so adding a corridor seed adds its own 40 results
+to the bill.
+
 ## 5. Schedule
 
 The in-process APScheduler (`ATLAS_ENABLE_SCHEDULER=1`) runs, all pinned to
@@ -206,6 +274,12 @@ The in-process APScheduler (`ATLAS_ENABLE_SCHEDULER=1`) runs, all pinned to
 | 05:30 | RERA registry |
 | 06:00 | Portals (Bangalore + Mysore) |
 | 06:45 | Staleness sweep + legal tagging |
+| 07:00 | Deal Score pass (collects finished motivation batches, then scores) |
+| 07:15 | The daily briefing |
+
+The digest is deliberately **not** part of `run_daily()`, which is what the
+startup catch-up replays — otherwise a restart inside the morning window would
+re-send the email. `report_runs.sent_at` guards it a second time.
 
 ### Downtime and the daily window
 
@@ -251,10 +325,16 @@ guess (see the header of `scripts/backup.sh`).
 
 ## 7. Watchdog
 
-Create a check at healthchecks.io and have the daily job ping it on success, so
-a *silent* failure (VPS down, container dead, scheduler wedged) pages you
-instead of quietly costing a week of the gate. Set `HEALTHCHECKS_PING_URL` in
-`.env`; wiring it into the job is a small follow-up, not yet implemented.
+Create a check at healthchecks.io and set `ATLAS_HEALTHCHECKS_PING_URL` in
+`.env`. **Now wired** (was a stub until 2026-08-02): the digest job pings it
+only on *successful delivery*, so a missed ping means the briefing did not
+arrive — VPS down, container dead, scheduler wedged, or Resend refusing. A
+dead process cannot report itself dead, which is the whole point of an outside
+watcher.
+
+Set the period to ~26h and the grace to ~2h: the digest fires at 07:15 IST, so
+anything longer hides a whole missed day and anything shorter pages you for
+normal jitter.
 
 ## 8. What the running image decides by itself, and what comes back to you
 

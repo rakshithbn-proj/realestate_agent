@@ -89,6 +89,22 @@ Front-load the "don't lose money" layer before you trust any recommendation.
 
 **Done when:** the briefing arrives every morning for 14 days; ≥1 recommendation/week is genuinely worth reading; every recommendation shows legal flags + evidence + why-selling.
 
+> **Status 2026-08-02 — code complete, gate NOT met.** All four bullets are
+> built (197 tests): Deal Score v1 with versioned weights and stored
+> decomposition, Haiku/Batch seller-motivation with typed output and a
+> verbatim quote, capital-aware ranking, and the Resend digest with 👍/👎.
+> The done-when is a **runtime** gate like Phase 1's — "arrives every morning
+> for 14 days" cannot be claimed by shipping code, so the clock starts on the
+> first delivered briefing, not on this commit.
+>
+> Two factors named in the first bullet ship **declared but dataless**, at
+> weight 0 with a stated reason printed in every briefing:
+> `guidance_value_gap` (never built — see handoff §9.8; `price_vs_locality` is
+> a labelled *stand-in*, not a substitute) and `infra_proximity` (needs
+> PostGIS, Phase 4). `rental_yield` likewise — no rental data is collected.
+> A score that silently omitted them would imply a completeness it does not
+> have.
+
 ### Phase 2b — Capital Plan: how the first deal actually gets funded (~15–20h)
 
 **Why this exists:** the roadmap assumed the reader could transact. In practice
@@ -123,6 +139,19 @@ call." Same data, different product.
 **Done when:** the briefing states the capital it assumed, the cash floor, and
 the countdown — and never surfaces a property that cannot be funded on the date
 it is shown.
+
+> **Status 2026-08-02 — MET in code, with regression tests on each clause.**
+> The capital block prints first on every path (including quiet days) and names
+> the env var behind each figure; the countdown carries the nearest real cash
+> bar and months-away; recommendations are filtered to what is fundable *today*,
+> with near-term targets confined to a separate watchlist.
+>
+> The remaining "to build" items in this section are still open: liquidation
+> cost is modelled (`unlock_cost`, LTCG) but loan **eligibility** as distinct
+> from LTV is not — `capital_fit` still assumes 70% LTV is available wherever
+> the legal tags allow it. That needs the banker conversation and the user's
+> income/existing EMIs (handoff §9.7), and it moves the ceiling more than any
+> code here.
 
 ### Phase 3 — The judgment layer (the 9/10 differentiator, pulled early) (~25–35h)
 Mostly prompts + schemas + storage — cheap, and it compounds immediately, even on deals you find manually offline.

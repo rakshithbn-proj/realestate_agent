@@ -56,10 +56,37 @@ services:
       # Without this the portal fetcher raises and Atlas runs with a
       # permanently dead MagicBricks collector — visible only days later.
       APIFY_TOKEN: ${ATLAS_APIFY_TOKEN:?set ATLAS_APIFY_TOKEN in .env}
-      # The in-process scheduler is what actually collects daily
-      # (05:30 / 06:00 / 06:45, pinned to Asia/Kolkata in atlas/jobs.py).
+      # The in-process scheduler is what actually collects, scores and sends
+      # (05:30 / 06:00 / 06:45 / 07:00 / 07:15, pinned to Asia/Kolkata in
+      # atlas/jobs.py).
       ATLAS_ENABLE_SCHEDULER: ${ATLAS_ENABLE_SCHEDULER:-1}
       TZ: Asia/Kolkata
+      # --- Phase 2: scoring and the daily briefing -----------------------
+      # Every key below is OPTIONAL and defaults to empty, unlike the two
+      # above. That is deliberate: each one degrades to a visible no-op
+      # rather than a failure, so a partial rollout is a safe state.
+      #
+      # Unset -> the seller_motivation factor abstains for every listing and
+      # the score renormalises over the remaining weight. It must never look
+      # like "no seller here is motivated".
+      ANTHROPIC_API_KEY: ${ATLAS_ANTHROPIC_API_KEY:-}
+      # Unset -> the briefing is still built and stored in report_runs each
+      # morning, just not delivered. Logged, never silent.
+      RESEND_API_KEY: ${ATLAS_RESEND_API_KEY:-}
+      ATLAS_DIGEST_TO: ${ATLAS_DIGEST_TO:-}
+      ATLAS_DIGEST_FROM: ${ATLAS_DIGEST_FROM:-Atlas <onboarding@resend.dev>}
+      # Signs the thumbs-up/down links in the email. A mail client cannot
+      # send an Authorization header, so each link carries its own HMAC.
+      # Unset -> links omitted AND /feedback rejects everything: it fails
+      # closed, because that endpoint is unauthenticated by design.
+      ATLAS_FEEDBACK_SECRET: ${ATLAS_FEEDBACK_SECRET:-}
+      # Public origin the feedback links point at, e.g.
+      # https://atlas.example.com — must match your Traefik Host rule below.
+      ATLAS_PUBLIC_BASE_URL: ${ATLAS_PUBLIC_BASE_URL:-}
+      # External dead-man's switch: pinged only on successful delivery, so a
+      # missed ping means the briefing did not arrive. A dead process cannot
+      # report itself dead, which is the whole point of an outside watcher.
+      HEALTHCHECKS_PING_URL: ${ATLAS_HEALTHCHECKS_PING_URL:-}
     depends_on:
       atlas-db:
         condition: service_healthy

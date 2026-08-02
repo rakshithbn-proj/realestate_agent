@@ -185,6 +185,29 @@ Updated for the decisions log: all-Bangalore scope, user's existing VPS (hosting
 
 Cost controls built into the design: Haiku-only extraction, Batch API for all non-interactive LLM work, prompt caching on report generation, deterministic parsing first (LLM only where structure fails), and **actual $/day spend surfaced in the daily report itself** with a $5/day alert. Levers if cost runs hot: scrape every 2 days instead of daily, restrict LLM description-reading to flagged listings only (price drops, stale, distress keywords), trim to 2 portals.
 
+### Measured, as of 2026-08-02 (Phase 2 built, not yet enabled)
+
+The estimates above were made before anything ran. What the built system
+actually costs:
+
+| Item | Measured | vs. estimate |
+|---|---|---|
+| LLM — extraction (`seller_motivation`, Haiku 4.5 + Batch API) | **~$0.02–0.05/day** (~$1/mo). ~650 listings × ~250 tokens in / ~80 out, halved by Batch, and cached on `(listing_id, description hash, prompt version)` so only new or edited text is ever re-billed | **Far below** the $10–45 estimate, which assumed reading full descriptions daily rather than once per change |
+| 99acres plot source (`fatihtahta/99acres-scraper-ppe`, $3.49/1k) | **~$0.98/day (~$29/mo)** — 7 corridor seeds × 40 results. `limit` is **per location**, so each extra seed adds its own 40 to the bill | New line item; not in the original table |
+| MagicBricks + RERA | $0 (free actors, well inside the Apify free credit) | At the cheap end as hoped |
+| LLM — analysis & report | **$0** — the digest is deterministic string rendering, no model call | Estimate assumed an LLM-written report; the briefing turned out better as a fixed format |
+| Email (Resend), VPS | $0 | As estimated |
+| **Total once fully enabled** | **~$30/month**, essentially all of it the plot actor | Inside the $25–90 band, but with the mix inverted: scraping dominates, not LLM |
+
+The design lever that mattered most was not model choice — it was **caching
+extraction on a content hash**. Re-scoring is free; only genuinely new or
+edited listing text costs anything.
+
+Still unbuilt from the controls list: `$/day spend surfaced in the report`
+and the $5/day alert. Worth adding when spend is dominated by a *paid actor*
+rather than the LLM, since the actor bill scales with corridor seeds and is
+the one that can run away quietly.
+
 ## 9. Risks
 
 | Risk | Severity | Mitigation |
