@@ -28,6 +28,11 @@ Manual source runs (idempotent — same code as the scheduler):
 .venv\Scripts\python -m atlas.cli health                    # per-source health JSON
 .venv\Scripts\python -m atlas.cli gate                      # Phase-1 gate: consecutive clean days
 .venv\Scripts\python -m atlas.cli plan                      # capital plan: cash bar + countdown
+.venv\Scripts\python -m atlas.cli score --dry-run           # score distribution, writes nothing
+.venv\Scripts\python -m atlas.cli score --explain <id>      # one listing's full decomposition
+.venv\Scripts\python -m atlas.cli top --limit 15 [--all]    # ranked; --all includes unfundable
+.venv\Scripts\python -m atlas.cli digest --dry-run          # render the briefing, send nothing
+.venv\Scripts\python -m atlas.cli reparse --source <name>   # replay raw_payloads through the parser
 ```
 
 `run <source>` choices come from the registry, so a new `SourceSpec` is
@@ -107,7 +112,59 @@ config (`ATLAS_LIQUID_TOTAL_INR`, `ATLAS_RESERVED_INR`,
 and the briefing must always print the figures it assumed, so a stale value is
 visible daily instead of silently mis-filtering.
 
-**Auth:** every endpoint except `GET /health` requires `Authorization: Bearer $ATLAS_API_TOKEN`; an *unset* token must lock the API (503), never open it.
+**Deal Score is renormalised, never zero-filled** ([atlas/scoring/](atlas/scoring/)).
+Weights live in `weights.py` and are mirrored into `score_weights`;
+`ensure_weights()` raises `WeightsDriftError` if a stored version disagrees
+with the code, so changing how deals rank forces a version bump. A factor with
+no data for a listing **abstains** (`None`) — it is still written as a
+`score_factors` row explaining why, and `overall` is renormalised over the
+weight that was actually covered, recorded as `scores.coverage`. Scoring 0 for
+"unknown" would punish listings for Atlas's own gaps; with three factors
+dataless and price history days deep it would flatten the ranking entirely.
+`guidance_value_gap` / `infra_proximity` / `rental_yield` are declared at
+weight 0 with a stated reason and printed in every briefing — the roadmap
+calls the guidance-value gap the core arbitrage signal and it was never built,
+so `price_vs_locality` is labelled a *stand-in*, not a substitute. Scores are
+listing-scoped (migration 0003) because `properties` is empty until Phase 4,
+and idempotent within an `Asia/Kolkata` day via `score_date`, so a
+recommendation already emailed keeps the number that was sent.
+
+**Locality medians are segmented by asset class.** Land and built stock are
+priced on different bases; a mixed median would make every plot read as a ~45%
+discount and dominate the ranking on an artefact.
+
+**`seller_motivation` is asynchronous and optional**
+([atlas/scoring/motivation.py](atlas/scoring/motivation.py)). Haiku over the
+Batch API answers in minutes to hours, so submission and collection are
+separate passes over `listing_motivation` and the factor abstains until a
+result lands. With no `ANTHROPIC_API_KEY` it abstains for every listing — a
+missing key must never look like "no seller here is motivated".
+
+**Parsers may return three things** ([atlas/ingest/parsers/](atlas/ingest/parsers/)):
+a dict, `None` (a genuine failure, counted against the unparsed ratio), or
+`SKIP` (a valid record that is not a listing — 99acres mixes builder projects
+into the feed). Skips are excluded from that ratio, or a project-heavy feed
+would cross `ANOMALY_UNPARSED_RATIO`, mark healthy runs `anomalous`, and
+freeze the staleness sweep. `SourceSpec.enabled` is mirrored to
+`sources.enabled`, which the gate reads — the paid 99acres specs ship
+**disabled** so they neither bill nor owe a daily `ok` run until switched on.
+
+**`listings.posted_at` is the portal's date, not ours.** `first_seen_at` only
+means "when Atlas noticed", so using it for days-on-market reads every listing
+as brand new. `atlas.cli reparse` replays `raw_payloads` to backfill it — the
+first real exercise of the raw-first guarantee, and written to be reusable for
+any future parser fix.
+
+**The briefing states the capital it assumed, first, always**
+([atlas/report.py](atlas/report.py), 07:15 IST). Capital is env config, so a
+stale figure mis-filters in both directions; printing it daily is what makes
+it visible. Nothing unfundable is ever recommended (Phase 2b), quiet days
+still send (silence is indistinguishable from a dead cron), and delivery is
+guarded by `report_runs.sent_at` — `UNIQUE(report_date)` stops a duplicate
+row, not a duplicate email. `digest_daily` is deliberately **not** in
+`run_daily()`, because that sequence is what the startup catch-up replays.
+
+**Auth:** every endpoint except `GET /health` requires `Authorization: Bearer $ATLAS_API_TOKEN`; an *unset* token must lock the API (503), never open it. The one exception is `GET /feedback/{id}/{up|down}` — a mail client cannot send a header, so those links carry an HMAC over **both** the id and the vote (so a link cannot be edited into its opposite) and fail closed when no secret is set.
 
 **Deploy is image-only.** The dev box has no Docker, so CI
 ([.github/workflows/release.yml](.github/workflows/release.yml)) builds and
@@ -124,7 +181,7 @@ would lose a day; `jobs.catch_up_if_missed()` collects on boot instead.
 
 - Raw first, parse second: never parse before archiving; parser bugs must be recoverable by re-parsing `raw_payloads`.
 - Failures are recorded, never swallowed: a run ends `ok`/`anomalous`/`failed` with `finished_at` set — silent failure is the enemy, and "no new listings" must be distinguishable from "the scraper is dead".
-- Version everything that judges: bump `PARSER_VERSION` on any mapping change (it's stamped on every row); scoring weights and prompts are versioned tables.
+- Version everything that judges: bump `PARSER_VERSION` on any mapping change (it's stamped on every row); `WEIGHTS_VERSION` on any scoring change (enforced — `ensure_weights` raises on drift); `MOTIVATION_PROMPT_VERSION` on any prompt, schema, or signal-vocabulary change (cached extractions are keyed on it).
 - Golden files ([tests/golden/](tests/golden/)) are *reviewed artifacts*: regenerate only deliberately and inspect the diff — never blindly to make tests pass.
 - Evidence or it didn't happen: scores/flags/recommendations store the factor rows and source references that produced them.
 - All scheduled jobs run in `Asia/Kolkata` explicitly.

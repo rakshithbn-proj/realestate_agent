@@ -49,7 +49,73 @@ If any two docs conflict, precedence is: **atlas_roadmap.md → overall_plan.md 
 
 ---
 
-## 3. Current reality (honest state — updated 2026-08-01)
+## 3. Current reality (honest state — updated 2026-08-02)
+
+> **2026-08-02 — Phase 2 code is in (3 commits, 197 tests, local).** Deal Score
+> v1, the 99acres plot source, and the Resend digest. Not yet deployed, and
+> two things need a human before it runs for real — see
+> "Before the next deploy" at the end of this section.
+
+- **Deal Score v1 ships.** Six weighted factors, legal-first
+  (`legal_risk` 30 / `capital_fit` 25 / `price_vs_locality` 15 /
+  `thesis_fit` 12 / `distress` 10 / `seller_motivation` 8), versioned in
+  `score_weights` with drift enforcement. The load-bearing choice is
+  **abstention**: a factor with no data returns `None`, is still written as a
+  `score_factors` row saying why, and `overall` renormalises over the covered
+  weight (`scores.coverage`). Scores are listing-scoped — migration 0003 makes
+  the subject nullable on both sides with a CHECK, rather than minting a fake
+  `properties` row per listing and pre-empting Phase-4 entity resolution.
+- **The plot source is wired and DISABLED.** `fatihtahta/99acres-scraper-ppe`,
+  corridor-targeted (7 seeds × 40, ~$0.98/day). A real 24-item run is saved as
+  a fixture. It found **plots at ₹33L–99L in Attibele and Sarjapur** — the
+  first inventory Atlas collects that is actually inside the capital band.
+  Rendered end to end, the briefing surfaces them at scores 76–79, every one
+  fundable today against ₹35L deployable.
+- **A third trap, not in the old §3 finding 1: coordinates are sometimes
+  transposed** (`latitude: 77.618233, longitude: 13.002091` on a Sarjapur Road
+  plot). A range check misses it — 77.6 is a legal latitude, just not in India
+  — and the geohash lands in the Barents Sea. Handled in
+  `parsers/common.normalise_coords`.
+- **The m² trap is real and is now guarded by corroboration, not by trusting
+  one field.** The record states the area four independent ways; agreement is
+  what makes it trustworthy. The price cross-check is a **unit guard, not a
+  tie-breaker** — on 4 of 24 fixture records all three area fields agree at
+  1,200 sqft while `price / price_sqft` implies 1,280, because the seller
+  rounded the *rate*. A first version preferred the arithmetic and silently
+  invented a 7% larger plot; the golden file caught it.
+- **The digest ships.** Capital block first on every path (naming the env var
+  behind each figure), countdown, fundable-only opportunities with full
+  decomposition, a watchlist of near-term targets, price drops, source health,
+  gate streak, and an explicit "NOT SCORED — no data exists" section.
+  Delivery is guarded by `report_runs.sent_at`; quiet days still send.
+- **`listings.posted_at` landed**, with `atlas.cli reparse` to backfill it from
+  the raw archive — the first real use of the raw-first guarantee.
+- **Feedback loop wired**: signed 👍/👎 links write `recommendations.feedback`.
+  This is the only route by which weights ever get tuned from evidence.
+
+### Before the next deploy — two things need a human
+
+1. **Read `atlas.cli score --dry-run` on the VPS before the first real scoring
+   pass.** Weights v1 is written to `score_weights` the first time scoring runs
+   non-dry, and changing it afterwards requires a version bump. Four constants
+   were reasoned, not measured: `MIN_COMPS = 5`, the DOM ramp (30→180 days),
+   the `months_away` bands, and `seller_motivation` at 8. On the 15-listing
+   MagicBricks fixture `price_vs_locality` abstained **100%** of the time (too
+   few same-locality comps); on the 24 plots it fired on all of them. Which of
+   those the 656-listing production set looks like is the open question.
+2. **Do not enable the 99acres sources until the gate reads 7/7.** They ship
+   `enabled=False` for exactly this reason: a newly enabled source must land an
+   `ok` run every day from its first one, so switching them on mid-streak bets
+   the Phase-1 clock on a scraper that has never run in production.
+
+Also unset on the VPS and therefore inert: `ANTHROPIC_API_KEY` (so
+`seller_motivation` abstains for every listing), `RESEND_API_KEY` /
+`ATLAS_DIGEST_TO` (digest is built and stored but not delivered), and
+`ATLAS_FEEDBACK_SECRET` / `ATLAS_PUBLIC_BASE_URL` (feedback links omitted).
+
+---
+
+## 3a. Previous state (2026-08-01)
 
 - **Phase 0 (foundations): DONE.** FastAPI + Postgres 16 + Alembic + Docker
   Compose/Caddy spine; raw-first ingestion pipeline; token auth; the
@@ -432,18 +498,26 @@ Bangalore–Mysore Expressway) added in Phase 4 per §4a. Detailed in
 
 **Still open:**
 
-6. **Wire the plot source.** Decided and validated, just not built: the paid
-   `fatihtahta/99acres-scraper-ppe` was test-run and returns real Bangalore land
-   (§3 finding 1). Needs a `SourceSpec` + parser handling the m²-labelled-as-sqft
-   trap and the listing-vs-project split.
+6. ~~**Wire the plot source.**~~ **DONE 2026-08-02** — parser, fixture, and
+   registry specs are in, shipped `enabled=False`. Enable after the gate
+   reads 7/7. All three traps (m², project split, transposed coordinates) are
+   handled with cross-checks and regression tests.
 7. **Plot-loan LTV and loan eligibility.** The 70% LTV is a generic assumption.
    Plot loans are stricter (lower LTV, approved layout and clean title
    required, revenue sites often refused), and banks also size on income/FOIR,
    which the model does not know. **Worth one conversation with a banker** — it
    moves the ceiling materially, and it is a one-line config change afterwards.
 8. **Guidance values were never built** despite the roadmap calling the
-   guidance-value gap the core arbitrage signal (§4.8). No code references them.
-   Deal Score v1 ships without it unless built first.
+   guidance-value gap the core arbitrage signal (§4.8). Deal Score v1 shipped
+   **without** it and says so: `guidance_value_gap` is a declared zero-weight
+   factor with a stated reason, written on every score and printed in every
+   briefing. `price_vs_locality` is a peer-relative *stand-in* and is labelled
+   as one — it moves with the same sentiment it is trying to measure, which is
+   exactly what the statutory anchor would avoid. **Next step (agreed
+   2026-08-02): a timeboxed spike** on whether Kaveri/SRO guidance values are
+   bulk-obtainable for the target corridors. If yes, a new source plus a real
+   factor at weights v2. If no, document it as dead and stop calling it the
+   core signal in the roadmap.
 7. **Embedding model + vector dimension** — deferred to Phase 3, *not* needed at
    migration time. The schema assumes Voyage `voyage-3.5` (1024-dim);
    embeddings are a separate provider from Claude. The `vector` columns were
@@ -489,25 +563,29 @@ Bangalore–Mysore Expressway) added in Phase 4 per §4a. Detailed in
 > auto-memory (atlas-progress, atlas-open-inputs). Confirm back where we are in
 > one short paragraph before doing anything.
 >
-> State: deployed on the VPS and collecting daily; Phase-1 gate was 1/7 on
-> 2026-08-01 — check `atlas.cli gate` for today's streak. 110 tests, CI green.
+> State: deployed on the VPS and collecting daily — check `atlas.cli gate` for
+> today's streak. **Phase 2 is built but NOT deployed**: Deal Score v1, the
+> 99acres plot source (shipped disabled), and the Resend digest, on
+> `feature/deal-score-v1`. 197 tests green.
 >
-> Next up, in order:
-> 1. **Deal Score v1** — versioned weights in the `score_weights` /`scores` /
->    `score_factors` tables (already migrated, no ORM classes yet), with the
->    factor decomposition stored as evidence. Capital-aware via
->    `atlas/profile.py`.
-> 2. **Wire the plot source** — `fatihtahta/99acres-scraper-ppe` is validated
->    and funding approved. Handle the two traps in handoff §3 finding 1:
->    `min_area_sqft` is really square metres, and the feed mixes listings with
->    builder projects.
-> 3. **The Resend digest**, which must print the capital it assumed."
+> Read §3 'Before the next deploy' first — two things need a human:
+> reading `score --dry-run` against real data before weights v1 is written to
+> the database, and leaving 99acres disabled until the gate reads 7/7.
+>
+> Next up: the guidance-value spike (§9.8) — a timeboxed probe of whether
+> Kaveri/SRO guidance values are bulk-obtainable for the target corridors.
+> It is the last declared-but-missing scoring factor, and the roadmap calls it
+> the core arbitrage signal. If it is reachable, it is weights v2; if not,
+> document it as dead and stop calling it the core signal."
 
-### Where to pick up (2026-08-01)
+### Where to pick up (2026-08-02)
 
 | | |
 |---|---|
 | **Running** | VPS collects 05:30/06:00/06:45 IST. `atlas.cli gate` = streak; `atlas.cli plan` = cash bar + countdown |
-| **Next build** | Deal Score v1 → plot source → Resend digest |
+| **Built, not deployed** | Deal Score v1, 99acres plot source (disabled), Resend digest. 197 tests, 3 commits on `feature/deal-score-v1` |
+| **Before deploying** | Read `score --dry-run` on real data *before* weights v1 is committed to the DB; leave 99acres disabled until the gate reads 7/7 (§3) |
+| **To switch on** | `ANTHROPIC_API_KEY` (why-selling), `RESEND_API_KEY` + `ATLAS_DIGEST_TO` (delivery), `ATLAS_FEEDBACK_SECRET` + `ATLAS_PUBLIC_BASE_URL` (👍/👎 links) |
+| **Next build** | Guidance-value spike (§9.8) — the last declared-but-missing factor |
 | **Chores** | Unregister local `Atlas-Daily`; rotate the Apify token; pin `image: traefik` to a version |
-| **Ask a human** | A banker, about real plot-loan LTV — it moves the ceiling more than any code here |
+| **Ask a human** | A banker, about real plot-loan LTV — it moves the ceiling more than any code here. Income + existing EMIs would also let `capital_fit` model FOIR instead of assuming 70% LTV is always available |
