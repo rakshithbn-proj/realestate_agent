@@ -124,6 +124,18 @@ so they can't clash with what's already in there:
 | `ATLAS_API_TOKEN` | A long random string (`openssl rand -base64 36`). **An unset token locks the API (503), it never opens it** — deliberate. |
 | `ATLAS_APIFY_TOKEN` | Portal collectors raise without it; required so a deploy can't come up with a dead MagicBricks scraper. |
 | `ATLAS_ENABLE_SCHEDULER` | Defaults to `1` — this is what actually runs the daily jobs. Set `0` only if driving ingestion from host cron. |
+| `ATLAS_LIQUID_TOTAL_INR` | Deployable cash **plus** the emergency fund — not net worth. With `ATLAS_RESERVED_INR` it sets the purchase ceiling, so there is deliberately **no default**: a wrong value here over-promises and surfaces property you cannot buy. |
+| `ATLAS_RESERVED_INR` | The emergency fund. Comes off the top; never counted as buying power. Also no default, same reason. |
+
+`ATLAS_MONTHLY_CONTRIBUTION_INR` (0), `ATLAS_COMMITTED_INR` (0), `ATLAS_LTV`
+(0.70) and `ATLAS_COMMITTED_GAIN_FRACTION` (0.35) *do* default, because each
+errs conservative when unset — no savings means a longer countdown, no
+committed holdings means no unlock is offered. They under-promise, which is
+safe. **The rule: default only where being wrong is conservative.**
+
+Sanity-check the four with `atlas.cli plan` before trusting a briefing — it
+should reproduce a runway you recognise. A decimal-place error shows up there
+as "NOW" or "never" rather than a plausible number of months.
 
 `ATLAS_POSTGRES_USER` / `ATLAS_POSTGRES_DB` default to `atlas` and can be left
 unset. `DATABASE_URL` is assembled by compose (host `atlas-db`) — you do not

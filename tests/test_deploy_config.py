@@ -52,6 +52,29 @@ def test_setting_is_passed_into_the_container(key):
     )
 
 
+# Settings where a wrong value OVER-promises — it makes the investor look
+# richer than they are and surfaces property that cannot be bought. These must
+# have no compose default at all, so an unset value stops the deploy instead
+# of quietly substituting someone else's number.
+MUST_NOT_HAVE_A_DEFAULT = (
+    "ATLAS_LIQUID_TOTAL_INR",
+    "ATLAS_RESERVED_INR",
+)
+
+
+@pytest.mark.parametrize("key", MUST_NOT_HAVE_A_DEFAULT)
+def test_ceiling_setting_has_no_silent_fallback(key):
+    """`${VAR:-1234}` in compose duplicates the default in atlas/config.py and
+    silently wins. For the two values that set the purchase ceiling that is
+    the dangerous direction, so they use `${VAR:?...}` and the stack refuses
+    to start rather than assume."""
+    line = next(l for l in SNIPPET.splitlines() if l.strip().startswith(f"{key}:"))
+    assert f"${{{key}:?" in line, (
+        f"{key} must use ${{{key}:?...}} (required) — a `:-` default here "
+        "duplicates atlas/config.py and silently produces a wrong ceiling."
+    )
+
+
 def test_every_configured_setting_has_a_home():
     """Catch the reverse drift too: a new setting added to config.py that
     nobody wired up. Fails loudly listing what is missing, so the choice to
