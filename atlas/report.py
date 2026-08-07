@@ -440,19 +440,35 @@ def send_via_resend(subject: str, text: str, html: str) -> bool:
         log.warning("digest not sent: RESEND_API_KEY or ATLAS_DIGEST_TO unset")
         return False
 
-    response = httpx.post(
-        RESEND_ENDPOINT,
-        headers={"Authorization": f"Bearer {settings.resend_api_key}"},
-        json={
-            "from": settings.atlas_digest_from,
-            "to": [settings.atlas_digest_to],
-            "subject": subject,
-            "text": text,
-            "html": html,
-        },
-        timeout=30,
-    )
-    response.raise_for_status()
+    try:
+        response = httpx.post(
+            RESEND_ENDPOINT,
+            headers={"Authorization": f"Bearer {settings.resend_api_key}"},
+            json={
+                "from": settings.atlas_digest_from,
+                "to": [settings.atlas_digest_to],
+                "subject": subject,
+                "text": text,
+                "html": html,
+            },
+            timeout=30,
+        )
+    except Exception as exc:
+        log.error("digest not sent: could not reach Resend (%s)", exc)
+        return False
+
+    if response.is_error:
+        # Resend puts the actual reason in the body — "you can only send to
+        # your own address until a domain is verified", "invalid API key",
+        # "domain not found". `raise_for_status()` discards all of that and
+        # leaves you with a bare status code pointing at a generic HTTP page,
+        # which is useless for the one question that matters: what do I fix?
+        log.error(
+            "digest not sent: Resend returned %s -- %s  (from=%r to=%r)",
+            response.status_code, response.text[:500],
+            settings.atlas_digest_from, settings.atlas_digest_to,
+        )
+        return False
     return True
 
 

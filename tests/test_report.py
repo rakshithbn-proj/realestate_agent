@@ -259,7 +259,8 @@ def test_resend_key_rides_in_a_header_never_a_url(session, monkeypatch):
     captured = {}
 
     class _Response:
-        def raise_for_status(self): pass
+        is_error = False
+        status_code = 200
 
     def fake_post(url, headers=None, json=None, timeout=None):
         captured.update(url=url, headers=headers, json=json)
@@ -345,3 +346,46 @@ def test_subject_says_whether_anything_is_fundable(session):
     _scored(session, external_id="cheap", price=1_500_000)
     loud = R._subject(R.build_report(session, _profile()))
     assert "fundable" in loud
+
+
+def test_resend_rejection_is_logged_with_its_reason_not_a_traceback(
+        session, monkeypatch, caplog):
+    """Resend explains the real problem in the response body — "you can only
+    send to your own address until a domain is verified", "invalid API key".
+    raise_for_status() throws that away and leaves a bare 403 pointing at a
+    generic HTTP page, which answers none of the questions the reader has.
+
+    A delivery failure must also stay recoverable: log it, return False, leave
+    sent_at null so tomorrow retries — never crash the command or the job."""
+    import httpx
+
+    class _Response:
+        status_code = 403
+        is_error = True
+        text = ('{"statusCode":403,"message":"You can only send testing '
+                'emails to your own email address (owner@example.com)."}')
+
+    monkeypatch.setenv("RESEND_API_KEY", "re_key")
+    monkeypatch.setenv("ATLAS_DIGEST_TO", "someone-else@example.com")
+    get_settings.cache_clear()
+    monkeypatch.setattr(httpx, "post", lambda *a, **k: _Response())
+
+    assert R.send_via_resend("s", "t", "<p>h</p>") is False
+    assert "403" in caplog.text
+    assert "your own email address" in caplog.text     # the actionable part
+    assert "someone-else@example.com" in caplog.text   # and what it tried
+
+
+def test_unreachable_resend_does_not_crash_the_job(session, monkeypatch, caplog):
+    import httpx
+
+    monkeypatch.setenv("RESEND_API_KEY", "re_key")
+    monkeypatch.setenv("ATLAS_DIGEST_TO", "me@example.com")
+    get_settings.cache_clear()
+
+    def boom(*a, **k):
+        raise httpx.ConnectError("network down")
+
+    monkeypatch.setattr(httpx, "post", boom)
+    assert R.send_via_resend("s", "t", "<p>h</p>") is False
+    assert "could not reach Resend" in caplog.text
