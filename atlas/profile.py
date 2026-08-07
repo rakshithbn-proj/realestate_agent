@@ -27,6 +27,7 @@ against.
 from dataclasses import dataclass, field, replace
 
 from atlas.config import get_settings
+from atlas.money import inr
 
 PROFILE_VERSION = "profile-v2"
 
@@ -158,8 +159,8 @@ class InvestorProfile:
             raise ValueError("monthly_contribution_inr must not be negative")
         if self.reserved_inr > self.liquid_total_inr:
             raise ValueError(
-                f"reserved_inr ({self.reserved_inr:,}) exceeds "
-                f"liquid_total_inr ({self.liquid_total_inr:,})")
+                f"reserved_inr ({inr(self.reserved_inr)}) exceeds "
+                f"liquid_total_inr ({inr(self.liquid_total_inr)})")
         if not 0.0 <= self.ltv < 1.0:
             raise ValueError(
                 f"ltv must be a fraction in [0, 1), got {self.ltv} "

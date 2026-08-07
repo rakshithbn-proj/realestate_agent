@@ -17,6 +17,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from atlas.ingest.legal import legal_tags_by_listing
+from atlas.money import inr
 from atlas.models import Listing, Locality
 from atlas.profile import InvestorProfile, default_profile, is_financeable
 
@@ -131,14 +132,14 @@ def format_plan(plan: CapitalPlan) -> str:
     out: list[str] = []
     a = out.append
     a("YOUR POSITION")
-    a(f"  Deployable now      Rs {plan.deployable_inr:>12,}")
-    a(f"  Reserved (untouched)Rs {plan.reserved_inr:>12,}")
+    a(f"  Deployable now      Rs {inr(plan.deployable_inr):>14}")
+    a(f"  Reserved (untouched)Rs {inr(plan.reserved_inr):>14}")
     if plan.committed_inr:
-        a(f"  Committed (unlockable) Rs {plan.committed_inr:>9,}")
-    a(f"  Saving              Rs {plan.monthly_contribution_inr:>12,} / month")
-    a(f"  Ceiling today       Rs {plan.ceiling_now_inr:>12,}")
+        a(f"  Committed (unlockable) Rs {inr(plan.committed_inr):>11}")
+    a(f"  Saving              Rs {inr(plan.monthly_contribution_inr):>14} / month")
+    a(f"  Ceiling today       Rs {inr(plan.ceiling_now_inr):>14}")
     if plan.ceiling_with_unlock_inr > plan.ceiling_now_inr:
-        a(f"  Ceiling with unlock Rs {plan.ceiling_with_unlock_inr:>12,}")
+        a(f"  Ceiling with unlock Rs {inr(plan.ceiling_with_unlock_inr):>14}")
     a("")
 
     if not plan.rungs:
@@ -147,7 +148,7 @@ def format_plan(plan: CapitalPlan) -> str:
         return "\n".join(out)
 
     a(f"THE LADDER  (cheapest real entry points, {plan.considered} listings considered)")
-    a(f"  {'market':<10} {'locality':<22} {'price':>10} {'cash bar':>10}  when")
+    a(f"  {'market':<10} {'locality':<22} {'price':>13} {'cash bar':>13}  when")
     for r in plan.rungs:
         if r.months_away is None:
             when = "never at this savings rate"
@@ -162,14 +163,14 @@ def format_plan(plan: CapitalPlan) -> str:
                 when += "  (never if mkt +10%/yr)"
         flag = "" if r.financeable else "  [cash only - legal flag]"
         a(f"  {r.city:<10} {(r.locality or '?')[:22]:<22} "
-          f"{r.price_inr:>10,} {r.cash_needed_inr:>10,}  {when}{flag}")
+          f"{inr(r.price_inr):>13} {inr(r.cash_needed_inr):>13}  {when}{flag}")
 
     nearest = plan.rungs[0]
     a("")
-    a(f"NEAREST BAR  Rs {nearest.cash_needed_inr:,} "
+    a(f"NEAREST BAR  Rs {inr(nearest.cash_needed_inr)} "
       f"({nearest.locality or '?'}, {nearest.city})")
     if nearest.unlock_needed_inr and plan.committed_inr:
-        a(f"  Unlock Rs {nearest.unlock_needed_inr:,} of committed holdings to "
-          f"close today; tax approx Rs {nearest.unlock_tax_inr:,}.")
+        a(f"  Unlock Rs {inr(nearest.unlock_needed_inr)} of committed holdings to "
+          f"close today; tax approx Rs {inr(nearest.unlock_tax_inr)}.")
     a("  Stamp duty and registration cannot be borrowed - this is cash.")
     return "\n".join(out)

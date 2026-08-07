@@ -5,6 +5,7 @@ the thing that judges.
 """
 from sqlalchemy.orm import Session
 
+from atlas.money import inr
 from atlas.scoring.engine import ScoreRunResult
 from atlas.scoring.weights import (
     ACTIVE_FACTORS,
@@ -74,7 +75,7 @@ def format_explain(session: Session, result: ScoreRunResult,
     a = out.append
     a(f"LISTING {listing_id}  weights v{WEIGHTS_VERSION}")
     if listing is not None:
-        price = f"Rs {listing.price_inr:,}" if listing.price_inr else "no price"
+        price = f"Rs {inr(listing.price_inr)}" if listing.price_inr else "no price"
         a(f"  {listing.title or '(no title)'}")
         a(f"  {listing.city}  {listing.property_type or '?'}  {price}")
     a("")
@@ -113,14 +114,14 @@ def format_top(rows: list[dict], reachable_only: bool = True) -> str:
           "yet; without it, nothing scored is currently affordable.")
         return "\n".join(out)
     a(f"  {'score':>5} {'cov':>4} {'market':<10} {'locality':<20} "
-      f"{'type':<12} {'price':>12} {'cash bar':>11}")
+      f"{'type':<12} {'price':>14} {'cash bar':>13}")
     for row in rows:
-        price = f"{row['price_inr']:,}" if row["price_inr"] else "on request"
-        cash = f"{row['cash_needed_inr']:,}" if row["cash_needed_inr"] else "-"
+        price = inr(row["price_inr"], dash="on request")
+        cash = inr(row["cash_needed_inr"])
         flag = "" if row["financeable"] else "  [cash only - legal flag]"
         a(f"  {row['overall']:>5.1f} {row['coverage'] * 100:>3.0f}% "
           f"{(row['city'] or '?'):<10} {(row['locality'] or '?')[:20]:<20} "
-          f"{(row['property_type'] or '?')[:12]:<12} {price:>12} {cash:>11}{flag}")
+          f"{(row['property_type'] or '?')[:12]:<12} {price:>14} {cash:>13}{flag}")
         top = [f for f in row["factors"] if f["weight"] > 0][:3]
         detail = "  ".join(
             f"{f['factor']}={f['value'] * f['weight']:.0f}/{f['weight']}"

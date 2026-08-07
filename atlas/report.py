@@ -36,6 +36,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from atlas.config import get_settings
 from atlas.gate import gate_status
 from atlas.health import source_health_dicts
+from atlas.money import inr
 from atlas.models import Listing, PriceEvent, Recommendation, ReportRun
 from atlas.plan import build_plan
 from atlas.profile import PROFILE_VERSION, InvestorProfile, default_profile
@@ -236,7 +237,7 @@ def save_report(session: Session, digest: Digest) -> ReportRun:
 
 
 def _headline(opportunity: dict) -> str:
-    price = (f"Rs {opportunity['price_inr']:,}" if opportunity["price_inr"]
+    price = (f"Rs {inr(opportunity['price_inr'])}" if opportunity["price_inr"]
              else "price on request")
     return (f"[{opportunity['overall']:.0f}] "
             f"{opportunity.get('locality') or '?'}, {opportunity.get('city')} — "
@@ -277,7 +278,7 @@ def feedback_url(recommendation_id: int, vote: str) -> str | None:
 # --- rendering --------------------------------------------------------------
 
 def _rs(value: int | float | None) -> str:
-    return f"Rs {int(value):,}" if value is not None else "-"
+    return f"Rs {inr(value)}" if value is not None else "-"
 
 
 def render_text(digest: Digest, votes: dict[int, int] | None = None) -> str:
