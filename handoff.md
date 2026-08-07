@@ -51,6 +51,23 @@ If any two docs conflict, precedence is: **atlas_roadmap.md → overall_plan.md 
 
 ## 3. Current reality (honest state — updated 2026-08-02)
 
+> ## PHASE 1 IS MET — 7/7 clean days, 2026-08-01 → 2026-08-07
+>
+> Measured, not claimed: `atlas.cli gate` counts consecutive days on which
+> every enabled source landed an `ok` run, in Asia/Kolkata, off the
+> `scrape_runs` table. Seven consecutive CLEAN days across
+> `magicbricks/bangalore`, `magicbricks/mysore` and
+> `rera_karnataka/karnataka`, with **zero** bad runs on any source
+> (`consecutive_bad_runs: 0` on all three) and no human intervention across
+> the week. Volumes held steady: 300 / 145 / 9,817.
+>
+> This closes atlas_roadmap Phase 1's done-when. **Note it is a rolling
+> measurement, not a banked award** — the gate re-computes from the last 7
+> days on every call, so enabling a new source that then has a bad morning
+> will drop it below 7 again. That is the intended behaviour (the point is
+> current reliability, not a past trophy), but it is why the paid plot
+> sources ship disabled.
+
 > **2026-08-02 — Phase 2 code is in (3 commits, 197 tests, local).** Deal Score
 > v1, the 99acres plot source, and the Resend digest. Not yet deployed, and
 > two things need a human before it runs for real — see

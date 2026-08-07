@@ -251,7 +251,22 @@ noticed". Scoring before it would read every listing as brand new.
 They ship `enabled=False` and the daily job skips them. The Phase-1 gate
 requires every *enabled* source to land an `ok` run every day **from its first
 run onward**, so switching on a scraper that has never run in production puts
-the streak at the mercy of its first bad morning. After 7/7:
+the streak at the mercy of its first bad morning.
+
+**Use the manual run first — it is free of both risks.** `atlas.cli run
+<source>` resolves the spec directly and does **not** consult `enabled`, while
+`_get_or_create_source()` still writes `enabled=False` to the `sources` row,
+which the gate skips. So one manual run costs ~$1, lands real plots in
+`listings`, and feeds scoring and the digest without joining the streak:
+
+```sh
+docker compose exec atlas-app python -m atlas.cli run acres99_land
+docker compose exec atlas-app python -m atlas.cli score
+docker compose exec atlas-app python -m atlas.cli top --limit 10
+```
+
+Only once that looks right is there a reason to accept daily billing and gate
+exposure. To go daily:
 
 ```sh
 # edit atlas/ingest/registry.py: enabled=False -> True on both acres99 specs,
