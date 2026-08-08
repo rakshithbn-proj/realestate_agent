@@ -105,12 +105,35 @@ def test_capital_block_matches_the_profile_and_names_its_env_keys(session):
 
 
 def test_capital_block_survives_a_quiet_day(session):
+    """With no listings at all there is no ladder either — the briefing still
+    sends, still states the capital it assumed, and says plainly why it is
+    empty. Silence would be indistinguishable from a dead cron."""
     digest = R.build_report(session, _profile())
     text = R.render_text(digest)
     assert "Deployable now" in text
-    assert "Nothing fundable today" in text
-    # A quiet day is normal until the floor is cleared, and must say so.
-    assert "countdown above is the product" in text
+    assert "No in-corridor priced listing to plan against yet" in text
+
+
+def test_unfundable_day_shows_the_ladder_instead_of_an_empty_page(session):
+    """At an early capital position nothing is fundable for months. An email
+    that only says "nothing yet" is a daily reminder that nothing changed, so
+    it shows what to aim at — with each row's distance stated, so it can never
+    be read as a recommendation."""
+    _scored(session, external_id="far", price=90_000_000)
+    tight = profile_with(liquid_total_inr=3_50_000, reserved_inr=2_50_000,
+                         monthly_contribution_inr=45_000)
+    digest = R.build_report(session, tight)
+    assert digest.content["opportunities"] == []
+    assert digest.content["countdown"]["ladder"]
+
+    text = R.render_text(digest)
+    assert "WHAT YOU ARE SAVING TOWARD" in text
+    assert "Nothing is fundable today" in text
+    assert "needs Rs" in text
+    # ...and the HTML says the same, in the same terms.
+    html = R.render_html(digest)
+    assert "What you are saving toward" in html
+    assert "targets, not recommendations" in html
 
 
 # --- what may and may not be recommended ------------------------------------
