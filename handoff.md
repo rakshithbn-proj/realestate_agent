@@ -49,7 +49,50 @@ If any two docs conflict, precedence is: **atlas_roadmap.md → overall_plan.md 
 
 ---
 
-## 3. Current reality (honest state — updated 2026-08-02)
+## 3. Current reality (honest state — updated 2026-08-08)
+
+> ## Where things actually stand
+>
+> **Phase 1: MET.** **Phase 2: built, deployed, and sending.** The daily
+> briefing arrives; Resend returned 200 on 2026-08-07.
+>
+> **Read these five before doing anything.**
+>
+> **1. The capital position on the VPS no longer matches §9.1 of this file,
+> and the discrepancy is unresolved.** Configured and live:
+>
+> | | |
+> |---|---|
+> | deployable | **₹1,00,000** (`ATLAS_LIQUID_TOTAL_INR` 3,50,000 − `ATLAS_RESERVED_INR` 2,50,000) |
+> | saving | **₹45,000/month** |
+> | committed | **₹7,00,000** |
+> | ceiling | **₹3,00,661** |
+>
+> That totals ~₹10.5L against the **₹25L** recorded in §9.1, and the saving
+> rate is ₹45k rather than ₹75k. Either the position genuinely changed since
+> 2026-08-01 or the fields were mis-mapped — **`ATLAS_RESERVED_INR` is a slice
+> *inside* `ATLAS_LIQUID_TOTAL_INR`, not a separate pot**, so entering the
+> accessible figure as `liquid_total` and then reserving again understates
+> deployable. Ask before trusting any runway number. At the configured
+> values the nearest entry point is **23 months** away; at the §9.1 values it
+> was 8.
+>
+> **2. Nothing is fundable, and will not be for ~23 months.** This is the
+> correct answer, not a bug — but it means the briefing's opportunity section
+> is empty every morning. It now shows the **ladder** (cheapest real entry
+> points and what each requires) instead of an empty page.
+>
+> **3. The 99acres plot sources are still `enabled=False`.** The gate is 7/7
+> so this is unblocked; it has simply not been done. Try the ~$1 manual run
+> first (see "Before the next deploy" below) — it does not touch the streak.
+>
+> **4. `seller_motivation` was at 0% coverage as of 2026-08-02.** Expected on
+> day one (the Batch API is asynchronous), but it should be populated by now.
+> **If `atlas.cli score --dry-run` still shows 0%, `ATLAS_ANTHROPIC_API_KEY`
+> was never set** and 8 points of weight are being silently redistributed.
+>
+> **5. Two commits are unpushed** (`556f2c1`, `fe8eaf3` — the email rebuild).
+> The VPS is running the version *before* them.
 
 > ## PHASE 1 IS MET — 7/7 clean days, 2026-08-01 → 2026-08-07
 >
@@ -68,10 +111,42 @@ If any two docs conflict, precedence is: **atlas_roadmap.md → overall_plan.md 
 > current reliability, not a past trophy), but it is why the paid plot
 > sources ship disabled.
 
-> **2026-08-02 — Phase 2 code is in (3 commits, 197 tests, local).** Deal Score
-> v1, the 99acres plot source, and the Resend digest. Not yet deployed, and
-> two things need a human before it runs for real — see
-> "Before the next deploy" at the end of this section.
+> **Phase 2 is built and deployed** (239 tests). Deal Score v1, the 99acres
+> plot source (disabled), and the Resend digest.
+
+### What the deploy taught, 2026-08-02 → 08-08
+
+Four things were found by *running* it, not by testing it — the same pattern
+as the six in Phase 1. All fixed; each is worth not relearning.
+
+- **The VPS never received the capital settings.** `deploy/compose-snippet.yml`
+  passed `APIFY_TOKEN` and the scheduler flag but none of the
+  `ATLAS_LIQUID_TOTAL_INR` family, so the app used its own defaults no matter
+  what the VPS `.env` said — a ₹68L ceiling against a real ~₹10L. **This is
+  the same bug class as "`.env.example` advertised capital overrides nothing
+  read" in the Phase-1 list**: the fix went to `.env.example` and never to the
+  compose passthrough. It surfaced only because the digest prints the capital
+  it assumed. `tests/test_deploy_config.py` now fails if any silently-
+  defaulting setting is unwired.
+- **Compose defaults duplicated the ones in `atlas/config.py`.** The rule now
+  encoded and tested: **a default belongs in compose only when being wrong
+  errs conservative.** `ATLAS_LIQUID_TOTAL_INR` and `ATLAS_RESERVED_INR` set
+  the ceiling, so wrong there *over-promises* — they use `:?` and the deploy
+  stops. Savings and committed default to 0 because that under-promises.
+- **Numbers were formatted in thousands, not lakhs.** `9,549,795` where an
+  Indian reader expects `95,49,795`. One implementation in `atlas/money.py`;
+  `grep ':,}'` over `atlas/` returns nothing.
+- **The email was the terminal output in a `<pre>`,** with internal citations
+  (`handoff §9.8`, `PostGIS`, `searchMode=buy`) leaking into the reader's
+  inbox. Rebuilt as a real email in `atlas/emailer.py` — table layout, inline
+  styles, listing links, feedback buttons, reader-facing factor labels. A test
+  asserts those internal tokens can never reach the briefing again.
+
+Also fixed: a Resend 403 crashed the CLI with a traceback because
+`raise_for_status()` discards the response body — where Resend puts the actual
+reason ("you can only send to your own address until a domain is verified").
+Delivery failures now log the reason and return, leaving `sent_at` null so
+tomorrow retries.
 
 - **Deal Score v1 ships.** Six weighted factors, legal-first
   (`legal_risk` 30 / `capital_fit` 25 / `price_vs_locality` 15 /
@@ -630,29 +705,52 @@ Bangalore–Mysore Expressway) added in Phase 4 per §4a. Detailed in
 > auto-memory (atlas-progress, atlas-open-inputs). Confirm back where we are in
 > one short paragraph before doing anything.
 >
-> State: deployed on the VPS and collecting daily — check `atlas.cli gate` for
-> today's streak. **Phase 2 is built but NOT deployed**: Deal Score v1, the
-> 99acres plot source (shipped disabled), and the Resend digest, on
-> `feature/deal-score-v1`. 197 tests green.
+> State: **Phase 1 MET** (7/7 clean days). **Phase 2 built, deployed and
+> sending** — Deal Score v1, the 99acres plot source (still disabled), and the
+> Resend daily briefing. 239 tests green.
 >
-> Read §3 'Before the next deploy' first — two things need a human:
-> reading `score --dry-run` against real data before weights v1 is written to
-> the database, and leaving 99acres disabled until the gate reads 7/7.
+> Read handoff.md §3 'Where things actually stand' first. It lists five things
+> to check before touching anything — most importantly that the capital figures
+> configured on the VPS do not match §9.1 of the same file, so no runway number
+> should be trusted until I confirm which is right.
 >
-> Next up: the guidance-value spike (§9.8) — a timeboxed probe of whether
-> Kaveri/SRO guidance values are bulk-obtainable for the target corridors.
-> It is the last declared-but-missing scoring factor, and the roadmap calls it
-> the core arbitrage signal. If it is reachable, it is weights v2; if not,
-> document it as dead and stop calling it the core signal."
+> Then pick from §3 'What to do next', in that order."
 
-### Where to pick up (2026-08-02)
+### What to do next (2026-08-08), in order
+
+**0. Push and deploy the two outstanding commits.** `556f2c1` + `fe8eaf3` (the
+email rebuild) are committed locally but not pushed; the VPS is a version
+behind and still sends the old `<pre>` email.
+
+```sh
+git push
+docker compose pull atlas-app && docker compose up -d atlas-app
+docker compose exec atlas-app python -m atlas.cli digest --force
+```
+
+**1. Settle the capital numbers.** See §3 item 1. Until that is resolved every
+runway figure the system prints is suspect, and it is the input the whole
+briefing filters on. `atlas.cli plan` is the check — the answer should match a
+runway the user recognises.
+
+**2. Confirm `seller_motivation` is populating.** `atlas.cli score --dry-run`;
+if coverage is still 0%, `ATLAS_ANTHROPIC_API_KEY` is unset.
+
+**3. Try the plot source, then decide on daily.** One manual run costs ~$1 and
+does not join the gate (see "Before the next deploy"). Only enable
+`enabled=True` afterwards, accepting ~$29/month and gate exposure.
+
+**4. Surface spend in the briefing.** plan.md §8 always specified "$/day in the
+daily report, with a $5/day alert" and it was never built. It mattered less
+when cost was LLM tokens; now the bill is a paid actor whose cost scales with
+the number of corridor seeds in a config file, and nothing warns you.
+
+**5. The guidance-value spike (§9.8).** The last declared-but-missing factor,
+and the one the roadmap calls the core arbitrage signal.
 
 | | |
 |---|---|
-| **Running** | VPS collects 05:30/06:00/06:45 IST. `atlas.cli gate` = streak; `atlas.cli plan` = cash bar + countdown |
-| **Built, not deployed** | Deal Score v1, 99acres plot source (disabled), Resend digest. 197 tests, 3 commits on `feature/deal-score-v1` |
-| **Before deploying** | Read `score --dry-run` on real data *before* weights v1 is committed to the DB; leave 99acres disabled until the gate reads 7/7 (§3) |
-| **To switch on** | `ANTHROPIC_API_KEY` (why-selling), `RESEND_API_KEY` + `ATLAS_DIGEST_TO` (delivery), `ATLAS_FEEDBACK_SECRET` + `ATLAS_PUBLIC_BASE_URL` (👍/👎 links) |
-| **Next build** | Guidance-value spike (§9.8) — the last declared-but-missing factor |
+| **Running** | VPS: collect 05:30/06:00/06:45, score 07:00, briefing 07:15 IST |
+| **Useful** | `gate` · `plan` · `score --dry-run` / `--explain <id>` · `top` · `digest --dry-run` · `health` · `reparse` |
 | **Chores** | Unregister local `Atlas-Daily`; rotate the Apify token; pin `image: traefik` to a version |
 | **Ask a human** | A banker, about real plot-loan LTV — it moves the ceiling more than any code here. Income + existing EMIs would also let `capital_fit` model FOIR instead of assuming 70% LTV is always available |

@@ -164,6 +164,32 @@ guarded by `report_runs.sent_at` — `UNIQUE(report_date)` stops a duplicate
 row, not a duplicate email. `digest_daily` is deliberately **not** in
 `run_daily()`, because that sequence is what the startup catch-up replays.
 
+**The email is a product surface, not a log dump**
+([atlas/emailer.py](atlas/emailer.py), split from report.py). Table layout and
+inline styles because Gmail strips `<head>` styles and Outlook renders through
+Word. Factor names are translated for the reader (`Affordability`, not
+`capital_fit`) and only the top three reasons are shown — six is an audit
+trail, and that lives in `score --explain`. **Internal identifiers must never
+reach it**: a test fails if `handoff`, `atlas_roadmap`, `PostGIS`, `§` or a raw
+factor key appears in the rendered briefing. Both renderers share
+`_factor_line` so the text and HTML parts cannot drift. When nothing is
+fundable — the normal state for months at an early capital position — it shows
+the *ladder* rather than an empty page, with each row's distance in months so
+it reads as a target, not an offer.
+
+**Rupees are formatted Indian-style** ([atlas/money.py](atlas/money.py)):
+`95,49,795`, never `9,549,795`. One implementation; `grep ':,}'` over `atlas/`
+should return nothing.
+
+**Config defaults follow one rule** (`deploy/compose-snippet.yml`, enforced by
+[tests/test_deploy_config.py](tests/test_deploy_config.py)): **a compose
+default is allowed only where being wrong errs conservative.**
+`ATLAS_LIQUID_TOTAL_INR` / `ATLAS_RESERVED_INR` set the purchase ceiling, so a
+wrong value over-promises — they carry no default and the deploy stops. Savings
+and committed capital default to 0 because that under-promises. Every setting
+whose absence is *silent* must appear in the snippet; the app reading a value
+its container never receives is a bug this project has now hit twice.
+
 **Auth:** every endpoint except `GET /health` requires `Authorization: Bearer $ATLAS_API_TOKEN`; an *unset* token must lock the API (503), never open it. The one exception is `GET /feedback/{id}/{up|down}` — a mail client cannot send a header, so those links carry an HMAC over **both** the id and the vote (so a link cannot be edited into its opposite) and fail closed when no secret is set.
 
 **Deploy is image-only.** The dev box has no Docker, so CI
