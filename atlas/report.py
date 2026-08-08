@@ -323,27 +323,54 @@ def render_text(digest: Digest, votes: dict[int, int] | None = None) -> str:
         a(f"WORTH READING TODAY  ({len(c['opportunities'])} fundable now)")
         for opportunity in c["opportunities"]:
             a("")
-            a(f"  {_headline(opportunity)}")
-            a(f"      cash needed {_rs(opportunity['cash_needed_inr'])}"
-              f"   coverage {opportunity['coverage'] * 100:.0f}%"
-              f"{'' if opportunity['financeable'] else '   [cash only - legal flag]'}")
-            for factor in opportunity["factors"]:
-                if factor["weight"] == 0:
-                    continue
+            a(f"  [{opportunity['overall']:.0f}] "
+              f"{opportunity.get('locality') or '?'}, "
+              f"{(opportunity.get('city') or '').title()}"
+              f"{'' if opportunity['financeable'] else '  [CASH ONLY - LEGAL FLAG]'}")
+            price = (_rs(opportunity["price_inr"]) if opportunity["price_inr"]
+                     else "price on request")
+            a(f"      {opportunity.get('property_type') or 'Property'} - {price}"
+              f" - needs {_rs(opportunity['cash_needed_inr'])} cash")
+            # The three strongest reasons, in the reader's words. The full
+            # decomposition is an audit trail and lives in `score --explain`.
+            scored = [f for f in opportunity["factors"]
+                      if f["weight"] > 0
+                      and (f.get("evidence") or {}).get("kind")
+                      not in ("abstained", "no_data")]
+            scored.sort(key=lambda f: f["value"] * f["weight"], reverse=True)
+            for factor in scored[:3]:
                 detail = _factor_line(factor)
-                a(f"      {factor['factor']:<20} "
-                  f"{factor['value'] * factor['weight']:>5.1f}/{factor['weight']:<3} {detail}")
+                if detail:
+                    a(f"      {FACTOR_LABEL.get(factor['factor'], factor['factor'])}: "
+                      f"{detail}")
             if opportunity.get("url"):
                 a(f"      {opportunity['url']}")
-            vote_up = opportunity.get("feedback_up")
-            vote_down = opportunity.get("feedback_down")
-            if vote_up and vote_down:
-                a(f"      useful? yes {vote_up}")
-                a(f"              no  {vote_down}")
+            if opportunity.get("feedback_up"):
+                a(f"      useful?  yes: {opportunity['feedback_up']}")
+                a(f"               no:  {opportunity['feedback_down']}")
+    elif c["countdown"]["ladder"]:
+        # Nothing is fundable today, which at an early capital position is the
+        # normal state for months. An email that says only "nothing yet" is a
+        # daily reminder that nothing changed, so show the ladder instead: the
+        # cheapest real entry points and what each one actually requires.
+        # This is not a recommendation — every row states how far away it is,
+        # so Phase 2b's rule (never surface what cannot be funded *as buyable*)
+        # holds while the reader still gets something concrete to aim at.
+        a("WHAT YOU ARE SAVING TOWARD  (cheapest real entry points)")
+        for rung in c["countdown"]["ladder"][:6]:
+            when = ("now" if rung["months_away"] == 0
+                    else f"{rung['months_away']} mo"
+                    if rung["months_away"] is not None
+                    else "not at this rate")
+            flag = "" if rung["financeable"] else "  [cash only]"
+            a(f"  {(rung['locality'] or '?')[:24]:<24} "
+              f"{_rs(rung['price_inr']):>14}   needs "
+              f"{_rs(rung['cash_needed_inr']):>13}   {when}{flag}")
+        a("")
+        a("  Nothing is fundable today - normal until the cash bar is cleared.")
     else:
         a("WORTH READING TODAY")
-        a("  Nothing fundable today. That is the normal state until the cash")
-        a("  floor is cleared - the countdown above is the product for now.")
+        a("  No in-corridor priced listing to plan against yet.")
     a("")
 
     if c["watchlist"]:
@@ -362,21 +389,39 @@ def render_text(digest: Digest, votes: dict[int, int] | None = None) -> str:
               f"  ({drop['pct_change']:+.1f}%)")
         a("")
 
-    a(f"NEW LISTINGS (24h)  {c['new_listings_24h']}")
-    a("")
-    a("SOURCES")
-    for source in digest.source_health:
-        mark = "ok" if source["healthy"] else "DEGRADED"
-        a(f"  {source['name']}/{source['city']:<12} {mark:<9} "
-          f"{source['reason']}  last={source['last_run_status']}")
+    # System health in one line rather than a per-source table: the reader
+    # needs "is anything broken", and the detail lives in `atlas.cli health`.
+    unhealthy = [s for s in digest.source_health if not s["healthy"]]
+    if unhealthy:
+        names = ", ".join(f"{s['name']}/{s['city']}" for s in unhealthy)
+        health = f"{len(unhealthy)} SOURCE(S) DEGRADED: {names}"
+    else:
+        health = f"all {len(digest.source_health)} sources healthy"
     gate = c["gate"]
-    a(f"GATE  {gate['streak']}/{gate['required']} clean days"
-      f" - Phase 1 {'MET' if gate['met'] else 'not met'}")
-    a("")
-    a("NOT SCORED - no data exists")
-    for item in c["not_scored"]:
-        a(f"  {item['factor']:<20} {item['reason']}")
+    gate_txt = (f"Phase 1 met, {gate['streak']}/{gate['required']} clean days"
+                if gate["met"]
+                else f"{gate['streak']}/{gate['required']} clean collection days")
+    a("--")
+    a(f"{health} | {gate_txt} | {c['new_listings_24h']} new listings today")
+    # The score's gaps are real and worth stating — a 79 should not read as
+    # complete. But the reasoning is developer detail: it lives in
+    # `atlas.cli score`, not in someone's inbox.
+    a("Not yet factored into any score: guidance values, infrastructure "
+      "proximity, rental yield.")
+    a("Scores are relative rankings, not appraisals.")
     return "\n".join(out)
+
+
+# Reader-facing names. The internal factor keys are for `score --explain`,
+# where the audience is someone auditing the number rather than acting on it.
+FACTOR_LABEL = {
+    "legal_risk": "Legal",
+    "capital_fit": "Affordability",
+    "price_vs_locality": "Price vs area",
+    "thesis_fit": "Fit",
+    "distress": "Seller pressure",
+    "seller_motivation": "Why selling",
+}
 
 
 def _factor_line(factor: dict) -> str:
@@ -411,17 +456,14 @@ def _factor_line(factor: dict) -> str:
 
 
 def render_html(digest: Digest) -> str:
-    """HTML is the plain text in a <pre>. The briefing is dense, aligned,
-    numeric content — a table layout would make it less readable, not more,
-    and this renders identically in every mail client."""
-    import html
+    """The designed email — see atlas/emailer.py.
 
-    return (
-        '<div style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;'
-        'font-size:13px;line-height:1.45"><pre style="white-space:pre-wrap">'
-        f"{html.escape(render_text(digest))}"
-        "</pre></div>"
-    )
+    `_factor_line` is handed over so the HTML and plain-text parts explain a
+    factor with exactly the same words; two copies would drift.
+    """
+    from atlas import emailer
+
+    return emailer.render(digest, _factor_line)
 
 
 # --- delivery ---------------------------------------------------------------

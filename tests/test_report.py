@@ -125,14 +125,30 @@ def test_unfundable_listing_is_never_recommended(session):
     assert session.scalars(select(Recommendation)).all() == []
 
 
-def test_fundable_listing_is_recommended_with_its_decomposition(session):
+def test_fundable_listing_is_recommended_with_its_reasons(session):
+    """Reasons are given in the reader's words, not the internal factor keys —
+    `legal_risk` and `capital_fit` are for `score --explain`, whose audience is
+    auditing the number rather than acting on it."""
     _scored(session, external_id="cheap", price=1_500_000)
     digest = R.build_report(session, _profile())
     assert len(digest.content["opportunities"]) == 1
     text = R.render_text(digest)
     assert "WORTH READING TODAY" in text
-    assert "legal_risk" in text and "capital_fit" in text
-    assert "cash needed" in text
+    assert "Legal:" in text and "Affordability:" in text
+    assert "needs Rs" in text
+    # No internal identifiers leak into the product surface.
+    assert "legal_risk" not in text
+    assert "capital_fit" not in text
+
+
+def test_only_the_strongest_reasons_are_shown(session):
+    """Six factors per listing is an audit trail. An email gets the top three,
+    or the reader stops reading."""
+    _scored(session, external_id="cheap", price=1_500_000)
+    digest = R.build_report(session, _profile())
+    text = R.render_text(digest)
+    shown = sum(1 for label in R.FACTOR_LABEL.values() if f"{label}:" in text)
+    assert 0 < shown <= 3
 
 
 def test_watchlist_shows_near_term_targets_without_calling_them_buyable(session):
@@ -162,12 +178,20 @@ def test_watchlist_never_contains_something_affordable_today(session):
 
 
 def test_briefing_states_what_it_could_not_judge(session):
+    """A 79 must not read as complete. But the reasoning behind each gap is
+    developer detail — it belongs in `atlas.cli score`, not in an inbox, and
+    the email says it in one plain line instead of three cited paragraphs."""
     digest = R.build_report(session, _profile())
     names = {row["factor"] for row in digest.content["not_scored"]}
-    assert "guidance_value_gap" in names
+    assert "guidance_value_gap" in names          # still carried in the data
+
     text = R.render_text(digest)
-    assert "NOT SCORED" in text
-    assert "guidance values were never built" in text
+    assert "guidance values" in text
+    assert "not appraisals" in text
+    # The internal citations must never reach the reader.
+    for leak in ("handoff", "atlas_roadmap", "PostGIS", "searchMode",
+                 "guidance_value_gap", "§"):
+        assert leak not in text, f"internal detail leaked into the briefing: {leak}"
 
 
 def test_price_drops_and_source_health_are_carried(session):
@@ -180,8 +204,28 @@ def test_price_drops_and_source_health_are_carried(session):
     assert digest.source_health          # the "is the scraper dead?" line
     text = R.render_text(digest)
     assert "PRICE DROPS" in text
-    assert "SOURCES" in text
-    assert "GATE" in text
+    # Health collapses to one summary line — the reader needs "is anything
+    # broken", and the per-source detail lives in `atlas.cli health`. (The
+    # fixture's source has no runs, so it correctly reports as degraded.)
+    assert "DEGRADED" in text
+    assert "new listings today" in text
+    assert "clean" in text          # the gate streak
+
+
+def test_a_degraded_source_is_named_not_buried(session, monkeypatch):
+    """The one health case that must never be quiet: 'no new listings' and
+    'the scraper is dead' have to look different."""
+    digest = R.build_report(session, _profile())
+    digest.source_health = [
+        {"name": "magicbricks", "city": "bangalore", "healthy": False,
+         "reason": "2 consecutive bad runs", "last_run_status": "failed"},
+        {"name": "rera_karnataka", "city": "karnataka", "healthy": True,
+         "reason": "ok", "last_run_status": "ok"},
+    ]
+    text = R.render_text(digest)
+    assert "DEGRADED" in text
+    assert "magicbricks/bangalore" in text
+    assert "magicbricks/bangalore" in R.render_html(digest)
 
 
 # --- persistence and the double-send guard ----------------------------------
